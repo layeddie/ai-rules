@@ -1,0 +1,346 @@
+# .ai_rules
+
+**Standards-based AI rules for Elixir/BEAM development**
+
+This repository provides a standardized set of AI agent guidelines, tool configurations, and project templates for building Elixir/BEAM applications with agentic AI tools.
+
+---
+
+## 🎯 Objective
+
+Create a **subscription-free**, standards-based starting point for Elixir/BEAM projects that works with:
+- OpenCode (primary tool) - Multi-session agentic development
+- Compatible tools (Claude, Cursor)
+- Local LLMs (Ollama, LM Studio, MLX for Apple Silicon)
+- MCP support (Serena)
+
+**Key Principles**:
+- Tool-agnostic: Guidelines work across OpenCode, Claude, Cursor
+- Subscription-free: All tools (mgrep, Serena) are open-source and free
+- Multi-session: Separate plan, build, and review workflows
+- Flexible LLMs: Support for local + API providers
+- Elixir/BEAM focused: OTP patterns, Domain Resource Action, TDD
+
+---
+
+## 📁 Directory Structure
+
+```
+.ai_rules/
+├── README.md                    # This file
+├── AGENTS.md                   # General agent guidelines
+├── PROJECT_INIT.md             # Project initialization guide
+│
+├── tools/                      # Tool-specific configurations
+│   ├── README.md                  # Tools overview
+│   ├── opencode/              # OpenCode configurations
+│   │   ├── opencode.json          # Base config template
+│   │   ├── opencode.plan.json     # Plan mode (read-only)
+│   │   ├── opencode.build.json    # Build mode (full access)
+│   │   ├── opencode.review.json  # Review mode (analysis)
+│   │   └── opencode_mcp.json     # MCP server config (Serena)
+│   ├── claude/               # Claude compatibility
+│   │   └── agents/              # Agent definitions
+│   │   └── commands/           # Custom commands
+│   │   └── skills/              # Technical skills
+│   ├── cursor/               # Cursor compatibility
+│   │   ├── .cursorrules          # Cursor rules file
+│   └── nix/                  # Nix integration
+│   │
+│   └── [Submodules]/
+│       ├── roles/              # Role-based agents
+│       └── skills/             # Technical skills
+│           └── examples/      # Code examples
+│
+├── roles/                      # Role definitions
+│   ├── README.md              # Roles overview
+│   ├── architect.md
+│   ├── orchestrator.md
+│   ├── backend-specialist.md
+│   ├── frontend-specialist.md
+│   ├── database-architect.md
+│   ├── qa.md
+│   └── reviewer.md
+│
+├── skills/                     # Technical skills
+│   ├── README.md              # Skills overview
+│   ├── otp-patterns/
+│   │   ├── ecto-query-analysis/
+│   │   └── test-generation/
+│   │   └── examples/          # Code examples
+│
+│
+├── templates/                  # Project templates
+│   ├── README.md              # Templates overview
+│   ├── phoenix-ash-liveview/  # Phoenix + Ash + LiveView (primary)
+│   ├── phoenix-basic/          # Basic Phoenix app (stater)
+│   ├── elixir-library/        # OTP library (stater)
+│   └── nerves/                 # Embedded Elixir (stater)
+│
+├── configs/                   # Configuration templates
+│   ├── README.md              # Configs overview
+│   ├── project_requirements.md # Project requirements template
+│   ├── opencode_mcp.json          # MCP server config
+│   ├── mlx_gpu_config.yml    # MLX GPU optimization
+│   └── nix_flake_template.nix  # Nix flake template
+│
+│   └── tidewave_mcp.json         # Tidewave MCP config (placeholder, sub-free)
+│
+│
+└── scripts/                   # Helper scripts
+│   ├── README.md              # Scripts overview
+│   ├── init_project.sh       # Project initialization
+│   ├── setup_opencode.sh    # OpenCode environment setup
+│   └── validate_requirements.sh # Project validation
+```
+
+---
+
+## 🚀 Quick Start
+
+```bash
+# Clone or symlink .ai_rules into your project
+cd my_new_project
+ln -s ~/projects/2025/.ai_rules .ai_rules
+
+# Initialize project
+bash .ai_rules/scripts/init_project.sh my_app
+
+# Start plan session (Terminal 1)
+opencode --config .opencode/opencode.plan.json
+
+# Start build session (Terminal 2)
+opencode --config .opencode/opencode.build.json
+```
+
+---
+
+## 📋 Supported Tools
+
+### OpenCode (Primary)
+- **Multi-Session**: Plan, build, review workflows
+- **MCP Support**: Serena MCP integration
+- **mgrep Integration**: Native semantic search
+- **Local LLMs**: Ollama, LM Studio, MLX for Apple Silicon
+
+### Compatible Tools
+- **Claude**: Full agent, skills, commands support
+- **Cursor**: .cursorrules-based prompting
+
+---
+
+## 🎯 Elixir/BEAM Focus
+
+- **OTP Patterns**: GenServer, Supervisor, Application, Registry
+- **Domain Resource Action**: Organizes business logic into domains, resources, and actions
+- **TDD Workflow**: Red-Green-Refactor cycle
+- **Code Quality**: Credo, Dialyzer, formatting, type specs
+
+---
+
+## 🔧 Git Workflow
+
+This project follows a strict Git workflow defined in `git_rules.md`:
+- **Feature branch development**: Create branches for all changes
+- **Pull requests for code review**: Use PRs for review before merging
+- **Conventional commit messages**: Standardized commit format
+- **Squash merging**: Clean history on main branch
+
+### Git Roles & Skills
+
+- **Git Specialist Role** (`roles/git-specialist.md`): Git and GitHub workflow expert
+- **Git Workflow Skill** (`skills/git-workflow/SKILL.md`): Git automation and best practices
+
+### Key Commands
+
+```bash
+# Create feature branch
+git checkout -b feature/add-git-workflow
+
+# Commit with conventional format
+git add .
+git commit -m "feat: add git workflow integration"
+
+# Push and create PR
+git push -u origin feature/add-git-workflow
+gh pr create --title "Add git workflow" --body "Description..."
+
+# Merge with squash
+gh pr merge --squash
+
+# Cleanup branches
+git checkout main
+git pull origin main
+git branch -d feature/add-git-workflow
+```
+
+### Repositories
+
+- **.ai_rules**: https://github.com/layeddie/ai-rules
+- **tensioner**: https://github.com/layeddie/tensioner
+
+For detailed Git workflow rules, see `git_rules.md`.
+
+---
+
+## 🔧 Configuration
+
+### OpenCode
+- **Base config**: `opencode/opencode.json`
+- **Mode-specific**: Plan, build, review configs
+- **MCP config**: `opencode/opencode_mcp.json` (Serena)
+
+### Claude
+Compatible
+- **Structure**: `.claude/` folder
+- **Agents**: Role-based agents
+- **Commands**: Slash commands (`/create-feature`, `/full-test`)
+- **Skills**: Technical skills
+
+### Cursor
+- **Rules file**: `.cursorrules` with agent prompts
+
+### Nix (Optional)
+- **Flake template**: `configs/nix_flake_template.nix`
+- **Integration**: MLX GPU support for M2 Max
+
+---
+
+## 📚 Roles
+
+### Architecture & Planning
+- **Architect** - System design, OTP supervision trees, domain boundaries
+- **Orchestrator** - Implementation coordination, TDD workflow
+
+### Domain-Specific
+- **Backend Specialist** - API design, business logic, Ash resources
+- **Frontend Specialist** - LiveView UI, real-time features
+- **Database Architect** - Ecto schemas, query optimization, N+1 prevention
+
+### Quality Assurance
+- **QA** - Testing strategy, coverage analysis, property-based testing
+- **Reviewer** - Code review, OTP best practices verification
+
+---
+
+## 🛠️ Technical Skills
+
+### OTP Patterns
+- **GenServer patterns** - Client/server separation, named processes
+- **Supervisor strategies** - One-for-one, one-for-all, dynamic
+- **Registry usage** - Dynamic process naming and discovery
+
+### Ecto Query Analysis
+- **N+1 prevention** - Preloading strategies, missing indexes, query optimization
+
+### Test Generation
+- **TDD workflow** - ExUnit, property-based testing (StreamData, PropCheck)
+
+---
+
+## 📋 Project Templates
+
+### Phoenix + Ash + LiveView (Primary)
+- Complete Phoenix web application
+- Ash framework for domain modeling
+- LiveView for real-time UI
+- User authentication with Ash
+- JSON API via Ash JSON API
+- Real-time features via Phoenix PubSub
+
+### Phoenix Basic (Stater)
+- Basic Phoenix app
+- Simple router and controller structure
+
+### Elixir Library (Stater)
+- OTP library with public API
+- Clean module organization
+
+### Nerves (Stater)
+- Embedded Elixir for IoT devices
+- Hardware-specific configurations
+
+---
+
+## ⚙️ Scripts
+
+### init_project.sh
+- **Purpose**: Initialize new Elixir project with AI rules
+- **Functionality**: Creates directory structure, symlinks .ai_rules, creates configs, generates .gitignore
+
+### setup_opencode.sh
+- **Purpose**: Setup OpenCode environment
+- Installs mgrep, uv, Serena MCP
+- **Functionality**: Validates all tools are available
+
+### validate_requirements.sh
+- **Purpose**: Validates project setup and requirements
+- **Functionality**: Checks LLM config, Nix setup, dependencies, and OpenCode configs
+
+---
+
+## 🔨 Configuration Templates
+
+### project_requirements.md
+- **Purpose**: Template for defining project requirements
+- **Sections**: LLM configuration, tool config, architecture, testing strategy
+
+### opencode_mcp.json
+- **Purpose**: MCP server configuration (Serena, placeholder for Tidewave)
+
+### mlx_gpu_config.yml
+- **Purpose**: MLX GPU optimization for Apple Silicon M2 Max
+- **Hardware**: 64GB RAM, 50GB VRAM, up to 5 GPUs
+
+---
+
+## 🎉 Best Practices
+
+### OTP Principles
+- Supervision trees with clear hierarchies
+- Domain Resource Action pattern for business logic
+- TDD workflow (Red, Green, Refactor)
+- Code quality (Credo, Dialyzer, formatting)
+
+### Anti-Patterns
+- Blocking GenServer callbacks, mixing concerns, ignoring supervision strategies
+
+---
+
+## 🔗 Subscription-Free
+
+All tools (mgrep, Serena) are open-source and free.
+- No subscription required to use `.ai_rules`.
+- Local LLM providers (Ollama, LM Studio, MLX) are free.
+- API providers (Anthropic, OpenAI, OpenCode Zen) are optional, user choice.
+
+---
+
+## 📖 Documentation
+
+### Comprehensive guides for:
+- Project initialization
+- Tool-specific configurations
+- Role definitions
+- Technical skills
+- Project templates
+- Multi-session workflow
+- Hardware optimization
+
+---
+
+## 🚀 Starting Point for New Elixir/BEAM Projects
+
+**Use**: `.ai_rules` as subscription-free starting point for:
+- Standardized project structure
+- Multi-session development workflow
+- Comprehensive agent guidelines
+- Tool integration (mgrep + Serena)
+- Flexible LLM support (local + API)
+- Elixir/BEAM best practices
+
+**Perfect for**: Full-stack web applications, libraries, or embedded systems!
+
+---
+
+**Ready to code with .ai_rules! 🎉**

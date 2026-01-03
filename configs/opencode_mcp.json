@@ -1,0 +1,27 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+
+  "mcp": {
+    "serena": {
+      "type": "local",
+      "command": ["uvx", "--from", "git+https://github.com/oraios/serena", "serena", "start-mcp-server"],
+      "enabled": true,
+      "environment": {
+        "SERENA_PROJECT_PATH": "{project_root}/.serena",
+        "SERENA_READ_ONLY": "{read_only_setting}"
+      }
+    }
+  },
+
+  "serena_read_only_settings": {
+    "plan": "true",
+    "build": "false",
+    "review": "true"
+  },
+
+  "notes": {
+    "serena_configuration": "Serena MCP provides semantic code search and editing capabilities with LSP integration. It runs via uvx and requires no separate installation. The read_only setting controls whether Serena can modify files (false for build mode, true for plan/review modes). This is substituted dynamically in mode-specific configs.",
+    "project_path": "SERENA_PROJECT_PATH should be set to {project_root}/.serena where Serena will store indexes and project-specific configuration.",
+    "environment_variables": "SERENA_READ_ONLY controls read-only mode. Set to 'true' for plan/review (no edits), 'false' for build (allow edits). This is substituted dynamically in mode-specific configs."
+  }
+}

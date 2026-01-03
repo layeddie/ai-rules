@@ -1,0 +1,50 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+
+  "systemPrompt": "PLAN MODE: You are an Architect planning an Elixir/BEAM project. Read project_requirements.md for LLM selection and tool preferences. Use mgrep for semantic codebase discovery. Create file structure and identify architectural patterns before implementation. Output your plan clearly with phases, dependencies, and file locations. Do not create or modify files in plan mode.",
+
+  "tools": {
+    "write": false,
+    "read": true,
+    "bash": false,
+    "grep": true,
+    "glob": true,
+    "webfetch": true,
+    "websearch": true
+  },
+
+  "mcp": {
+    "serena": {
+      "enabled": false,
+      "environment": {
+        "SERENA_READ_ONLY": "true"
+      }
+    }
+  },
+
+  "agent": {
+    "mode": "plan",
+
+    "plan": {
+      "tools": {
+        "write": false,
+        "mgrep": true,
+        "serena_*": false,
+        "grep": true,
+        "websearch": true,
+        "bash": false
+      },
+      "model": {
+        "provider": "auto",
+        "prefer": "api",
+        "fallback": ["anthropic", "ollama"]
+      }
+    }
+  },
+
+  "permissions": {
+    "write": "disabled",
+    "bash": "disabled",
+    "mcp": "disabled"
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+
+  "mcp": {
+    "serena": {
+      "type": "local",
+      "command": ["uvx", "--from", "git+https://github.com/oraios/serena", "serena", "start-mcp-server"],
+      "enabled": true,
+      "environment": {
+        "SERENA_PROJECT_PATH": "{project_root}/.serena",
+        "SERENA_READ_ONLY": "{read_only_setting}"
+      },
+      "use_for": "semantic_search, multi_file_refactor, ast_aware_editing"
+    },
+    "tidewave_runtime_intelligence": {
+      "type": "local",
+      "command": ["uvx", "--from", "git+https://github.com/tidewave-ai/tidewave_phoenix", "mcp"],
+      "enabled": true,
+      "environment": {
+        "TIDEWAVE_READ_ONLY": "true"
+      },
+      "use_for": "database_access, logs_access, docs_access, runtime_introspection, project_eval"
+    },
+    "hermes_custom": {
+      "type": "local",
+      "command": ["mix", "run", "-e", "MyApp.MCPServer.start_link()"],
+      "enabled": true,
+      "environment": {
+        "MIX_ENV": "dev"
+      },
+      "use_for": "elixir_native_tools, nerves_integration, custom_mcp_servers"
+    }
+  },
+
+  "serena_read_only_settings": {
+    "plan": "true",
+    "build": "false",
+    "review": "true"
+  },
+
+  "notes": {
+    "overview": "Three MCP servers configured for different purposes: Serena (semantic search & refactor), Tidewave (runtime intelligence), Hermes (Elixir-native tools). All can be enabled/disabled independently.",
+    "serena": {
+      "description": "Serena MCP provides semantic code search and editing capabilities with AST-aware editing. NOT full LSP but uses embeddings for semantic understanding.",
+      "capabilities": "Semantic search via embeddings, AST-aware multi-file refactoring, cross-language support, runtime intelligence (project metadata, build system)",
+      "use_for": "semantic_search, multi_file_refactor, ast_aware_editing",
+      "lsp_vs_embeddings": "Uses embeddings for semantic search (NOT full LSP). Provides similar understanding to LSP but better for codebase discovery.",
+      "setup": "Runs via uvx from Python. No separate installation. Project path: {project_root}/.serena"
+    },
+    "tidewave": {
+      "description": "Tidewave for Phoenix provides runtime intelligence with direct database, logs, docs, and code evaluation access.",
+      "capabilities": "Direct database queries (project_eval), logs access, docs search, runtime introspection, Phoenix-specific features (LiveView, pub/sub)",
+      "use_for": "database_access, logs_access, docs_access, runtime_introspection, project_eval",
+      "subscription": "Pro features require subscription ($10-12/mo), but OSS Runtime Intelligence component available via MCP (free)",
+      "setup": "Run via uvx. Requires Tidewave for Phoenix integration in your Phoenix app."
+    },
+    "hermes": {
+      "description": "Hermes is an Elixir-native MCP SDK for building custom MCP servers/clients with full BEAM supervision and fault tolerance.",
+      "capabilities": "Build Elixir-native MCP servers, Phoenix HTTP/SSE transport, BEAM supervision, automatic recovery, complete MCP protocol implementation",
+      "use_for": "elixir_native_tools, nerves_integration, custom_mcp_servers, mcp_client_and_server",
+      "setup": "Add to mix.exs deps: {:hermes_mcp, \"~> 0.13.0\"}. Requires Phoenix for HTTP transport or use stdio."
+    },
+    "token_efficiency_strategy": {
+      "plan_mode": "Use mgrep for semantic discovery (tokens: ~5k per query). Serena disabled or read-only.",
+      "build_mode": "Use Serena for multi-file refactors (AST-aware, ~40% token savings vs manual descriptions). Tidewave for DB access.",
+      "review_mode": "Use mgrep for cross-reference, Serena for edit context. Tidewave for runtime validation.",
+      "combined": "All three tools enabled for comprehensive coverage. On-demand tool loading saves 20-40% tokens."
+    },
+    "environment_variables": "SERENA_READ_ONLY, TIDEWAVE_READ_ONLY, MIX_ENV control read-only modes. SERENA_PROJECT_PATH for Serena indexes."
+  }
+}
