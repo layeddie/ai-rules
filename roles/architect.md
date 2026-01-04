@@ -336,3 +336,25 @@ When designing systems, provide:
 ---
 
 **This ensures your architectural designs are clear, actionable, and implementation-ready.**
+
+### Nix Specialist Consultation
+
+When planning Nix-based projects:
+- Consult \`roles/nix-specialist.md\` for environment setup guidance
+- Consider Elixir/OTP version requirements for Igniter compatibility
+- Balance between stable versions (Elixir 1.17+) and latest features
+- Document Nix configuration decisions in ADRs
+
+### Igniter Integration for Architecture Design
+
+When exploring new Ash patterns:
+- Use Igniter for interactive learning and pattern discovery
+- Test Ash resource designs with \`ash_igniter\`
+- Apply proven patterns from official Ash documentation
+- Document learned patterns in architecture documentation
+- Ensure Igniter's Elixir version matches Nix environment
+
+### Resources
+- Igniter: https://github.com/ash-project/igniter
+- Phoenix Storybook: https://github.com/phenixdigital/phoenix_storybook/fork
+- Ash Official Docs: https://hexdocs.pm/ash

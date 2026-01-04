@@ -387,3 +387,49 @@ Invoke HTML/CSS specialist when:
 ---
 
 **Follow this skill to ensure semantic, accessible, and performant web interfaces in Elixir/BEAM projects.**
+
+---
+
+## Key Resources
+
+### Phoenix Learning & Best Practices
+
+**Phoenix Storybook**: https://github.com/phenixdigital/phoenix_storybook/fork
+- Official Phoenix documentation and examples
+- LiveView patterns and best practices
+- Real-time features with PubSub
+- Comprehensive guides for all Phoenix features
+
+**When to Use**:
+- Learning Phoenix LiveView patterns
+- Understanding Phoenix framework conventions
+- Finding code examples for specific features
+- Troubleshooting Phoenix issues
+
+### Ash Framework Best Practices
+
+**Ash Igniter**: https://github.com/ash-project/igniter
+- Official Ash documentation and interactive guides
+- Domain modeling examples and patterns
+- Query building and optimization techniques
+- Resource action implementation guides
+
+**When to Use**:
+- Learning Ash resource and domain modeling
+- Understanding Ash actions and changesets
+- Building complex queries with Ash
+- Troubleshooting Ash issues
+
+### Elixir/BEAM Best Practices
+
+**Elixir Guides**: https://hexdocs.pm/elixir
+- Official Elixir documentation and best practices
+- OTP patterns and supervision
+- Concurrency and fault tolerance
+- BEAM VM concepts
+
+**When to Use**:
+- Looking up Elixir functions and patterns
+- Understanding OTP principles and GenServer patterns
+- Learning BEAM VM concepts
+- Finding examples for common tasks

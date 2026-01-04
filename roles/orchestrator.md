@@ -468,3 +468,28 @@ When collaborating with other roles:
 ---
 
 **This ensures your implementations are well-orchestrated, tested, and follow Elixir/BEAM best practices.**
+
+### Nix Specialist Consultation
+
+When implementing with Nix-based projects:
+- Consult \`roles/nix-specialist.md\` for environment setup guidance
+- Use Nix devshell for development environment
+- Ensure Ash packages work with Nix-provided Elixir version
+- Set up MLX GPU acceleration via environment variables
+- Report version compatibility issues to Nix specialist
+
+### Igniter Integration for Implementation
+
+When developing Ash resources:
+- Use Igniter to learn Ash Framework patterns interactively
+- Test resource designs with \`ash_igniter\` before implementation
+- Apply proven patterns from Igniter exploration
+- Follow TDD workflow even during learning phase with Igniter
+- Document learned patterns in test comments
+- Ensure Igniter's Elixir version matches Nix environment
+
+### Resources
+- Igniter: https://github.com/ash-project/igniter
+- Phoenix Storybook: https://github.com/phenixdigital/phoenix_storybook/fork
+- Ash Official Docs: https://hexdocs.pm/ash
+- Nix Specialist: \`roles/nix-specialist.md\`

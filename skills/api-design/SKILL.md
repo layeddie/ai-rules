@@ -538,3 +538,47 @@ Use API design patterns for:
 - **Plug.CSRFProtection**: CSRF token validation
 - **Joken**: JWT authentication and validation
 - **Ecto**: Database queries with parameterization
+
+### Ash Igniter Integration
+
+**Critical**: Nix environment must match what Igniter expects
+
+When using Igniter with Ash:
+- **Architect Phase**: Consult Nix specialist for environment setup
+- **Orchestrator Phase**: Set up Nix devshell with correct Elixir version
+- **Implementation Phase**: Ensure Ash packages work with Nix-provided Elixir
+- **Review Phase**: Verify Ash package works with selected version
+
+**Nix specialist** provides:
+- Guidance on version selection for Igniter compatibility
+- Multiple environment configurations (stable vs testing)
+- Version testing strategies before full implementation
+
+**Workflow**:
+```bash
+# 1. Nix Specialist (Planning)
+nix-specialist:
+  "We need Ash 3.4+ for this project"
+  "Nix 1.17+ supports this"
+
+# 2. Architect (Design with Igniter guidance)
+architect:
+  "Use Igniter to explore Ash 3.4+"
+  "Nix specialist confirmed 1.17+ compatibility"
+
+# 3. Orchestrator (Implementation)
+orchestrator:
+  "Setting up Nix devshell"
+  "Use Ash 3.4+ from Nix"
+
+# 4. Reviewer (Verify)
+reviewer:
+  "Check Ash package compatibility"
+  "Verify Nix environment"
+```
+
+**Resources**:
+- Ash Igniter: https://github.com/ash-project/igniter
+- Ash Official Docs: https://hexdocs.pm/ash
+- Nix Specialist: `roles/nix-specialist.md`
+- Phoenix Storybook: https://github.com/phenixdigital/phoenix_storybook/fork

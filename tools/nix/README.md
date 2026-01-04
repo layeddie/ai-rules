@@ -606,3 +606,156 @@ Nix integration with `.ai_rules` provides:
 ---
 
 **Happy coding with Nix and .ai_rules! 🎉**
+
+---
+
+## Version Flexibility
+
+### Philosophy
+
+ai-rules supports flexible Elixir versioning to accommodate:
+- Project-specific requirements (may need older stable versions)
+- Nix environment overrides (version can be specified per shell session)
+- Team preferences (latest stable vs cutting edge)
+- Testing scenarios (test compatibility across versions)
+
+### Approaches
+
+#### 1. Flakes (Default - Use Flexible Versioning)
+
+Nix flake.nix templates use `~>` for flexible versions:
+
+\`\`\`nix
+pkgs.elixir_1_17        # Allows 1.17+ (e.g., 1.18, 1.19)
+pkgs.phoenix_1_7_14      # Allows 1.7+ (e.g., 1.8, 1.9)
+pkgs.beam_27              # Allows 27+ (e.g., 28, 29)
+pkgs.erlang_26            # Allows 26+ (e.g., 27, 28)
+\`\`\`
+
+**Advantages**:
+- Latest stable with automatic updates
+- Bug fixes and security patches
+- New features and deprecation warnings
+
+**When to Override**:
+\`\`\`bash
+# In flake.nix, specify exact version
+pkgs.elixir.override { version = "1.17.3"; }
+
+# Or use different version range
+pkgs.elixir_1_16             # Downgrade for testing
+\`\`\`
+
+#### 2. Shell Session Overrides
+
+Nix devshell allows version specification per session:
+
+\`\`\`bash
+# Use latest stable Elixir
+nix develop .#elixir_1_17
+
+# Or use specific version
+nix develop .#elixir_1_16
+
+# Or use flexible versioning
+nix develop .#elixir_1_17+
+
+# Or use ASDF
+nix develop . --impure env=Elixir ASDF_ELIXIR_VERSION=1_17_3
+\`\`\`
+
+#### 3. ASDF Integration (Preferred for Development)
+
+Use ASDF for per-project version management:
+
+\`\`\`bash
+# Install tooling in Nix devshell
+pkgs.asdf_2_7_5
+pkgs.asdf_elixir_1_17_3
+
+# Switch versions dynamically
+asdf elixir global 1.17.3
+asdf elixir local 1.18.0
+asdf elixir local 1.19.0
+
+# Nix devshell includes ASDF in PATH
+\`\`\`
+
+**Advantages**:
+- Project-specific version control
+- Team coordination
+- Rollback capabilities
+- Reproducible team environments
+
+### Templates Remain Unchanged
+
+**Keep templates with old version references** - This is intentional and correct:
+- \`scripts/init_project.sh\` generates mix.exs with \`~>\`
+- Template files use \`~>\` for flexibility
+- Mix will resolve to latest stable or specified version
+- Documented in this section that overrides are possible
+
+### Usage Guide
+
+#### For New Projects
+\`\`\`bash
+# Use default flexible versions (recommended)
+bash ai-rules/scripts/init_project.sh my_app
+
+# Override Elixir version in flake.nix
+# Add to buildInputs:
+pkgs.elixir_1_17_3   # Specific version
+\`\`\`
+
+#### For Existing Projects
+\`\`\`bash
+# Override in flake.nix
+pkgs.elixir_1_17_3
+
+# Use ASDF in Nix shell
+nix develop
+asdf elixir local 1.17.3
+
+# Mix still respects MIX_ENV and deps
+\`\`\`
+
+#### Version Testing
+\`\`\`bash
+# Test different Elixir versions in Nix
+nix develop .#elixir_1_16
+mix test
+nix develop .#elixir_1_17_0
+mix test
+
+# Switch back
+asdf elixir local 1.17.3
+\`\`\`
+
+### Troubleshooting
+
+#### Issue: Version Conflicts
+\`\`\`bash
+# Clear Nix cache
+rm -rf .direnv/flake-profile
+nix develop
+
+# Rebuild
+rm -rf _build deps mix.lock
+mix deps.get
+mix compile
+\`\`\`
+
+#### Issue: Mix Can't Find Packages
+\`\`\`bash
+# Mix environment
+mix local.hex --force
+mix archive.uninstall unused
+\`\`\`
+
+### Notes
+
+- Old version references (\`~> 1.17\`) in templates are CORRECT and intentional
+- They provide flexibility for users who need specific versions
+- Nix devshell allows session-level overrides
+- ASDF provides project-level version control
+- Mix respects environment and can be overridden
