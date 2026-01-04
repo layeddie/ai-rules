@@ -4,6 +4,11 @@
 
 This repository provides a standardized set of AI agent guidelines, tool configurations, and project templates for building Elixir/BEAM applications with agentic AI tools.
 
+# Disclaimer
+
+This project is provided as-is and without any warranty. The authors are not responsible for any damages or losses resulting from the use of this project.
+Created with opencode using GLM 4.7 Zen and research on many elixir ai projects as of Jan 2026. Not fully tested against any real projects yet.
+
 ---
 
 ## 🎯 Objective
@@ -11,7 +16,7 @@ This repository provides a standardized set of AI agent guidelines, tool configu
 Create a **subscription-free**, standards-based starting point for Elixir/BEAM projects that works with:
 
 - OpenCode (primary tool) - Multi-session agentic development
-- Compatible tools (Claude, Cursor)
+- Compatible tools (Claude Code, Cursor)
 - Local LLMs (Ollama, LM Studio, MLX for Apple Silicon)
 - MCP support (Serena)
 
