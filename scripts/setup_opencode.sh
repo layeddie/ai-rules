@@ -1,5 +1,5 @@
 #!/bin/bash
-# .ai_rules/scripts/setup_opencode.sh
+# ai-rules/scripts/setup_opencode.sh
 # Setup OpenCode environment with mgrep and Serena MCP
 
 set -e
@@ -71,9 +71,9 @@ echo "  - mgrep: $(command -v mgrep 2>&1 || echo 'not found')"
 echo "  - uv: $(uv --version)"
 echo "  - Serena MCP: Available (via uvx)"
 echo ""
-echo -e "${YELLOW}📚 Next steps:${NC}"
+echo -e "${YELLOW}📋 Next steps:${NC}"
 echo "   1. Initialize project:"
-echo "     bash .ai_rules/scripts/init_project.sh my_app"
+echo "     bash ai-rules/scripts/init_project.sh my_app"
 echo ""
 echo "  2. Configure project:"
 echo "     vim project_requirements.md"
@@ -81,4 +81,4 @@ echo ""
 echo "  3. Start plan session:"
 echo "     opencode --config .opencode/opencode.plan.json"
 echo ""
-echo -e "${GREEN}🎉 Happy coding with .ai_rules! 🎉${NC}"
+echo -e "${GREEN}🎉 Happy coding with ai-rules! 🎉${NC}"

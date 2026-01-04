@@ -55,7 +55,7 @@ gh repo view
 ### Initialize Existing Project with GitHub
 ```bash
 # Navigate to project directory
-cd ~/projects/2026/<project-name>
+cd ~/path/to/your-project-name
 
 # Initialize git
 git init
@@ -143,43 +143,20 @@ git push origin --delete feature/descriptive-name
 
 ### Add Submodule
 ```bash
-# Add .ai_rules as submodule
-git submodule add https://github.com/layeddie/ai-rules.git .ai_rules
+# Add ai-rules as submodule
+git submodule add https://github.com/layeddie/ai-rules.git ai-rules
+git commit -m "chore: add ai-rules as submodule"
 
-# Commit submodule addition
-git add .gitmodules
-git commit -m "chore: add .ai_rules as submodule"
-```
+# Update submodule to latest
+git submodule update --remote ai-rules
+git add ai-rules
+git commit -m "chore: update ai-rules submodule"
 
-### Clone with Submodules
-```bash
-# Clone with submodules
-git clone --recurse-submodules https://github.com/layeddie/tensioner.git
-
-# Or clone and init separately
-git clone https://github.com/layeddie/tensioner.git
-cd tensioner
-git submodule update --init --recursive
-```
-
-### Update Submodule
-```bash
-# Update to latest commit on submodule's main branch
-git submodule update --remote .ai_rules
-
-# Commit submodule update
-git add .ai_rules
-git commit -m "chore: update .ai_rules submodule"
-```
-
-### Remove Submodule
-```bash
 # Remove submodule
-git submodule deinit .ai_rules
-git rm .ai_rules
-git rm -f .gitmodules
-rm -rf .git/modules/.ai_rules
-git commit -m "chore: remove .ai_rules submodule"
+git submodule deinit ai-rules
+git rm ai-rules
+rm -rf .git/modules/ai-rules
+git commit -m "chore: remove ai-rules submodule"
 ```
 
 ## Merge Conflict Resolution

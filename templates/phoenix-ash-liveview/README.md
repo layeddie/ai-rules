@@ -5,10 +5,10 @@
 **Project Structure**:
 ```
 [Project Name]/
-├── .ai_rules/                   # Symlink to .ai_rules repository
-├── .serena/                       # Serena MCP indexes
-├── .opencode/                     # OpenCode configurations
-├── mix.exs                        # Mix configuration
+├── ai-rules/                       # Symlink to ai-rules repository
+├── .serena/                        # Serena MCP indexes
+├── .opencode/                      # OpenCode configurations
+├── mix.exs                         # Mix configuration
 ├── config/
 │   ├── config.exs                 # Application config
 │   ├── dev.exs                  # Dev environment
@@ -384,12 +384,10 @@ config :[Project Name], :prod,
 ### 1. Initialize Project
 
 ```bash
-# Navigate to your project directory
-cd ~/projects/2025
-my_app
+cd ~/path/to/projects
 
-# Create project using .ai_rules template
-bash .ai_rules/scripts/init_project.sh my_app ~/projects/2025/.ai_rules phoenix-ash-liveview
+# Create new project
+bash ai-rules/scripts/init_project.sh my_app ~/path/to/ai-rules phoenix-ash-liveview
 
 # 2. Edit project_requirements.md
 # Configure your project requirements

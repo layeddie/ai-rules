@@ -1,4 +1,4 @@
-# .ai_rules
+# ai-rules
 
 **Standards-based AI rules for Elixir/BEAM development**
 
@@ -25,6 +25,73 @@ Create a **subscription-free**, standards-based starting point for Elixir/BEAM p
 
 ## 📁 Directory Structure
 
+```
+ai-rules/
+├── README.md                    # This file
+├── AGENTS.md                   # General agent guidelines
+├── PROJECT_INIT.md             # Project initialization guide
+│
+├── tools/                      # Tool-specific configurations
+│   ├── README.md                  # Tools overview
+│   ├── opencode/              # OpenCode configurations
+│   │   ├── opencode.json          # Base config template
+│   │   ├── opencode.plan.json     # Plan mode (read-only)
+│   │   ├── opencode.build.json    # Build mode (full access)
+│   │   ├── opencode.review.json  # Review mode (analysis)
+│   │   └── opencode_mcp.json     # MCP server config (Serena)
+│   ├── claude/               # Claude compatibility
+│   │   └── agents/              # Agent definitions
+│   │   └── commands/           # Custom commands
+│   │   └── skills/              # Technical skills
+│   ├── cursor/               # Cursor compatibility
+│   │   ├── .cursorrules          # Cursor rules file
+│   └── nix/                  # Nix integration
+│
+│   └── [Submodules]/
+│       ├── roles/              # Role-based agents
+│       └── skills/             # Technical skills
+│           └── examples/      # Code examples
+│
+├── roles/                      # Role definitions
+│   ├── README.md              # Roles overview
+│   ├── architect.md
+│   ├── orchestrator.md
+│   ├── backend-specialist.md
+│   ├── frontend-specialist.md
+│   ├── database-architect.md
+│   ├── qa.md
+│   └── reviewer.md
+│
+├── skills/                     # Technical skills
+│   ├── README.md              # Skills overview
+│   ├── otp-patterns/
+│   │   ├── ecto-query-analysis/
+│   │   └── test-generation/
+│   │   └── examples/          # Code examples
+│
+│
+├── templates/                  # Project templates
+│   ├── README.md              # Templates overview
+│   ├── phoenix-ash-liveview/  # Phoenix + Ash + LiveView (primary)
+│   ├── phoenix-basic/          # Basic Phoenix app (stater)
+│   ├── elixir-library/        # OTP library (stater)
+│   └── nerves/                 # Embedded Elixir (stater)
+│
+├── configs/                   # Configuration templates
+│   ├── README.md              # Configs overview
+│   ├── project_requirements.md # Project requirements template
+│   ├── opencode_mcp.json          # MCP server config
+│   ├── mlx_gpu_config.yml    # MLX GPU optimization
+│   └── nix_flake_template.nix  # Nix flake template
+│
+│   └── tidewave_mcp.json         # Tidewave MCP config (placeholder, sub-free)
+│
+│
+└── scripts/                   # Helper scripts
+    ├── README.md              # Scripts overview
+    ├── init_project.sh       # Project initialization
+    ├── setup_opencode.sh    # OpenCode environment setup
+    └── validate_requirements.sh # Project validation
 ```
 .ai_rules/
 ├── README.md                    # This file
@@ -99,12 +166,12 @@ Create a **subscription-free**, standards-based starting point for Elixir/BEAM p
 ## 🚀 Quick Start
 
 ```bash
-# Clone or symlink .ai_rules into your project
+# Clone or symlink ai-rules into your project
 cd my_new_project
-ln -s ~/projects/2025/.ai_rules .ai_rules
+ln -s ~/path/to/ai-rules ai-rules
 
 # Initialize project
-bash .ai_rules/scripts/init_project.sh my_app
+bash ai-rules/scripts/init_project.sh my_app
 
 # Start plan session (Terminal 1)
 opencode --config .opencode/opencode.plan.json
@@ -176,7 +243,7 @@ git branch -d feature/add-git-workflow
 
 ### Repositories
 
-- **.ai_rules**: https://github.com/layeddie/ai-rules
+- **ai-rules**: https://github.com/layeddie/ai-rules
 - **tensioner**: https://github.com/layeddie/tensioner
 
 For detailed Git workflow rules, see `git_rules.md`.
@@ -186,9 +253,9 @@ For detailed Git workflow rules, see `git_rules.md`.
 ## 🔧 Configuration
 
 ### OpenCode
-- **Base config**: `opencode/opencode.json`
+- **Base config**: `tools/opencode/opencode.json`
 - **Mode-specific**: Plan, build, review configs
-- **MCP config**: `opencode/opencode_mcp.json` (Serena)
+- **MCP config**: `tools/opencode/opencode_mcp.json` (Serena)
 
 ### Claude
 Compatible
@@ -198,7 +265,7 @@ Compatible
 - **Skills**: Technical skills
 
 ### Cursor
-- **Rules file**: `.cursorrules` with agent prompts
+- **Rules file**: `tools/cursor/.cursorrules` with agent prompts
 
 ### Nix (Optional)
 - **Flake template**: `configs/nix_flake_template.nix`
@@ -266,7 +333,7 @@ Compatible
 
 ### init_project.sh
 - **Purpose**: Initialize new Elixir project with AI rules
-- **Functionality**: Creates directory structure, symlinks .ai_rules, creates configs, generates .gitignore
+- **Functionality**: Creates directory structure, symlinks ai-rules, creates configs, generates .gitignore
 
 ### setup_opencode.sh
 - **Purpose**: Setup OpenCode environment
@@ -310,7 +377,7 @@ Compatible
 ## 🔗 Subscription-Free
 
 All tools (mgrep, Serena) are open-source and free.
-- No subscription required to use `.ai_rules`.
+- No subscription required to use `ai-rules`.
 - Local LLM providers (Ollama, LM Studio, MLX) are free.
 - API providers (Anthropic, OpenAI, OpenCode Zen) are optional, user choice.
 
@@ -331,7 +398,7 @@ All tools (mgrep, Serena) are open-source and free.
 
 ## 🚀 Starting Point for New Elixir/BEAM Projects
 
-**Use**: `.ai_rules` as subscription-free starting point for:
+**Use**: `ai-rules` as subscription-free starting point for:
 - Standardized project structure
 - Multi-session development workflow
 - Comprehensive agent guidelines
@@ -343,4 +410,4 @@ All tools (mgrep, Serena) are open-source and free.
 
 ---
 
-**Ready to code with .ai_rules! 🎉**
+**Ready to code with ai-rules! 🎉**

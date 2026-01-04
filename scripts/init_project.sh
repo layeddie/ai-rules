@@ -1,5 +1,5 @@
 #!/bin/bash
-# .ai_rules/scripts/init_project.sh
+# ai-rules/scripts/init_project.sh
 # Initialize new Elixir project with AI rules
 
 set -e
@@ -12,7 +12,9 @@ NC='\033[0m' # No Color
 
 # Parse arguments
 PROJECT_NAME=${1}
-AI_RULES_PATH=${2:-"$HOME/projects/2025/.ai_rules"}
+# Default to parent directory of this script if no path provided
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+AI_RULES_PATH=${2:-"$(cd "$SCRIPT_DIR/.." && pwd)"}
 TEMPLATE=${3:-"phoenix-ash-liveview"}
 
 if [ -z "$PROJECT_NAME" ]; then
@@ -44,34 +46,41 @@ cd "$PROJECT_NAME"
 git init
 git branch -M main
 
-# 3. Create symlink to .ai_rules
-echo -e "${GREEN}🔗 Linking .ai_rules...${NC}"
-if [ -e .ai_rules ]; then
-    echo -e "${YELLOW}⚠️  .ai_rules already exists, skipping symlink${NC}"
+# 3. Create symlink to ai-rules
+echo -e "${GREEN}🔗 Linking ai-rules...${NC}"
+if [ -e ai-rules ]; then
+    echo -e "${YELLOW}⚠️  ai-rules already exists, skipping symlink${NC}"
 else
-    ln -s "$AI_RULES_PATH" .ai_rules
+    ln -s "$AI_RULES_PATH" ai-rules
 fi
 
 # 4. Create project_requirements.md from template
 echo -e "${GREEN}📄 Creating project_requirements.md...${NC}"
-cp .ai_rules/configs/project_requirements.md project_requirements.md
+cp ai-rules/configs/project_requirements.md project_requirements.md
 
 # 5. Create OpenCode configs directory
 echo -e "${GREEN}⚙️  Creating OpenCode configuration...${NC}"
 mkdir -p .opencode
-cp .ai_rules/tools/opencode/opencode.json .opencode/config.json
-cp .ai_rules/tools/opencode/opencode_mcp.json .opencode/mcp.json
-cp .ai_rules/tools/opencode/opencode.plan.json .opencode/opencode.plan.json
-cp .ai_rules/tools/opencode/opencode.build.json .opencode/opencode.build.json
-cp .ai_rules/tools/opencode/opencode.review.json .opencode/opencode.review.json
+cp ai-rules/tools/opencode/opencode.json .opencode/config.json
+cp ai-rules/tools/opencode/opencode_mcp.json .opencode/mcp.json
+cp ai-rules/tools/opencode/opencode.plan.json .opencode/opencode.plan.json
+cp ai-rules/tools/opencode/opencode.build.json .opencode/opencode.build.json
+cp ai-rules/tools/opencode/opencode.review.json .opencode/opencode.review.json
 
 # 6. Copy template files (if specified)
 if [ "$TEMPLATE" != "none" ]; then
-    TEMPLATE_PATH=".ai_rules/templates/$TEMPLATE"
+    TEMPLATE_PATH="ai-rules/templates/$TEMPLATE"
     if [ -d "$TEMPLATE_PATH" ]; then
-        echo -e "${GREEN}📋 Applying template: $TEMPLATE${NC}"
-        # Copy template files (exclude README and metadata)
-        find "$TEMPLATE_PATH" -type f ! -name "README.md" ! -name "template_config.json" -exec cp {} . \;
+        # Check if template has files to copy (excluding README)
+        TEMPLATE_FILES=$(find "$TEMPLATE_PATH" -type f ! -name "README.md" ! -name "template_config.json" 2>/dev/null | wc -l | xargs)
+        if [ "$TEMPLATE_FILES" -gt 0 ]; then
+            echo -e "${GREEN}📋 Applying template: $TEMPLATE${NC}"
+            # Copy template files (exclude README and metadata)
+            find "$TEMPLATE_PATH" -type f ! -name "README.md" ! -name "template_config.json" -exec cp {} . \;
+        else
+            echo -e "${YELLOW}⚠️  Template '$TEMPLATE' is a placeholder (no files to copy)${NC}"
+            echo -e "${GREEN}✅ Using basic project structure${NC}"
+        fi
     else
         echo -e "${YELLOW}⚠️  Template not found: $TEMPLATE, using basic structure${NC}"
     fi
@@ -85,7 +94,7 @@ mkdir -p {lib,test,config,priv}
 echo -e "${GREEN}📝 Creating .gitignore...${NC}"
 cat > .gitignore << 'EOF'
 # AI rules (symlinked)
-.ai_rules
+ai-rules
 
 # OpenCode
 .opencode/
@@ -161,10 +170,10 @@ fi
 # 10. Initial git commit
 echo -e "${GREEN}💾 Creating initial git commit...${NC}"
 git add .
-git commit -m "chore: initialize project with .ai_rules
+git commit -m "chore: initialize project with ai-rules
 
 - Create project structure
-- Link .ai_rules repository
+- Link ai-rules repository
 - Add OpenCode configuration
 - Apply template: $TEMPLATE
 - Create .gitignore
@@ -188,8 +197,8 @@ echo "  4. Start review session (Terminal 3, optional):"
 echo "     opencode --config .opencode/opencode.review.json"
 echo ""
 echo -e "${YELLOW}📚 For more information, see:${NC}"
-echo "  - .ai_rules/PROJECT_INIT.md"
-echo "  - .ai_rules/README.md"
-echo "  - .ai_rules/AGENTS.md"
+echo "  - ai-rules/PROJECT_INIT.md"
+echo "  - ai-rules/README.md"
+echo "  - ai-rules/AGENTS.md"
 echo ""
 echo -e "${GREEN}Happy coding! 🎉${NC}"

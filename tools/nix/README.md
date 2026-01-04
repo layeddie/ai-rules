@@ -1,12 +1,12 @@
 # Nix Integration Guide
 
-This guide explains how to use `.ai_rules` with Nix for reproducible Elixir/BEAM development.
+This guide explains how to use `ai-rules` with Nix for reproducible Elixir/BEAM development.
 
 ---
 
 ## Overview
 
-Nix provides **reproducible development environments** for Elixir/BEAM projects. `.ai_rules` integrates with Nix to provide:
+Nix provides **reproducible development environments** for Elixir/BEAM projects. `ai-rules` integrates with Nix to provide:
 
 - **Reproducible Dependencies**: Elixir, OTP, Erlang, Node.js versions pinned
 - **Local LLM Paths**: Configured paths to Ollama, LM Studio
@@ -115,18 +115,18 @@ A minimal flake.nix for Elixir development:
 
 ---
 
-## Integrating .ai_rules with Nix
+## Integrating ai-rules with Nix
 
 ### Step 1: Copy Template
 
-When initializing a project with `.ai_rules`, copy the Nix template:
+When initializing a project with `ai-rules`, copy the Nix template:
 
 ```bash
-# Copy from .ai_rules
-cp .ai_rules/configs/nix_flake_template.nix flake.nix
+# Copy from ai-rules
+cp ai-rules/configs/nix_flake_template.nix flake.nix
 
-# Or use .ai_rules/scripts/init_project.sh
-# This automatically copies the template
+# Or use ai-rules/scripts/init_project.sh
+bash ai-rules/scripts/init_project.sh my_app
 ```
 
 ### Step 2: Customize flake.nix
@@ -185,16 +185,16 @@ Modify the template for your project needs:
 }
 ```
 
-### Step 3: Add .ai_rules Integration
+### Step 3: Add ai-rules Integration
 
-Configure shell hook to integrate with `.ai_rules`:
+Configure shell hook to integrate with `ai-rules`:
 
 ```nix
 shellHook = ''
-  # Symlink to .ai_rules if not already linked
-  if [ ! -e ".ai_rules" ]; then
-    echo "🔗 Linking .ai_rules..."
-    ln -s ~/projects/2025/.ai_rules .ai_rules
+  # Symlink to ai-rules if not already linked
+  if [ ! -e "ai-rules" ]; then
+    echo "🔗 Linking ai-rules..."
+    ln -s $AI_RULES_PATH ai-rules
   fi
 
   # Set environment for OpenCode
@@ -204,14 +204,14 @@ shellHook = ''
   if command -v mgrep &> /dev/null; then
     echo "✅ mgrep available"
   else
-    echo "⚠️  mgrep not found - run .ai_rules/scripts/setup_opencode.sh"
+    echo "⚠️  mgrep not found - run ai-rules/scripts/setup_opencode.sh"
   fi
 
   # Set up Serena MCP
   export SERENA_PROJECT_PATH="${toString ./.serena}"
 
   # Add scripts to PATH
-  export PATH="${toString ./.ai_rules/scripts}:$PATH"
+  export PATH="${toString ./ai-rules/scripts}:$PATH"
 '';
 ```
 
@@ -508,11 +508,11 @@ ollama serve
 
 ## Using Existing flake.nix
 
-If you already have a custom flake.nix, integrate `.ai_rules` by:
+If you already have a custom flake.nix, integrate `ai-rules` by:
 
 ### Option 1: Add Inputs
 
-Add `.ai_rules` as an input to your flake.nix:
+Add `ai-rules` as an input to your flake.nix:
 
 ```nix
 {
@@ -546,7 +546,7 @@ Add `.ai_rules` as an input to your flake.nix:
 
 ### Option 2: Copy Configuration
 
-Copy relevant sections from `.ai_rules` template to your flake.nix:
+Copy relevant sections from `ai-rules` template to your flake.nix:
 
 - Build inputs for your project
 - Shell hooks for local LLMs

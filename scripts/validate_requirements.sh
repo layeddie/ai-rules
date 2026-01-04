@@ -1,5 +1,5 @@
 #!/bin/bash
-# .ai_rules/scripts/validate_requirements.sh
+# ai-rules/scripts/validate_requirements.sh
 # Validate project setup and requirements
 
 set -e
@@ -14,9 +14,9 @@ PROJECT_ROOT=$(pwd)
 
 echo -e "${GREEN}🔍 Validating project setup...${NC}"
 
-# Check for .ai_rules symlink
-if [ ! -e .ai_rules" ]; then
-    echo -e "${RED}❌ .ai_rules not found (should be symlinked)${NC}"
+# Check for ai-rules symlink
+if [ ! -e ai-rules" ]; then
+    echo -e "${RED}❌ ai-rules not found (should be symlinked)${NC}"
     exit 1
 fi
 

@@ -14,14 +14,14 @@ This document defines the Git workflow for OpenCode projects. All agents must fo
 
 ### Current Repositories
 
-- **.ai_rules**: https://github.com/layeddie/ai-rules (public)
+- **ai-rules**: https://github.com/layeddie/ai-rules (public)
 - **tensioner**: https://github.com/layeddie/tensioner (public)
 
 ### Repository Isolation
 
-- **.ai_rules** and **tensioner** are completely separate projects
-- No tensioner references should exist in .ai_rules repository
-- No .ai_rules references should exist in tensioner repository (except as symlink/submodule)
+- **ai-rules** and **tensioner** are completely separate projects
+- No tensioner references should exist in ai-rules repository
+- No ai-rules references should exist in tensioner repository (except as symlink/submodule)
 - Each repository has its own Git history and development workflow
 
 ---
@@ -157,8 +157,8 @@ gh pr merge --squash
 ### Commit Examples
 
 ```bash
-# Feature
-git commit -m "feat: add git specialist role to .ai_rules"
+# Example
+git commit -m "feat: add git specialist role to ai-rules"
 
 # Fix
 git commit -m "fix: resolve merge conflict in git_rules.md"
@@ -249,7 +249,7 @@ Describe how this was tested:
 
 ## Repository Specific Rules
 
-### .ai_rules Repository
+### ai-rules Repository
 
 **Purpose**: AI rules, roles, skills, and templates for Elixir/BEAM development
 
@@ -289,15 +289,15 @@ tensioner/
 ├── rootfs_overlay/     # Nerves filesystem overlay
 ├── mix.exs             # Mix configuration
 ├── README.md           # Project documentation
-└── .ai_rules/          # Symlink to ../.ai_rules (gitignored)
+└── ai-rules/           # Symlink to ../ai-rules (gitignored)
 ```
 
 **Rules**:
-- ✅ Symlink to .ai_rules (not submodule)
-- ✅ .ai_rules in .gitignore
+- ✅ Symlink to ai-rules (not submodule)
+- ✅ ai-rules in .gitignore
 - ✅ Clean git history
 - ✅ Follow Nerves project conventions
-- ❌ No .ai_rules files committed
+- ❌ No ai-rules files committed
 - ❌ No committing sensitive data
 
 ---
@@ -462,12 +462,12 @@ gh api repos/layeddie/<repo>/branches/main/protection \
 ### Adding Submodule
 
 ```bash
-# Add .ai_rules as submodule (optional)
-git submodule add https://github.com/layeddie/ai-rules.git .ai_rules
+# Add ai-rules as submodule (optional)
+git submodule add https://github.com/layeddie/ai-rules.git ai-rules
 
 # Commit submodule
 git add .gitmodules
-git commit -m "chore: add .ai_rules as submodule"
+git commit -m "chore: add ai-rules as submodule"
 ```
 
 ### Cloning with Submodules
@@ -486,11 +486,11 @@ git submodule update --init --recursive
 
 ```bash
 # Update submodule to latest
-git submodule update --remote .ai_rules
+git submodule update --remote ai-rules
 
 # Commit submodule update
-git add .ai_rules
-git commit -m "chore: update .ai_rules submodule"
+git add ai-rules
+git commit -m "chore: update ai-rules submodule"
 ```
 
 ---

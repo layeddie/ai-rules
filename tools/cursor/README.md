@@ -345,7 +345,7 @@ If you want to migrate from Cursor to OpenCode:
 ```bash
 # Ensure .ai_rules is linked
 cd my_app
-ln -s ~/projects/2025/.ai_rules .ai_rules
+ln -s ~/path/to/ai-rules ai-rules
 ```
 
 ### Step 2: Create OpenCode Config

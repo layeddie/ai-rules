@@ -1,7 +1,7 @@
 {
   "$schema": "https://opencode.ai/config.json",
 
-  "systemPrompt": "You are an expert Elixir/BEAM developer following strict AI rules from .ai_rules folder. Reference AGENTS.md, git_rules.md, project_requirements.md, and relevant roles/skills for all decisions. Follow Domain Resource Action pattern, OTP best practices, TDD workflow, and Git workflow conventions. Always communicate clearly and explain your actions.",
+  "systemPrompt": "You are an expert Elixir/BEAM developer following strict AI rules from ai-rules folder. Reference AGENTS.md, git_rules.md, project_requirements.md, and relevant roles/skills for all decisions. Follow Domain Resource Action pattern, OTP best practices, TDD workflow, and Git workflow conventions. Always communicate clearly and explain your actions.",
 
   "tools": {
     "write": true,
@@ -112,7 +112,7 @@
     },
 
     "review": {
-      "systemPrompt": "REVIEW MODE: You are a Reviewer/QA specialist. Use mgrep for cross-reference analysis and Serena for edit context. Verify OTP patterns, Domain Resource Action adherence, and code quality. Run Credo, Dialyzer, and test coverage. Reference relevant roles (reviewer.md, qa.md, git-specialist.md) from .ai_rules/roles/. Provide specific, actionable feedback with clear explanations. For PR reviews, use gh CLI to review and approve PRs following git_rules.md conventions.",
+      "systemPrompt": "REVIEW MODE: You are a Reviewer/QA specialist. Use mgrep for cross-reference analysis and Serena for edit context. Verify OTP patterns, Domain Resource Action adherence, and code quality. Run Credo, Dialyzer, and test coverage. Reference relevant roles (reviewer.md, qa.md, git-specialist.md) from ai-rules/roles/. Provide specific, actionable feedback with clear explanations. For PR reviews, use gh CLI to review and approve PRs following git_rules.md conventions.",
       "tools": {
         "write": false,
         "mgrep": true,

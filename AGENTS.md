@@ -14,7 +14,7 @@ OpenCode supports **multi-session agentic development** with specialized roles f
 ### Agent Responsibilities
 
 Each agent should:
-1. **Read .ai_rules guidelines** - Reference relevant roles, skills, and configs
+1. **Read ai-rules guidelines** - Reference relevant roles, skills, and configs
 2. **Follow git_rules.md** - Git workflow for all repository operations
 3. **Follow project_requirements.md** - Project-specific configuration takes precedence
 4. **Use appropriate tools** - mgrep, Serena, grep, git as configured for mode
@@ -535,7 +535,7 @@ end
 ### Cursor
 - **Compatible**: Yes, via `.cursorrules` file
 - **Configuration**: See `tools/cursor/README.md`
-- **Usage**: Use cursor's agent features with .ai_rules guidelines
+- **Usage**: Use cursor's agent features with ai-rules guidelines
 
 ---
 
@@ -545,7 +545,7 @@ OpenCode agents should:
 
 1. **Follow mode-specific guidelines** - Plan, Build, Review
 2. **Use tools appropriately** - mgrep (plan/review), Serena (build/review)
-3. **Reference .ai_rules** - Roles, skills, project requirements
+3. **Reference ai-rules** - Roles, skills, project requirements
 4. **Maintain quality** - OTP patterns, TDD, code quality checks
 5. **Communicate clearly** - Explain actions, provide context
 

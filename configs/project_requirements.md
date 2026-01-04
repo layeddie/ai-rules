@@ -12,9 +12,9 @@
 
 ## 1. Project Overview
 
-**Purpose**: Test project for validating `.ai_rules` repository with Elixir, Ash, Phoenix, and LiveView integration.
+**Purpose**: Test project for validating `ai-rules` repository with Elixir, Ash, Phoenix, and LiveView integration.
 
-**Target Users**: Developers testing `.ai_rules` repository for compatibility with OpenCode, mgrep, and Serena MCP.
+**Target Users**: Developers testing `ai-rules` repository for compatibility with OpenCode, mgrep, and Serena MCP.
 
 **Key Features**:
 - Domain Resource Action pattern with Ash framework
@@ -356,6 +356,44 @@ on:
 
 ```
 test_app/
+├── ai-rules/                       # Symlink to ai-rules repository
+├── .serena/                        # Serena MCP indexes
+├── .opencode/                      # OpenCode configurations
+├── .tidewave/                      # Tidewave MCP (disabled - sub-free)
+├── flake.nix                        # Nix flake
+├── mix.exs                         # Mix configuration
+├── config/
+│   ├── config.exs                 # Application config
+│   ├── dev.exs                  # Dev environment
+│   ├── runtime.exs              # Runtime config
+│   └── test.exs                  # Test config
+├── lib/
+│   └── [Test App]/
+│       ├── ash/
+│       │   ├── resources/
+│       │   │   └── api/
+│       │   │       │   └── user/
+│       │   │       │   └── actions/
+│       │   │       │   └── schemas/
+│       │   │       │   │   └── api/
+│       └── registry/
+│       │       │       │   │   └── domain.ex
+│       │       │       │   │   └── application.ex
+├── lib/test_app_web/
+│   ├── endpoint.ex
+│   ├── router.ex
+│   └── live/
+│       └── [Live Components]/
+├── priv/
+│   └── repo/
+├── test/
+│   └── [Test App]/
+│       └── accounts/
+│           └── dashboards/
+└── live/
+├── project_requirements.md  # This file
+```
+test_app/
 ├── .ai_rules/                      # Symlink to .ai_rules repository
 ├── .serena/                       # Serena MCP indexes
 ├── .opencode/                     # OpenCode configurations
@@ -399,7 +437,7 @@ test_app/
 
 ## 12. Acceptance Criteria
 
-- [ ] Project initialized with .ai_rules and all required directories created
+- [ ] Project initialized with ai-rules and all required directories created
 - [ ] project_requirements.md configured with Elixir, Ash, Phoenix, LiveView
 - [ ] LLM configuration defined for plan/build/review modes
 - [ ] Tool configuration complete (mgrep + Serena per phase)

@@ -240,7 +240,7 @@ claude-code
 **Add .ai_rules Path**:
 ```json
 {
-  "aiRulesPath": "~/projects/2025/.ai_rules"
+  "aiRulesPath": "~/path/to/ai-rules"
 }
 ```
 

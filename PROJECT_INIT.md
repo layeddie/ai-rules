@@ -1,6 +1,6 @@
 # Project Initialization Guide
 
-This guide walks through starting a new Elixir/BEAM project with `.ai_rules` standards using OpenCode multi-session workflow.
+This guide walks through starting a new Elixir/BEAM project with `ai-rules` standards using OpenCode multi-session workflow.
 
 ---
 
@@ -123,16 +123,16 @@ ollama serve
 
 ```bash
 # Navigate to your projects directory
-cd ~/projects/2025
+cd <your-projects-directory>
 
-# Create new project with .ai_rules
-bash .ai_rules/scripts/init_project.sh my_app
+# Create new project with ai-rules
+bash ai-rules/scripts/init_project.sh my_app
 ```
 
 **What This Does**:
 1. Creates project directory: `my_app/`
 2. Initializes git repository
-3. Creates symlink to `.ai_rules` (from `~/projects/2025/.ai_rules`)
+3. Creates symlink to `ai-rules`
 4. Copies `project_requirements.md` template
 5. Creates `.opencode/` directory with configurations
 6. Creates basic file structure
@@ -148,10 +148,10 @@ bash .ai_rules/scripts/init_project.sh my_app
 # - nerves
 
 # Example: Use Phoenix basic template
-bash .ai_rules/scripts/init_project.sh my_app ~/projects/2025/.ai_rules phoenix-basic
+bash ai-rules/scripts/init_project.sh my_app ~/path/to/ai-rules phoenix-basic
 
 # Example: No template (minimal structure)
-bash .ai_rules/scripts/init_project.sh my_app ~/projects/2025/.ai_rules none
+bash ai-rules/scripts/init_project.sh my_app ~/path/to/ai-rules none
 ```
 
 ### Step 2: Configure Project Requirements
@@ -210,8 +210,8 @@ See `configs/project_requirements.md` template for full structure.
 # If you have a custom flake.nix, copy it to project
 cp ~/path/to/your/flake.nix .
 
-# Otherwise, use .ai_rules template
-cp .ai_rules/configs/nix_flake_template.nix flake.nix
+# Otherwise, use ai-rules template
+cp ai-rules/configs/nix_flake_template.nix flake.nix
 
 # Enter Nix development shell
 nix develop
@@ -239,7 +239,7 @@ cd assets && npm install && cd ..
 
 ### Overview
 
-`.ai_rules` supports **multi-session development** with separate OpenCode sessions for:
+`ai-rules` supports **multi-session development** with separate OpenCode sessions for:
 1. **Plan Session** - Architecture and design
 2. **Build Session** - Implementation and coding
 3. **Review Session** - Quality assurance (optional)
@@ -446,7 +446,7 @@ git commit -m "feat: implement user registration
 - All tests passing, coverage 85%"
 ```
 
-### TDD Workflow with .ai_rules
+### TDD Workflow with ai-rules
 
 #### Step 1: Red - Write Failing Test
 ```bash
@@ -724,7 +724,7 @@ git diff HEAD~1 HEAD  # See what changed
 
 ### After Project Initialization
 
-1. ✅ **Review .ai_rules Documentation**
+1. ✅ **Review ai-rules Documentation**
    - Read `README.md` for overview
    - Read `AGENTS.md` for agent guidelines
    - Review relevant roles and skills
@@ -792,7 +792,7 @@ git diff HEAD~1 HEAD  # See what changed
 
 ## Additional Resources
 
-### .ai_rules Documentation
+### ai-rules Documentation
 - **README.md**: Repository overview
 - **AGENTS.md**: Agent guidelines
 - **tools/opencode/README.md**: OpenCode integration
@@ -812,10 +812,9 @@ git diff HEAD~1 HEAD  # See what changed
 ### Community Support
 - **OpenCode Discord**: https://opencode.ai/discord
 - **Elixir Forum**: https://elixirforum.com
-- **GitHub Issues**: https://github.com/layeddie/.ai_rules/issues
-
+- **GitHub Issues**: https://github.com/layeddie/ai-rules/issues
 ---
 
-**Happy coding with .ai_rules! 🎉**
+**Happy coding with ai-rules! 🎉**
 
-For questions or issues, refer to this guide or check relevant documentation in `.ai_rules/` folder.
+For questions or issues, refer to this guide or check relevant documentation in `ai-rules/` folder.

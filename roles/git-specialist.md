@@ -102,7 +102,7 @@ Use **Conventional Commits** format:
 
 **Examples**:
 ```bash
-git commit -m "feat: add git specialist role to .ai_rules"
+git commit -m "feat: add git specialist role to ai-rules"
 git commit -m "fix: resolve merge conflict in git_rules.md"
 git commit -m "docs: update README with git workflow section"
 git commit -m "refactor: move tensioner to separate repository"
@@ -287,27 +287,22 @@ gh api repos/layeddie/<repo>/branches/main/protection \
 
 ### Adding Submodule
 ```bash
-# Add .ai_rules as submodule to project
-git submodule add https://github.com/layeddie/ai-rules.git .ai_rules
-git commit -m "chore: add .ai_rules as submodule"
-
-# Clone with submodules
-git clone --recurse-submodules https://github.com/layeddie/tensioner.git
+# Add ai-rules as submodule to project
+git submodule add https://github.com/layeddie/ai-rules.git ai-rules
+git commit -m "chore: add ai-rules as submodule"
 
 # Update submodule to latest
-git submodule update --remote .ai_rules
-git add .ai_rules
-git commit -m "chore: update .ai_rules submodule"
+git submodule update --remote ai-rules
+git add ai-rules
+git commit -m "chore: update ai-rules submodule"
 ```
 
 ### Symbolic Links (for Development)
 ```bash
 # Use symbolic links for local development
-ln -s ~/projects/2026/.ai_rules .ai_rules
-
-# Add to .gitignore
-echo ".ai_rules" >> .gitignore
-git commit -m "chore: ignore .ai_rules symbolic link"
+ln -s ~/path/to/ai-rules ai-rules
+echo "ai-rules" >> .gitignore
+git commit -m "chore: ignore ai-rules symbolic link"
 ```
 
 ## Integration with OpenCode

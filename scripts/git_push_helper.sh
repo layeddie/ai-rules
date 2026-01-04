@@ -1,16 +1,19 @@
 #!/bin/bash
-
-# Git Push Helper for .ai_rules Repository
-# Helps resolve SSL/TLS issues when pushing to GitHub
+# Git Push Helper for ai-rules Repository
 
 set -e
 
-echo "=== Git Push Helper for .ai_rules ==="
-echo ""
+# Color codes
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
 
-# Check if we're in the right directory
-if [ ! -f "git_rules.md" ]; then
-    echo "Error: Must be run from .ai_rules directory"
+echo "=== Git Push Helper for ai-rules ==="
+
+# Check if we're in the correct directory
+if [ ! -f "README.md" ] || [ ! -f "AGENTS.md" ]; then
+    echo -e "${RED}Error: Must be run from ai-rules directory${NC}"
     exit 1
 fi
 
