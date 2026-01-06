@@ -20,12 +20,13 @@ TEMPLATE=${3:-"phoenix-ash-liveview"}
 if [ -z "$PROJECT_NAME" ]; then
     echo -e "${RED}Usage: $0 <project-name> [ai_rules_path] [template]${NC}"
     echo ""
-    echo "Available templates:"
-    echo "  - phoenix-ash-liveview (default)"
-    echo "  - phoenix-basic"
-    echo "  - elixir-library"
-    echo "  - nerves"
-    exit 1
+ echo "Available templates:"
+     echo "  - phoenix-ash-liveview (default) - Phoenix + Ash web application"
+     echo "  - phoenix-basic - Basic Phoenix application"
+     echo "  - elixir-library - Elixir library"
+     echo "  - nerves - Nerves embedded systems"
+     echo "  - universal - Universal Elixir development"
+     exit 1
 fi
 
 echo -e "${GREEN}🚀 Initializing Elixir project: $PROJECT_NAME${NC}"
@@ -86,11 +87,34 @@ if [ "$TEMPLATE" != "none" ]; then
     fi
 fi
 
-# 7. Create basic file structure
+# 7. Copy appropriate flake.nix based on template
+echo -e "${GREEN}📦 Copying Nix flake...${NC}"
+case "$TEMPLATE" in
+  "nerves")
+    cp ai-rules/configs/nix_flake_nerves.nix flake.nix
+    echo -e "${GREEN}   Using Nerves flake template${NC}"
+    ;;
+  "universal")
+    cp ai-rules/configs/nix_flake_universal.nix flake.nix
+    echo -e "${GREEN}   Using Universal flake template${NC}"
+    ;;
+  "phoenix-basic"|"elixir-library")
+    # For these templates, use universal
+    cp ai-rules/configs/nix_flake_universal.nix flake.nix
+    echo -e "${GREEN}   Using Universal flake template${NC}"
+    ;;
+  "phoenix-ash-liveview"|*)
+    # Default template uses Phoenix + Ash
+    cp ai-rules/configs/nix_flake_phoenix_ash.nix flake.nix
+    echo -e "${GREEN}   Using Phoenix + Ash flake template${NC}"
+    ;;
+esac
+
+# 8. Create basic file structure
 echo -e "${GREEN}📁 Creating file structure...${NC}"
 mkdir -p {lib,test,config,priv}
 
-# 8. Create .gitignore
+# 9. Create .gitignore
 echo -e "${GREEN}📝 Creating .gitignore...${NC}"
 cat > .gitignore << 'EOF'
 # AI rules (symlinked)
@@ -121,7 +145,7 @@ erl_crash.dump
 
 EOF
 
-# 9. Create initial mix.exs if not from template
+# 10. Create initial mix.exs if not from template
 if [ ! -f mix.exs ]; then
     echo -e "${GREEN}📦 Creating basic mix.exs...${NC}"
     cat > mix.exs << 'EOF'
@@ -167,7 +191,7 @@ end
 EOF
 fi
 
-# 10. Initial git commit
+# 11. Initial git commit
 echo -e "${GREEN}💾 Creating initial git commit...${NC}"
 git add .
 git commit -m "chore: initialize project with ai-rules
@@ -184,7 +208,13 @@ echo ""
 echo -e "${GREEN}✅ Project initialized successfully!${NC}"
 echo ""
 echo -e "${YELLOW}📋 Next steps:${NC}"
-echo "  1. Edit project_requirements.md with your requirements"
+echo "  1. Enter Nix development environment:"
+echo "     nix develop"
+echo ""
+echo "  2. Install Elixir dependencies:"
+echo "     mix deps.get"
+echo ""
+echo "  3. Edit project_requirements.md with your requirements"
 echo "     vim project_requirements.md"
 echo ""
 echo "  2. Start plan session (Terminal 1):"

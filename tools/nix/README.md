@@ -57,6 +57,113 @@ nix profile install nixpkgs#direnv
 
 ---
 
+## Nix Flake Templates
+
+### Available Templates
+
+`ai-rules` provides **three production-ready flake.nix templates** for different Elixir use cases:
+
+| Template | Use Case | Description |
+|----------|-----------|-------------|
+| **`nix_flake_universal.nix`** | General Elixir Development | Elixir, Phoenix, LiveView, Ash, Livebook, PostgreSQL |
+| **`nix_flake_phoenix_ash.nix`** | Phoenix + Ash Web Apps | Optimized for Phoenix LiveView with Ash framework |
+| **`nix_flake_nerves.nix`** | Embedded Systems | Firmware development with Nerves framework |
+
+### Quick Start
+
+Choose and copy the appropriate template for your project:
+
+```bash
+# Universal template (all Elixir projects)
+cp ai-rules/configs/nix_flake_universal.nix flake.nix
+
+# Phoenix + Ash template (web applications)
+cp ai-rules/configs/nix_flake_phoenix_ash.nix flake.nix
+
+# Nerves template (embedded systems)
+cp ai-rules/configs/nix_flake_nerves.nix flake.nix
+
+# Or use init_project.sh (automatically selects appropriate template)
+bash ai-rules/scripts/init_project.sh my_app phoenix-ash
+```
+
+### Template Details
+
+#### Universal Template (`nix_flake_universal.nix`)
+
+**Use for**: Any Elixir project including Phoenix, LiveView, Ash, Livebook
+
+**Dependencies**:
+- Elixir 1.17 + Erlang 27
+- PostgreSQL 16 (server + client)
+- Node.js 20 (Phoenix assets)
+- Git, pkg-config, openssl
+- File watchers (fswatch on macOS, inotify on Linux)
+
+**Includes**:
+- Ash and Livebook support (via Mix)
+- PostgreSQL server for local development
+- LiveView hot reload helpers
+- Platform-specific dependencies
+
+**Start shell**:
+```bash
+nix develop
+# Then:
+mix phx.server    # Phoenix
+mix livebook      # Livebook
+```
+
+#### Phoenix + Ash Template (`nix_flake_phoenix_ash.nix`)
+
+**Use for**: Web applications using Phoenix LiveView with Ash framework
+
+**Dependencies**: All from Universal template, plus:
+
+**Additional features**:
+- Ash formatter configuration notes
+- Phoenix LiveView file watching optimizations
+- Ash-specific environment variables
+- Ash resource generation helpers
+
+**Start shell**:
+```bash
+nix develop
+# Then:
+mix ash.gen.resource    # Generate Ash resource
+mix phx.gen.resource  # Generate Phoenix resource
+mix phx.server        # Start Phoenix
+```
+
+#### Nerves Template (`nix_flake_nerves.nix`)
+
+**Use for**: Embedded systems and firmware development with Nerves
+
+**Dependencies**:
+- Elixir 1.17 + Erlang 27
+- `fwup` - Firmware update utility
+- `squashfsTools` - Firmware image creation
+- `autoconf`, `automake` - Native NIF compilation
+- `x11_ssh_askpass` - Firmware burning password helper
+- PostgreSQL 16 (for testing)
+
+**Includes**:
+- Firmware building and burning support
+- Cross-compilation target support (rpi3, rpi4, bbb, etc.)
+- Nerves-specific shell hooks
+- Platform-specific frameworks (CoreFoundation/CoreServices on macOS)
+
+**Start shell**:
+```bash
+nix develop
+# Then:
+mix firmware         # Build firmware
+mix firmware.burn   # Flash to SD card
+export MIX_TARGET=rpi3  # Cross-compile for Raspberry Pi 3
+```
+
+---
+
 ## Nix Configuration
 
 ### Basic flake.nix Structure
@@ -119,14 +226,20 @@ A minimal flake.nix for Elixir development:
 
 ### Step 1: Copy Template
 
-When initializing a project with `ai-rules`, copy the Nix template:
+When initializing a project with `ai-rules`, copy appropriate Nix template:
 
 ```bash
-# Copy from ai-rules
-cp ai-rules/configs/nix_flake_template.nix flake.nix
+# Universal template (recommended for most projects)
+cp ai-rules/configs/nix_flake_universal.nix flake.nix
 
-# Or use ai-rules/scripts/init_project.sh
-bash ai-rules/scripts/init_project.sh my_app
+# Phoenix + Ash template (web applications)
+cp ai-rules/configs/nix_flake_phoenix_ash.nix flake.nix
+
+# Nerves template (embedded systems)
+cp ai-rules/configs/nix_flake_nerves.nix flake.nix
+
+# Or use ai-rules/scripts/init_project.sh with template selection
+bash ai-rules/scripts/init_project.sh my_app phoenix-ash
 ```
 
 ### Step 2: Customize flake.nix
@@ -594,7 +707,9 @@ Nix integration with `.ai_rules` provides:
 ✅ **.ai_rules Integration**: Scripts and configs available in PATH
 
 **For detailed configuration**, see:
-- `configs/nix_flake_template.nix` - Complete Nix template
+- `configs/nix_flake_universal.nix` - Universal Elixir template
+- `configs/nix_flake_phoenix_ash.nix` - Phoenix + Ash template
+- `configs/nix_flake_nerves.nix` - Nerves embedded systems template
 - `configs/mlx_gpu_config.yml` - MLX GPU settings
 - `PROJECT_INIT.md` - Overall project initialization
 

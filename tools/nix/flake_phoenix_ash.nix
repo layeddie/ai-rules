@@ -1,0 +1,1 @@
+../configs/nix_flake_phoenix_ash.nix
