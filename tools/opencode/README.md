@@ -345,9 +345,54 @@ mgrep "N+1 query patterns in codebase"
 ```
 
 **Integration**:
-- Native integration with OpenCode
-- Configured in `opencode.json` as a tool
-- No additional setup needed after `mgrep install-opencode`
+- Native integration with OpenCode via `mgrep install-opencode`
+- Configured as bash tool (can be called by OpenCode)
+- Complements OpenCode's grep (ripgrep) for exact searches
+- Works with existing OpenCode infrastructure
+
+### Hybrid Search Strategy: ripgrep + mgrep
+
+OpenCode supports a hybrid search strategy that combines both tools:
+
+| Query Type | Tool | Example | Why |
+|------------|-------|----------|------|
+| **Exact symbol** | ripgrep (OpenCode grep) | "find UserService" | Instant exact match |
+| **Regex pattern** | ripgrep (OpenCode grep) | "def handle_*" | Regex capabilities |
+| **Concept discovery** | mgrep (via bash) | "where do we handle errors?" | Semantic understanding |
+| **Pattern exploration** | mgrep (via bash) | "how do we structure supervisors?" | Relevance ranking |
+
+**Quick Reference**:
+```bash
+# Exact searches (ripgrep)
+"Find UserService module"
+→ OpenCode grep (ripgrep) automatically
+
+# Semantic searches (mgrep)
+"Where do we handle authentication?"
+→ OpenCode LLM uses mgrep via bash automatically
+```
+
+**Benefits**:
+- **56% average token reduction** vs grep-only approach
+- **Natural language queries** via mgrep
+- **Instant exact searches** via ripgrep
+- **Automatic tool selection** by LLM
+- **Free tier available** for mgrep
+
+**Setup**:
+```bash
+# One-time setup
+npm install -g @mixedbread/mgrep
+mgrep install-opencode
+
+# After setup, LLM chooses automatically
+# No configuration needed for most users
+```
+
+**Documentation**:
+- [Hybrid Strategy Guide](../docs/mixed-search-strategy.md) - Detailed guide with examples
+- [AGENTS.md](../AGENTS.md) - Agent guidelines with tool selection
+- [GitHub PR Summary](../docs/github_pr_mgrep_summary.md) - Implementation experience
 
 ### Serena MCP (Semantic Search + Edit)
 

@@ -1,0 +1,16 @@
+# mgrep configuration for ai-rules (Free Tier)
+# https://www.mixedbread.com/pricing - Start free, upgrade when needed
+
+# Maximum file size to index (5MB - free tier limit)
+maxFileSize: 5242880
+
+# Maximum number of files to upload (conservative for free tier)
+maxFileCount: 5000
+
+# Store name - unique per project
+store: "ai-rules-elixir"
+
+# Free tier optimizations
+# - Use standard quality (not high quality) to save tokens
+# - Enable auto-rerank for better results
+# - Limit initial sync to essential files first

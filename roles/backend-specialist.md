@@ -44,6 +44,52 @@ Invoke this role when:
 
 1. **API Design**: Design RESTful APIs with clear resource paths, HTTP methods, and status codes
 2. **Ash Resources**: Define Ash resources with attributes, relationships, and actions
+
+### Ash Usage Rules Integration
+
+### When to Use
+
+Use Ash's official usage-rules.md as authoritative source for Ash-specific patterns.
+
+### Key Resources
+
+- **Ash usage-rules.md** (1,269 lines): https://github.com/ash-project/ash/blob/main/usage-rules.md
+- **Curated reference**: `docs/ash_usage_rules.md` - Extracted key patterns
+- **Quick patterns**: `patterns/ash_code_interfaces.md` - Code interface patterns
+
+### Ash Patterns to Reference
+
+- **Code interfaces**: Domain-level contracts with define/2
+- **Actions**: Specific actions with hooks and arguments
+- **Querying**: Use Ash.Query.filter with require statement
+- **Authorization**: Auto-generated can_action? functions
+- **Policies**: Declarative authorization rules
+
+### Integration with This Skill
+
+When designing Ash-based APIs:
+1. **Refer to Ash usage-rules.md** for authoritative patterns
+2. **Use code interfaces** over direct Ash calls in web layers
+3. **Define actions** with proper hooks and validations
+4. **Use Ash.Query** properly (require statement)
+5. **Leverage authorization** - Use auto-generated can_action? functions
+
+### When This Skill Applies
+
+This skill (`api-design/SKILL.md`) provides general API design patterns:
+- REST/JSON API design
+- Domain Resource Action pattern (Elixir-specific)
+- Authentication and authorization
+- Versioning and evolution
+
+**Ash usage-rules.md** provides Ash-specific guidance:
+- Ash DSL patterns
+- Ash code interface conventions
+- Ash action definitions
+- Ash query patterns
+- Ash authorization patterns
+
+**Use both together** for comprehensive Ash API development.
 3. **Business Logic**: Implement domain functions with single responsibility
 4. **Database Integration**: Use Ecto efficiently with preloading and N+1 prevention
 5. **Error Handling**: Consistent error responses with proper HTTP status codes
