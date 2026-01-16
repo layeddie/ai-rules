@@ -1,8 +1,10 @@
 # MCP Comparison: Serena vs Tidewave vs Hermes
 
 **Status**: ✅ Complete (All user requirements addressed)
-**Date**: January 2, 2026
-**Purpose**: Guide for choosing between three MCP tools for Elixir development
+**Date**: January 16, 2026
+**Purpose**: Comprehensive guide for Elixir/BEAM MCP tools and AI integration
+
+**Note**: Arcana has been removed from ai-rules (domain mismatch: data science vs Elixir development). See migration guide for details.
 
 ---
 
@@ -13,6 +15,9 @@
 | **Serena** | Semantic search, multi-file refactor | ✅ **MIT (Free)** | ⚠️ Medium | ⚠️ Universal | ⚠️ Works via MCP | ⚠️ No |
 | **Tidewave** | Runtime intelligence, database/logs access | ⚠️ Subscription ($10-12/mo) | ⚠️ High | ✅ **Phoenix native** | ✅ **Yes** | ⚠️ No |
 | **Hermes** | Elixir-native MCP SDK | ✅ **MIT (Free)** | ✅ **High** | ✅ **Native** | ✅ **Yes** | ✅ **Yes** |
+| **Anubis MCP** | Elixir-native MCP SDK | ⚠️ **LGPL v3** | ✅ **High** | ✅ **Native** | ✅ **Yes** | ✅ **Yes** |
+| **Codicil** | Elixir-native semantic search | ✅ **MIT (Free)** | ✅ **High** | ✅ **Native** | ✅ **Yes** | ✅ **Yes** |
+| **Probe** | AST-aware code search (backup) | ✅ **Apache 2.0** | ⚠️ Medium | ❌ **Node.js** | ⚠️ Works via MCP | ⚠️ No |
 
 ---
 
