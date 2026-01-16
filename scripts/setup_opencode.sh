@@ -61,6 +61,13 @@ else
     echo "  - uvx command available: uvx --from"
 fi
 
+# Optional: New Elixir-native tools (requires ai-rules project)
+if [ -f "ai-rules/scripts/setup_new_tools.sh" ]; then
+    echo ""
+    echo -e "${YELLOW}📦 Setting up new Elixir-native tools...${NC}"
+    bash ai-rules/scripts/setup_new_tools.sh
+fi
+
 # Summary
 echo ""
 echo -e "${GREEN}✅ OpenCode environment setup complete!${NC}"
@@ -71,14 +78,26 @@ echo "  - mgrep: $(command -v mgrep 2>&1 || echo 'not found')"
 echo "  - uv: $(uv --version)"
 echo "  - Serena MCP: Available (via uvx)"
 echo ""
+if [ -f "ai-rules/scripts/setup_new_tools.sh" ]; then
+    echo -e "${YELLOW}📋 New Elixir-native tools (see above):${NC}"
+    echo "  - anubis_mcp: Elixir MCP SDK"
+    echo "  - jido_ai: Agent framework + LLM integration"
+    echo "  - swarm_ex: Agent orchestration"
+    echo "  - codicil: Elixir-native semantic search"
+    echo "  - probe: AST-aware code search (backup)"
+fi
+echo ""
 echo -e "${YELLOW}📋 Next steps:${NC}"
-echo "   1. Initialize project:"
-echo "     bash ai-rules/scripts/init_project.sh my_app"
+echo "  1. Initialize project:"
+echo "      bash ai-rules/scripts/init_project.sh my_app"
 echo ""
 echo "  2. Configure project:"
-echo "     vim project_requirements.md"
+echo "      vim project_requirements.md"
 echo ""
-echo "  3. Start plan session:"
-echo "     opencode --config .opencode/opencode.plan.json"
+echo "  3. Validate new tools:"
+echo "      bash ai-rules/scripts/validate_new_tools.sh"
+echo ""
+echo "  4. Start plan session:"
+echo "      opencode --config .opencode/opencode.plan.json"
 echo ""
 echo -e "${GREEN}🎉 Happy coding with ai-rules! 🎉${NC}"
