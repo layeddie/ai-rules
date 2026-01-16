@@ -1,0 +1,60 @@
+defmodule [PROJECT_NAME].MixProject do
+  use Mix.Project
+
+  def project do
+    [
+      app: :[PROJECT_NAME],
+      version: "0.1.0",
+      elixir: "~> 1.17",
+      start_permanent: Mix.env() == :prod,
+      deps_path: "../../deps",
+      lockfile: "../../mix.lock",
+      elixirc_paths: elixirc_paths(Mix.env()),
+      compilers: [:gettext] ++ Mix.compilers(),
+      build_embedded: "lib/[PROJECT_NAME]_web",
+      start_permanent: Mix.env() == :prod,
+      deps: deps(),
+      aliases: aliases(),
+      preferred_cli_env: ["sh"]
+    ]
+  end
+
+  def application do
+    [
+      mod: {[PROJECT_NAME].Application, []},
+      extra_applications: [:logger]
+    ]
+  end
+
+  defp deps do
+    [
+      # Core Phoenix dependencies
+      {:phoenix, "~> 1.7.14"},
+      {:phoenix_ecto, "~> 4.5"},
+      {:phoenix_live_view, "~> 1.0.0"},
+      {:phoenix_html, "~> 3.3"},
+      {:ecto_sql, "~> 3.11"},
+      {:postgrex, "~> 0.17"},
+      {:jason, "~> 1.4"},
+      {:credo, "~> 1.7"},
+
+      # Ash Framework
+      {:ash, "~> 3.4", github: "ash-project/ash-core", override: true},
+      {:ash_phoenix, "~> 3.0"},
+      {:ash_authentication, "~> 4.0", github: "ash-auth-phoenix"},
+      {:ash_postgres, "~> 2.0"},
+      {:ash_json_api, "~> 1.4"},
+
+      # Elixir/BEAM native tools
+      {:anubis_mcp, "~> 0.17.0"},
+      {:jido_ai, "~> 0.5.3"},
+      {:swarm_ex, "~> 0.2.0"},
+      {:codicil, "~> 0.7", only: [:dev, :test]},
+
+      # Additional dependencies
+      {:bcrypt_elixir, "~> 3.0"},
+      {:comeonin, "~> 0.18"},
+      {:ex_machina, "~> 0.8"}
+    ]
+  end
+end

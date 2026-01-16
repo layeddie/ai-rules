@@ -1,0 +1,107 @@
+import Config
+
+# Phoenix Endpoint configuration
+config :[PROJECT_NAME], [PROJECT_NAME]Web.Endpoint,
+  pubsub_server_name: [PROJECT_NAME].PubSub,
+  live_view: [signing_salt: "Jl/1W7FJv8M2sF7S+J7Jd8l8Q7R5l3gK3cX8q7F4m3g="]
+
+# Ecto database configuration
+config :[PROJECT_NAME], :ecto,
+  repo: [PROJECT_NAME].Repo,
+  adapter: Ecto.Adapters.Postgres,
+  pool_size: 10,
+  ssl: true,
+  database_url: System.get_env("DATABASE_URL"),
+  stacktrace: true,
+  log: true,
+  migration_timestamps: [utc_datetime: true]
+
+# Configure Ash framework
+config :ash,
+  api_policies?: true,
+  show_key?: false,
+  actor_persistence?: true
+
+# Configure Phoenix LiveView
+config :phoenix_live_view,
+  signing_salt: System.get_env("LIVE_VIEW_SIGNING_SALT"),
+  live_reload_on_build_errors: true
+
+# Configure Ash Phoenix integration
+config :ash_phoenix,
+  show_key?: false,
+  actor_persistence?: true
+
+# Configure Credo (code quality)
+config :credo,
+  strict: true
+
+# ========================================
+# Elixir-Native AI Tools Configuration
+# ========================================
+
+# Codicil: Elixir-native semantic search
+if Code.ensure_loaded?(Codicil) do
+  config :codicil,
+    llm_provider: System.get_env("CODICIL_LLM_PROVIDER", "openai"),
+    openai_api_key: System.get_env("OPENAI_API_KEY"),
+    anthropic_api_key: System.get_env("ANTHROPIC_API_KEY"),
+    database: System.get_env("CODICIL_DATABASE", "local_sqlite")
+end
+
+# Jido AI: Agent framework + LLM integration
+config :jido_ai,
+  providers: %{
+    anthropic: [
+      api_key: System.get_env("ANTHROPIC_API_KEY"),
+      models: [
+        claude_3_5_sonnet: "claude-3-5-sonnet-20241022",
+        claude_3_opus: "claude-3-opus-20240219"
+      ]
+    ],
+    openai: [
+      api_key: System.get_env("OPENAI_API_KEY"),
+      models: [
+        gpt_4o: "gpt-4o",
+        gpt_4_turbo: "gpt-4-turbo"
+      ]
+    ],
+    google: [
+      api_key: System.get_env("GOOGLE_API_KEY"),
+      models: [
+        gemini_1_5_pro: "gemini-1.5-pro",
+        gemini_1_5_flash: "gemini-1.5-flash"
+      ]
+    ],
+    local: [
+      base_url: System.get_env("LOCAL_LLM_URL", "http://localhost:11434"),
+      models: [
+        llama3: "llama3"
+      ]
+    ]
+  },
+  default_provider: System.get_env("JIDO_DEFAULT_PROVIDER", "anthropic")
+
+# Swarm Ex: Agent orchestration
+config :swarm_ex,
+  telemetry_enabled: true,
+  telemetry_prefix: "[PROJECT_NAME].swarm_ex"
+
+# Anubis MCP: Elixir MCP SDK
+if Code.ensure_loaded?(Anubis.Server) do
+  config :anubis_mcp,
+    transport: :streamable_http,
+    server_name: "[PROJECT_NAME]MCP"
+end
+
+# ========================================
+# Logger configuration
+# ========================================
+
+config :[PROJECT_NAME], :logger, level: :info
+
+# ========================================
+# Environment-Specific Configuration
+# ========================================
+
+import_config "#{config_env()}.exs"
