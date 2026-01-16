@@ -15,11 +15,16 @@ errors=0
 
 # Check Elixir version
 elixir_version=$(elixir --version | grep -oE '[0-9.]+(\.[0-9]+)+')
-if [[ $(echo "$elixir_version < 1.17.0" | bc -l 2>/dev/null) -eq 1 ]]; then
-    echo -e "${RED}❌ Elixir version must be >= 1.17.0 (found: $elixir_version)${NC}"
-    ((errors++))
+
+if [ -z "$elixir_version" ]; then
+    echo -e "${YELLOW}⚠️  Could not determine Elixir version${NC}"
 else
-    echo -e "${GREEN}✅ Elixir version: $elixir_version${NC}"
+    if [[ $(echo "$elixir_version < 1.17.0" | bc -l 2>/dev/null) -eq 1 ]]; then
+        echo -e "${RED}❌ Elixir version must be >= 1.17.0 (found: $elixir_version)${NC}"
+        ((errors++))
+    else
+        echo -e "${GREEN}✅ Elixir version: $elixir_version${NC}"
+    fi
 fi
 
 # Check Node.js version (for Probe)
