@@ -37,7 +37,12 @@ Each agent should:
 - ✅ **websearch**: External best practices and documentation
 - ✅ **Hybrid mode**: LLM chooses best tool automatically
 - ❌ **write**: Disabled - Read-only planning
-- ❌ **serena_***: Disabled - No editing needed
+- ❌ **serena_*****: Disabled - No editing needed
+- ✅ **anubis_mcp**: Elixir MCP SDK (Phoenix integration, custom servers)
+- ✅ **jido_ai**: Agent framework + LLM integration (57+ providers, advanced reasoning)
+- ✅ **swarm_ex**: Agent orchestration (lightweight, testable, telemetry)
+- ✅ **codicil**: Elixir-native semantic search (compiler-level analysis, multi-LLM)
+- ⚠️ **probe**: AST-aware code search (backup, Node.js-based, multi-language)
 
 **Model Selection**:
 - **Primary**: Claude 3.5 Sonnet (API) - Strong architectural reasoning
