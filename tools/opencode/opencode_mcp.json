@@ -3,33 +3,65 @@
 
   "mcp": {
     "serena": {
-      "type": "local",
-      "command": ["uvx", "--from", "git+https://github.com/oraios/serena", "serena", "start-mcp-server"],
       "enabled": true,
-      "environment": {
-        "SERENA_PROJECT_PATH": "{project_root}/.serena",
-        "SERENA_READ_ONLY": "{read_only_setting}"
-      },
-      "use_for": "semantic_search, multi_file_refactor, ast_aware_editing"
+      "use_for": "semantic_search, multi_file_refactor, ast_aware_editing",
+      "read_only": false
     },
     "tidewave_runtime_intelligence": {
-      "type": "local",
-      "command": ["uvx", "--from", "git+https://github.com/tidewave-ai/tidewave_phoenix", "mcp"],
-      "enabled": true,
-      "environment": {
-        "TIDEWAVE_READ_ONLY": "true"
-      },
-      "use_for": "database_access, logs_access, docs_access, runtime_introspection, project_eval"
+      "enabled": false,
+      "note": "Pro subscription required for optimal experience"
     },
-    "hermes_custom": {
-      "type": "local",
-      "command": ["mix", "run", "-e", "MyApp.MCPServer.start_link()"],
+    "anubis_mcp": {
       "enabled": true,
+      "command": ["mix", "run", "-e", "MyApp.MCPServer.start_link()"],
+      "use_for": "elixir_mcp_sdk, phoenix_integration, custom_mcp_servers",
       "environment": {
-        "MIX_ENV": "dev"
+        "SERENA_READ_ONLY": "{read_only_setting}",
+        "ANUBIS_TRANSPORT": "streamable_http"
+      }
+    },
+    "jido_ai": {
+      "enabled": true,
+      "use_for": "agent_orchestration, advanced_reasoning, multi_provider_llm, stateful_conversations",
+      "environment": {
+        "ANTHROPIC_API_KEY": "api_key_placeholder",
+        "OPENAI_API_KEY": "api_key_placeholder"
+        "GOOGLE_API_KEY": "api_key_placeholder",
+        "LOCAL_LLM_PROVIDER": "ollama"
+      }
+    },
+    "swarm_ex": {
+      "enabled": true,
+      "use_for": "lightweight_agent_orchestration, testable_design, telemetry",
+      "environment": {
+        "SWARM_ENV": "dev"
+      }
+    },
+    "codicil": {
+      "enabled": true,
+      "use_for": "elixir_semantic_search, dependency_analysis, code_understanding, compiler_level_indexing",
+      "environment": {
+        "CODICIL_LLM_PROVIDER": "openai",
+        "OPENAI_API_KEY": "api_key_placeholder"
+        "CODICIL_DATABASE": "local_sqlite"
+      }
+    },
+    "probe": {
+      "enabled": true,
+      "use_for": "backup_semantic_search, ast_pattern_matching, multi_language_support",
+      "command": ["npx", "-y", "@buger/probe-mcp"],
+      "environment": {
+        "PROBE_DEFAULT_PATHS": "/path/to/project1,/path/to/project2",
+        "PROBE_MAX_TOKENS": "20000"
       },
-      "use_for": "elixir_native_tools, nerves_integration, custom_mcp_servers"
+      "tidewave_runtime_intelligence": {
+      "enabled": false,
+      "note": "Pro subscription required ($10-12/mo), disabled for local-first approach"
     }
+  },
+  "token_efficiency": {
+    "mode": "balanced"
+  }
   },
 
   "serena_read_only_settings": {
