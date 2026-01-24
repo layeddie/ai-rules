@@ -1,0 +1,64 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "default_agent": "beam-review",
+  "model": {
+    "provider": "ollama",
+    "base_url": "http://localhost:11434",
+    "model": "gpt-oss-20b",
+    "api_key": "ollama",
+    "temperature": 0.1,
+    "max_tokens": 4096,
+    "timeout": 30
+  },
+  "tools": {
+    "write": false,
+    "edit": false,
+    "bash": true,
+    "read": true,
+    "grep": true,
+    "glob": true,
+    "webfetch": true,
+    "websearch": true
+  },
+  "mcp": {
+    "serena": {
+      "type": "local",
+      "command": ["uvx", "--from", "git+https://github.com/oraios/serena", "serena", "start-mcp-server"],
+      "enabled": true,
+      "environment": {
+        "SERENA_PROJECT_PATH": "{project_root}/.serena",
+        "SERENA_READ_ONLY": "true"
+      }
+    },
+    "anubis_mcp": {
+      "enabled": false,
+      "note": "Use mgrep for cross-reference instead"
+    },
+    "jido_ai": {
+      "enabled": false,
+      "note": "Not needed for code review tasks"
+    },
+    "swarm_ex": {
+      "enabled": false,
+      "note": "Cross-reference doesn't require agent orchestration"
+    },
+    "codicil": {
+      "enabled": false,
+      "note": "Use Serena + mgrep for review, avoid redundant semantic search"
+    },
+    "probe": {
+      "enabled": false,
+      "note": "Use mgrep for pattern verification, no AST analysis needed"
+    }
+  },
+  "permission": {
+    "write": "deny",
+    "bash": "ask",
+    "edit": "deny"
+  },
+  "notes": {
+    "purpose": "Code quality analysis with cross-reference verification",
+    "token_efficiency": "Read-only mode, minimal MCP tools",
+    "tools_usage": "Serena for context, mgrep for cross-reference, bash for quality checks"
+  }
+}
