@@ -1,0 +1,89 @@
+# mgrepignore
+# Prevent indexing of gitignored, large, or irrelevant files
+# Reduces token usage and improves search relevance
+
+# Gitignored directories
+sessions/
+_build/
+deps/
+.elixir_ls/
+node_modules/
+.cover/
+doc/
+priv/static/
+
+# Large files (> 1MB)
+*.beam
+*.ez
+*.tar.gz
+*.zip
+*.dmg
+*.pkg
+
+# Temporary and cache files
+*.tmp
+*.cache
+*.swp
+*.swo
+*~
+
+# Log and crash files
+*.log
+erl_crash.dump
+crash.log
+*.trace
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Test artifacts
+.cover/
+.coverage/
+test/fixtures/
+*.test
+
+# Database files (if accidentally committed)
+*.db
+*.sqlite
+*.sqlite3
+
+# Local environment files
+.env
+.env.*
+.envrc
+
+# Binary files
+*.so
+*.dylib
+*.dll
+*.exe
+
+# Large data files
+*.csv
+*.jsonl
+*.parquet
+
+# Generated documentation
+build/
+dist/
+_out/
+
+# Session and backup files
+*.bak
+*.backup
+*.old
+*.orig
+
+# Merged/collapsed files
+*.orig
+*.rej
+
+# Lock files
+*.lock
+mix.lock
+package-lock.json
+yarn.lock
+
+# Note: Keep essential source files
+# lib/, test/, config/, etc. should remain indexed
