@@ -1,0 +1,65 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "default_agent": "beam-plan",
+  "model": {
+    "provider": "ollama",
+    "base_url": "http://localhost:11434",
+    "model": "gpt-oss-20b",
+    "api_key": "ollama",
+    "temperature": 0.1,
+    "max_tokens": 4096,
+    "timeout": 30
+  },
+  "tools": {
+    "write": false,
+    "edit": false,
+    "bash": false,
+    "read": true,
+    "grep": true,
+    "glob": true,
+    "webfetch": true,
+    "websearch": true
+  },
+  "mcp": {
+    "serena": {
+      "type": "local",
+      "command": ["uvx", "--from", "git+https://github.com/oraios/serena", "serena", "start-mcp-server"],
+      "enabled": true,
+      "environment": {
+        "SERENA_PROJECT_PATH": "{project_root}/.serena",
+        "SERENA_READ_ONLY": "true"
+      }
+    },
+    "anubis_mcp": {
+      "enabled": false,
+      "note": "Not needed for planning - use mgrep instead"
+    },
+    "jido_ai": {
+      "enabled": false,
+      "note": "Not needed for planning - no agent orchestration required"
+    },
+    "swarm_ex": {
+      "enabled": false,
+      "note": "Not needed for planning - lightweight coordination not required"
+    },
+    "codicil": {
+      "enabled": false,
+      "note": "Use mgrep for semantic search in plan mode"
+    },
+    "probe": {
+      "enabled": false,
+      "note": "Use mgrep for exact patterns, no AST search needed"
+    }
+  },
+  "permission": {
+    "write": "deny",
+    "bash": "deny",
+    "edit": "deny"
+  },
+  "notes": {
+    "purpose": "Architecture and design with minimal tools",
+    "token_efficiency": "Read-only mode, disable 5 MCP servers",
+    "tools_usage": "mgrep (via bash) for discovery, grep for exact matches, Serena read-only for context",
+    "savings_expected": "60% reduction vs full configuration"
+  }
+}
