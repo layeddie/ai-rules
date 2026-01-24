@@ -1,0 +1,64 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "default_agent": "beam-build",
+  "model": {
+    "provider": "ollama",
+    "base_url": "http://localhost:11434",
+    "model": "gpt-oss-20b",
+    "api_key": "ollama",
+    "temperature": 0.3,
+    "max_tokens": 4096,
+    "timeout": 30
+  },
+  "tools": {
+    "write": true,
+    "edit": true,
+    "bash": true,
+    "read": true,
+    "grep": true,
+    "glob": true,
+    "webfetch": true,
+    "websearch": true
+  },
+  "mcp": {
+    "serena": {
+      "type": "local",
+      "command": ["uvx", "--from", "git+https://github.com/oraios/serena", "serena", "start-mcp-server"],
+      "enabled": true,
+      "environment": {
+        "SERENA_PROJECT_PATH": "{project_root}/.serena",
+        "SERENA_READ_ONLY": "false"
+      }
+    },
+    "anubis_mcp": {
+      "enabled": false,
+      "note": "Not needed for standard build tasks"
+    },
+    "jido_ai": {
+      "enabled": false,
+      "note": "Keep for complex implementation problems only"
+    },
+    "swarm_ex": {
+      "enabled": false,
+      "note": "Not needed for individual development tasks"
+    },
+    "codicil": {
+      "enabled": true,
+      "note": "Elixir-native semantic search backup for when Serena fails"
+    },
+    "probe": {
+      "enabled": false,
+      "note": "Use mgrep for simpler pattern matching"
+    }
+  },
+  "permission": {
+    "write": "ask",
+    "bash": "ask",
+    "edit": "ask"
+  },
+  "notes": {
+    "purpose": "Full implementation capability with backup semantic search",
+    "token_efficiency": "Primary Serena + codicil backup, disable redundant tools",
+    "tools_usage": "Serena for semantic search + editing, codicil as Elixir-native backup, mgrep sparingly"
+  }
+}
