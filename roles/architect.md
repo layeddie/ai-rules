@@ -73,6 +73,8 @@ When making architectural decisions, consider:
 | **Agent** | Simple state wrapper | Limited to simple key-value state | Simple key-value state |
 | **Task** | Lightweight, fire-and-forget | No state management | One-off computations |
 | **ETS Table** | Fast in-memory storage | Not supervised by default | High-throughput lookups |
+| **See patterns/genserver.md** for comprehensive patterns and examples |
+| **See patterns/otp_supervisor.md** for supervision strategies |
 
 ## Standards
 
