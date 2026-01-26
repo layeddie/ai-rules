@@ -1,15 +1,17 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "default_agent": "beam-build",
+
   "model": {
     "provider": "ollama",
     "base_url": "http://localhost:11434",
-    "model": "gpt-oss-20b",
+    "model": "qwen3-coder",
     "api_key": "ollama",
     "temperature": 0.3,
     "max_tokens": 4096,
     "timeout": 30
   },
+
   "tools": {
     "write": true,
     "read": true,
@@ -19,10 +21,17 @@
     "webfetch": true,
     "websearch": true
   },
+
   "mcp": {
     "serena": {
       "type": "local",
-      "command": ["uvx", "--from", "git+https://github.com/oraios/serena", "serena", "start-mcp-server"],
+      "command": [
+        "uvx",
+        "--from",
+        "git+https://github.com/oraios/serena",
+        "serena",
+        "start-mcp-server"
+      ],
       "enabled": true,
       "environment": {
         "SERENA_PROJECT_PATH": "{project_root}/.serena",
@@ -30,6 +39,7 @@
       }
     }
   },
+
   "permission": {
     "write": "ask",
     "bash": "ask",
