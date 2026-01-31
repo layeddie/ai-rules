@@ -1,0 +1,18 @@
+# Pattern Extractor: ets_performance
+
+=== SECTION (no explicit problem/concept) ===
+## Pattern 1: ETS vs GenServer Decision Matrix
+=== SECTION (no explicit problem/concept) ===
+## Pattern 2: GenServer with Agent for Read-Write
+=== SECTION (no explicit problem/concept) ===
+## Pattern 3: Persistent Term for Read-Only Shared State
+=== SECTION (no explicit problem/concept) ===
+## Pattern 4: ETS Table Options and Performance
+=== SECTION (no explicit problem/concept) ===
+## Pattern 5: GenServer vs Task for One-Off Operations
+=== SECTION (no explicit problem/concept) ===
+## Pattern 6: Memory Management in ETS
+=== SECTION (no explicit problem/concept) ===
+## Pattern 7: Benchmarking Before Optimizing
+=== SECTION (no explicit problem/concept) ===
+## Pattern 8: Large Data Structures in ETS

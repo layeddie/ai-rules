@@ -1,0 +1,20 @@
+# Pattern Extractor: concurrent_tasks
+
+=== SECTION (no explicit problem/concept) ===
+## Pattern 1: Task vs Agent vs GenServer Decision Matrix
+=== SECTION (no explicit problem/concept) ===
+## Pattern 2: GenStage for Back-Pressure
+=== SECTION (no explicit problem/concept) ===
+## Pattern 3: Task.Supervisor for Pooling
+=== SECTION (no explicit problem/concept) ===
+## Pattern 4: GenStage Consumer Groups
+=== SECTION (no explicit problem/concept) ===
+## Pattern 5: Rate Limiting with GenStage
+=== SECTION (no explicit problem/concept) ===
+## Pattern 6: Ordered Processing with GenStage
+=== SECTION (no explicit problem/concept) ===
+## Pattern 7: PartitionSupervisor for Load Distribution
+=== SECTION (no explicit problem/concept) ===
+## Pattern 8: Timeout Handling in Concurrent Operations
+=== SECTION (no explicit problem/concept) ===
+## Pattern 9: Process Registry for Dynamic Supervision

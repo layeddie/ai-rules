@@ -1,0 +1,22 @@
+# Pattern Extractor: ash_resources
+
+=== SECTION (no explicit problem/concept) ===
+## Pattern 1: Domain-Driven Resource Design
+=== SECTION (no explicit problem/concept) ===
+## Pattern 2: Ash API for Resource Orchestration
+=== SECTION (no explicit problem/concept) ===
+## Pattern 3: Resource Splitting for Maintainability
+=== SECTION (no explicit problem/concept) ===
+## Pattern 4: Ash Actions with Policies
+=== SECTION (no explicit problem/concept) ===
+## Pattern 5: Custom Action Types
+=== SECTION (no explicit problem/concept) ===
+## Pattern 6: Code Generation with Igniter
+=== SECTION (no explicit problem/concept) ===
+## Pattern 7: Ash + Phoenix Integration
+=== SECTION (no explicit problem/concept) ===
+## Pattern 8: Testing Ash Resources
+=== SECTION (no explicit problem/concept) ===
+## Pattern 9: Migrations with Ash
+=== SECTION (no explicit problem/concept) ===
+## Pattern 10: API Generation (GraphQL, JSON:API)

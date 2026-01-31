@@ -1,0 +1,12 @@
+# Pattern Extractor: graceful_degradation
+
+=== SECTION (no explicit problem/concept) ===
+## Pattern 1: Feature Flags
+=== SECTION (no explicit problem/concept) ===
+## Pattern 2: Fallback Services
+=== SECTION (no explicit problem/concept) ===
+## Pattern 3: Caching with Degradation
+=== SECTION (no explicit problem/concept) ===
+## Pattern 4: Progressive Degradation
+=== SECTION (no explicit problem/concept) ===
+## Pattern 5: Load Shedding

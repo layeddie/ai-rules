@@ -1,0 +1,22 @@
+# Pattern Extractor: nerves_firmware
+
+=== SECTION (no explicit problem/concept) ===
+## Pattern 1: Basic Firmware Build
+=== SECTION (no explicit problem/concept) ===
+## Pattern 2: Cross-Compilation Targets
+=== SECTION (no explicit problem/concept) ===
+## Pattern 3: Firmware Burning to SD Card
+=== SECTION (no explicit problem/concept) ===
+## Pattern 4: A/B Partition Updates
+=== SECTION (no explicit problem/concept) ===
+## Pattern 5: Over-the-Air (OTA) Updates
+=== SECTION (no explicit problem/concept) ===
+## Pattern 6: Device Configuration at Runtime
+=== SECTION (no explicit problem/concept) ===
+## Pattern 7: Native NIFs (Native Implemented Functions)
+=== SECTION (no explicit problem/concept) ===
+## Pattern 8: Custom Nerves System
+=== SECTION (no explicit problem/concept) ===
+## Pattern 9: Fleet Management
+=== SECTION (no explicit problem/concept) ===
+## Pattern 10: Testing Nerves Applications

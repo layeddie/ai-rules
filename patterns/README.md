@@ -2,6 +2,8 @@
 
 **Purpose**: Curated collection of ~600-800 Elixir patterns for quick reference and efficient development.
 
+🚀 **Quick Start**: Use [PATTERN_INDEX.md](./PATTERN_INDEX.md) for fast pattern lookup (2K tokens, <5 seconds)!
+
 ## Quick Start: Finding Right Pattern
 
 1. **I know my problem** (e.g., "Need to test a GenServer")
@@ -66,11 +68,19 @@
 
 **Problem**: GenServer is blocking schedulers
 
-**Lookup path**:
-1. Check `patterns/genserver.md` → Pattern 1: Non-blocking callbacks
-2. See code example → Copy paste solution
-3. Check References → `otp_supervisor.md` for supervisor context
-4. If deeper needed → `docs/genserver_guide.txt` for full guide
-5. If comprehensive → `skills/otp-patterns/SKILL.md`
+**Fast Lookup** (with PATTERN_INDEX.md):
+1. Check `PATTERN_INDEX.md` → Search for "GenServer blocking schedulers"
+2. Find match → genserver.md, Pattern 1
+3. Load `genserver.md` → Pattern 1: Non-blocking callbacks
+4. See code example → Copy paste solution
+5. Check References → `otp_supervisor.md` for supervisor context
 
-**Time saved**: 30 seconds (vs finding + reading full docs)
+**Detailed Lookup** (without index):
+1. Check `patterns/genserver.md` → Browse patterns
+2. Find Pattern 1: Non-blocking callbacks
+3. See code example → Copy paste solution
+4. Check References → `otp_supervisor.md` for supervisor context
+5. If deeper needed → `docs/genserver_guide.txt` for full guide
+6. If comprehensive → `skills/otp-patterns/SKILL.md`
+
+**Time saved with index**: 30 seconds (vs 2-3 minutes searching manually)

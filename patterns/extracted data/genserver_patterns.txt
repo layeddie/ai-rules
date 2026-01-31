@@ -1,0 +1,22 @@
+# Pattern Extractor: genserver
+
+=== SECTION (no explicit problem/concept) ===
+## Pattern 1: Non-blocking GenServer Callbacks
+=== SECTION (no explicit problem/concept) ===
+## Pattern 2: ETS vs GenServer for Read-Heavy Workloads
+=== SECTION (no explicit problem/concept) ===
+## Pattern 3: Supervisor Restart Strategies
+=== SECTION (no explicit problem/concept) ===
+## Pattern 4: GenServer Testing with Isolation
+=== SECTION (no explicit problem/concept) ===
+## Pattern 5: Instrument Before Optimizing
+=== SECTION (no explicit problem/concept) ===
+## Pattern 6: Non-blocking Callbacks with Task.async
+=== SECTION (no explicit problem/concept) ===
+## Pattern 7: State Management Best Practices
+=== SECTION (no explicit problem/concept) ===
+## Pattern 8: Handle_info vs Cast for Async Work
+=== SECTION (no explicit problem/concept) ===
+## Pattern 9: Timeout Handling in GenServers
+=== SECTION (no explicit problem/concept) ===
+## Pattern 10: GenServer Call Tracing

@@ -1,0 +1,20 @@
+# Pattern Extractor: liveview
+
+=== SECTION (no explicit problem/concept) ===
+## Pattern 1: Offloading Long-Running Tasks
+=== SECTION (no explicit problem/concept) ===
+## Pattern 2: Optimistic UI Updates
+=== SECTION (no explicit problem/concept) ===
+## Pattern 3: Streaming Large Lists with LiveComponents
+=== SECTION (no explicit problem/concept) ===
+## Pattern 4: LiveComponent Reusability
+=== SECTION (no explicit problem/concept) ===
+## Pattern 5: File Uploads with LiveView
+=== SECTION (no explicit problem/concept) ===
+## Pattern 6: Client-Side Information in Hooks
+=== SECTION (no explicit problem/concept) ===
+## Pattern 7: Loading States and Skeleton UI
+=== SECTION (no explicit problem/concept) ===
+## Pattern 8: Real-time Updates with PubSub
+=== SECTION (no explicit problem/concept) ===
+## Pattern 9: Error Handling in LiveViews

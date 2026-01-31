@@ -1,0 +1,12 @@
+# Pattern Extractor: bulkhead_patterns
+
+=== SECTION (no explicit problem/concept) ===
+## Pattern 1: Task Pool Limitation
+=== SECTION (no explicit problem/concept) ===
+## Pattern 2: Database Connection Pool
+=== SECTION (no explicit problem/concept) ===
+## Pattern 3: HTTP Client Pool
+=== SECTION (no explicit problem/concept) ===
+## Pattern 4: Rate Limiter
+=== SECTION (no explicit problem/concept) ===
+## Pattern 5: Semaphore Pattern

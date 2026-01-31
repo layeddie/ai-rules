@@ -2,10 +2,10 @@
   "$schema": "https://opencode.ai/config.json",
   "default_agent": "beam-review",
   "model": {
-    "provider": "ollama",
-    "base_url": "http://localhost:11434",
-    "model": "qwen3-coder",
-    "api_key": "ollama",
+    "provider": "openai",
+    "base_url": "https://api.opencode.ai",
+    "model": "claude-sonnet-4-20250514",
+    "api_key": "opencode",
     "temperature": 0.1,
     "max_tokens": 4096,
     "timeout": 30

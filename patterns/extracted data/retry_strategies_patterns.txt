@@ -1,0 +1,12 @@
+# Pattern Extractor: retry_strategies
+
+=== SECTION (no explicit problem/concept) ===
+## Pattern 1: Exponential Backoff with Jitter
+=== SECTION (no explicit problem/concept) ===
+## Pattern 2: Retry with Specific Errors
+=== SECTION (no explicit problem/concept) ===
+## Pattern 3: Retry with Circuit Breaker
+=== SECTION (no explicit problem/concept) ===
+## Pattern 4: Retry for Database Operations
+=== SECTION (no explicit problem/concept) ===
+## Pattern 5: Retry with Backoff Library

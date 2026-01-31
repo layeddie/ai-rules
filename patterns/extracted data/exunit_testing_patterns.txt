@@ -1,0 +1,18 @@
+# Pattern Extractor: exunit_testing
+
+=== SECTION (no explicit problem/concept) ===
+## Pattern 1: Async vs Synchronous Tests
+=== SECTION (no explicit problem/concept) ===
+## Pattern 2: setup and teardown
+=== SECTION (no explicit problem/concept) ===
+## Pattern 3: describe for Organization
+=== SECTION (no explicit problem/concept) ===
+## Pattern 4: Testing GenServers with Isolation
+=== SECTION (no explicit problem/concept) ===
+## Pattern 5: Integration Testing with Phoenix
+=== SECTION (no explicit problem/concept) ===
+## Pattern 6: Using Factories and Fixtures
+=== SECTION (no explicit problem/concept) ===
+## Pattern 7: Testing with Mocks
+=== SECTION (no explicit problem/concept) ===
+## Pattern 8: Tag-Based Test Execution

@@ -1,0 +1,20 @@
+# Pattern Extractor: phoenix_controllers
+
+=== SECTION (no explicit problem/concept) ===
+## Pattern 1: Thin Controllers with Context Delegation
+=== SECTION (no explicit problem/concept) ===
+## Pattern 2: Error Handling with put_flash
+=== SECTION (no explicit problem/concept) ===
+## Pattern 3: Authentication and Authorization in Controllers
+=== SECTION (no explicit problem/concept) ===
+## Pattern 4: JSON vs HTML Responses
+=== SECTION (no explicit problem/concept) ===
+## Pattern 5: File Uploads in Controllers
+=== SECTION (no explicit problem/concept) ===
+## Pattern 6: Pagination and Filtering
+=== SECTION (no explicit problem/concept) ===
+## Pattern 7: Strong Etag Parameters
+=== SECTION (no explicit problem/concept) ===
+## Pattern 8: Streaming Responses
+=== SECTION (no explicit problem/concept) ===
+## Pattern 9: CORS Handling
