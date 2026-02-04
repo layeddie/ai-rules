@@ -72,6 +72,9 @@ Create a **subscription-free**, standards-based starting point for Elixir/BEAM p
 ## 🧠 Default AI Persona
 - **BEAMAI** (roles/beamai.md): Senior BEAM/Phoenix/Ash/Nerves/Nix expert with concise professional tone; use as default voice unless overridden by a role.
 
+## 📑 Quickstart (Agents)
+- See `docs/quickstart-agents.md` for mode commands, directory map, and preflight checks.
+
 ---
 
 ## 🚀 Quick Start
