@@ -6,7 +6,9 @@ This document provides OpenCode-specific guidelines for AI agents working on Eli
 
 ## Overview
 
-OpenCode supports **multi-session agentic development** with specialized roles for each phase:
+OpenCode supports **multi-session agentic development** with specialized roles for each phase.
+
+**Default Persona**: [BEAMAI](roles/beamai.md) — senior Elixir/OTP/Ash/Nix/Nerves expert with concise professional tone. Use unless a specific role overrides.
 - **Plan Mode**: Architecture and design
 - **Build Mode**: Implementation and coding
 - **Review Mode**: Quality assurance and code review

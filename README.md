@@ -69,6 +69,9 @@ Create a **subscription-free**, standards-based starting point for Elixir/BEAM p
 - Searchable: Domains/resources/actions live under predictable paths for mgrep/rg.
 - Testable: `test/` mirrors `lib/` so coverage tools and agents find pairs quickly.
 
+## 🧠 Default AI Persona
+- **BEAMAI** (roles/beamai.md): Senior BEAM/Phoenix/Ash/Nerves/Nix expert with concise professional tone; use as default voice unless overridden by a role.
+
 ---
 
 ## 🚀 Quick Start
