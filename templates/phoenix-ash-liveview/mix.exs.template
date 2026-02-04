@@ -6,16 +6,11 @@ defmodule [PROJECT_NAME].MixProject do
       app: :[PROJECT_NAME],
       version: "0.1.0",
       elixir: "~> 1.17",
-      start_permanent: Mix.env() == :prod,
-      deps_path: "../../deps",
-      lockfile: "../../mix.lock",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:gettext] ++ Mix.compilers(),
-      build_embedded: "lib/[PROJECT_NAME]_web",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      aliases: aliases(),
-      preferred_cli_env: ["sh"]
+      aliases: aliases()
     ]
   end
 
@@ -26,35 +21,51 @@ defmodule [PROJECT_NAME].MixProject do
     ]
   end
 
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
+
   defp deps do
     [
-      # Core Phoenix dependencies
+      # Core Phoenix stack
       {:phoenix, "~> 1.7.14"},
       {:phoenix_ecto, "~> 4.5"},
-      {:phoenix_live_view, "~> 1.0.0"},
-      {:phoenix_html, "~> 3.3"},
       {:ecto_sql, "~> 3.11"},
       {:postgrex, "~> 0.17"},
+      {:phoenix_html, "~> 3.3"},
+      {:phoenix_live_view, "~> 1.0.0"},
       {:jason, "~> 1.4"},
-      {:credo, "~> 1.7"},
+      {:gettext, "~> 0.23"},
+      {:telemetry_metrics, "~> 1.0"},
+      {:telemetry_poller, "~> 1.0"},
 
-      # Ash Framework
-      {:ash, "~> 3.4", github: "ash-project/ash-core", override: true},
-      {:ash_phoenix, "~> 3.0"},
-      {:ash_authentication, "~> 4.0", github: "ash-auth-phoenix"},
+      # Ash framework (hex versions for reproducibility)
+      {:ash, "~> 3.4"},
       {:ash_postgres, "~> 2.0"},
+      {:ash_phoenix, "~> 3.0"},
+      {:ash_authentication, "~> 4.0"},
       {:ash_json_api, "~> 1.4"},
 
-      # Elixir/BEAM native tools
-      {:anubis_mcp, "~> 0.17.0"},
-      {:jido_ai, "~> 0.5.3"},
-      {:swarm_ex, "~> 0.2.0"},
-      {:codicil, "~> 0.7", only: [:dev, :test]},
-
-      # Additional dependencies
+      # Auth & security
       {:bcrypt_elixir, "~> 3.0"},
-      {:comeonin, "~> 0.18"},
-      {:ex_machina, "~> 0.8"}
+      {:comeonin, "~> 5.0"},
+
+      # Tooling
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:ex_machina, "~> 2.8", only: [:dev, :test]},
+
+      # Optional Elixir-native AI helpers (kept explicit but off prod path)
+      {:anubis_mcp, "~> 0.17", only: [:dev, :test]},
+      {:jido_ai, "~> 0.5", only: [:dev, :test]},
+      {:swarm_ex, "~> 0.2", only: [:dev, :test]},
+      {:codicil, "~> 0.7", only: [:dev, :test]}
+    ]
+  end
+
+  defp aliases do
+    [
+      "setup": ["deps.get"],
+      "test": ["ecto.create --quiet", "ecto.migrate --quiet", "test"]
     ]
   end
 end

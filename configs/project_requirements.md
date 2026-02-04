@@ -356,81 +356,34 @@ on:
 
 ```
 test_app/
-├── ai-rules/                       # Symlink to ai-rules repository
-├── .serena/                        # Serena MCP indexes
-├── .opencode/                      # OpenCode configurations
-├── .tidewave/                      # Tidewave MCP (disabled - sub-free)
-├── flake.nix                        # Nix flake
-├── mix.exs                         # Mix configuration
-├── config/
-│   ├── config.exs                 # Application config
-│   ├── dev.exs                  # Dev environment
-│   ├── runtime.exs              # Runtime config
-│   └── test.exs                  # Test config
+├── ai-rules/                # Symlink to this repo
+├── .opencode/               # Plan/Build/Review configs
+├── config/                  # Environment config only
 ├── lib/
-│   └── [Test App]/
-│       ├── ash/
-│       │   ├── resources/
-│       │   │   └── api/
-│       │   │       │   └── user/
-│       │   │       │   └── actions/
-│       │   │       │   └── schemas/
-│       │   │       │   │   └── api/
-│       └── registry/
-│       │       │       │   │   └── domain.ex
-│       │       │       │   │   └── application.ex
-├── lib/test_app_web/
+│   ├── test_app/            # Application + supervision
+│   │   ├── application.ex
+│   │   ├── registry/
+│   │   └── support/
+│   └── test_app_ash/        # Ash Domain/Resource/Action (single responsibility)
+│       ├── domains/
+│       │   └── accounts/
+│       │       ├── resources/
+│       │       ├── actions/
+│       │       ├── policies/
+│       │       └── notifiers/
+│       └── apis/
+├── lib/test_app_web/        # Phoenix LiveView (thin glue)
 │   ├── endpoint.ex
 │   ├── router.ex
+│   ├── controllers/
 │   └── live/
-│       └── [Live Components]/
-├── priv/
-│   └── repo/
-├── test/
-│   └── [Test App]/
-│       └── accounts/
-│           └── dashboards/
-└── live/
-├── project_requirements.md  # This file
-```
-test_app/
-├── .ai_rules/                      # Symlink to .ai_rules repository
-├── .serena/                       # Serena MCP indexes
-├── .opencode/                     # OpenCode configurations
-├── .tidewave/                     # Tidewave MCP (disabled - sub-free)
-├── flake.nix                       # Nix flake
-├── mix.exs                        # Mix configuration
-├── config/
-│   ├── config.exs                 # Application config
-│   ├── dev.exs                  # Dev environment
-│   ├── runtime.exs              # Runtime config
-│   └── test.exs                  # Test config
-├── lib/
-│   └── [Test App]/
-│       ├── ash/
-│       │   ├── resources/
-│       │   │   └── api/
-│       │   │       │   └── user/
-│       │   │       │   └── actions/
-│       │   │       │   └── schemas/
-│       │   │       │   │   └── api/
-│       └── registry/
-│       │       │       │   │   └── api/
-│       │   │       │   │   └── domain.ex
-│       │       │       │   │   └── application.ex
-├── lib/test_app_web/
-│   ├── endpoint.ex
-│   ├── router.ex
-│   └── live/
-│       └── [Live Components]/
-├── priv/
-│   └── repo/
-├── test/
-│   └── [Test App]/
-│       └── accounts/
-│           └── dashboards/
-└── live/
-├── project_requirements.md  # This file
+├── priv/repo/               # Migrations & seeds
+├── test/                    # Mirrors lib/ for coverage/searchability
+│   ├── support/
+│   ├── ash/
+│   └── web/
+├── flake.nix                # Nix devshell
+└── project_requirements.md  # This file
 ```
 
 ---

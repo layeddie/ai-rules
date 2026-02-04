@@ -59,14 +59,14 @@ fi
 echo -e "${GREEN}📄 Creating project_requirements.md...${NC}"
 cp ai-rules/configs/project_requirements.md project_requirements.md
 
-# 5. Create OpenCode configs directory
+# 5. Create OpenCode configs directory (source from repo root .opencode)
 echo -e "${GREEN}⚙️  Creating OpenCode configuration...${NC}"
 mkdir -p .opencode
-cp ai-rules/tools/opencode/opencode.json .opencode/config.json
-cp ai-rules/tools/opencode/opencode_mcp.json .opencode/mcp.json
-cp ai-rules/tools/opencode/opencode.plan.json .opencode/opencode.plan.json
-cp ai-rules/tools/opencode/opencode.build.json .opencode/opencode.build.json
-cp ai-rules/tools/opencode/opencode.review.json .opencode/opencode.review.json
+cp ai-rules/.opencode/opencode.json .opencode/config.json
+cp ai-rules/.opencode/opencode_mcp.json .opencode/mcp.json
+cp ai-rules/.opencode/opencode.plan.json .opencode/opencode.plan.json
+cp ai-rules/.opencode/opencode.build.json .opencode/opencode.build.json
+cp ai-rules/.opencode/opencode.review.json .opencode/opencode.review.json
 
 # 6. Copy template files (if specified)
 if [ "$TEMPLATE" != "none" ]; then

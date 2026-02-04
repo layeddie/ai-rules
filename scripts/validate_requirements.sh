@@ -15,7 +15,7 @@ PROJECT_ROOT=$(pwd)
 echo -e "${GREEN}🔍 Validating project setup...${NC}"
 
 # Check for ai-rules symlink
-if [ ! -e ai-rules" ]; then
+if [ ! -e "ai-rules" ]; then
     echo -e "${RED}❌ ai-rules not found (should be symlinked)${NC}"
     exit 1
 fi

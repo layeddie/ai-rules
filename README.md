@@ -30,11 +30,44 @@ Create a **subscription-free**, standards-based starting point for Elixir/BEAM p
 
 ---
 
-## 📁 Directory Structure
+## 📁 Directory Structure (AI-Search Friendly, Single Responsibility)
 
 ```
-Deleted for update
+.
+├── ai-rules/               # This repo (symlink in generated projects)
+├── .opencode/              # Plan/Build/Review configs
+├── config/                 # Environment config only (no business logic)
+├── lib/
+│   ├── [app]/              # Elixir runtime entry + supervision
+│   │   ├── application.ex  # Top-level supervisor
+│   │   ├── registry/       # Registry + DynamicSupervisor
+│   │   └── support/        # Pure helpers (no IO/side effects)
+│   └── [app]_ash/          # Ash Domain Resource Action (Elixir‑Scribe style)
+│       ├── domains/        # Domain boundaries
+│       │   └── accounts/
+│       │       ├── resources/      # Ash Resources (schema + validations)
+│       │       ├── actions/        # Ash Actions (single responsibility)
+│       │       ├── policies/       # Authorization per resource
+│       │       └── notifiers/      # Side-effect handlers (email, pubsub)
+│       └── apis/            # Ash APIs that expose resources per domain
+├── lib/[app]_web/          # Phoenix LiveView (thin controllers, state in Ash)
+│   ├── endpoint.ex
+│   ├── router.ex
+│   ├── live/               # LiveViews / components
+│   └── controllers/        # Minimal glue, delegate to Ash actions
+├── priv/repo/              # Migrations & seeds
+├── test/                   # Mirrors lib/ for easy grep & coverage
+│   ├── support/            # DataCase/ConnCase factories
+│   ├── ash/                # Resource/action tests (unit, property-based)
+│   └── web/                # LiveView/Controller integration tests
+├── flake.nix               # Nix devshell (phoenix_ash/universal/nerves)
+└── project_requirements.md # Project + model/tool choices
 ```
+
+**Why this layout?**
+- Single Responsibility: Ash resources/actions/policies separated; controllers stay thin.
+- Searchable: Domains/resources/actions live under predictable paths for mgrep/rg.
+- Testable: `test/` mirrors `lib/` so coverage tools and agents find pairs quickly.
 
 ---
 
