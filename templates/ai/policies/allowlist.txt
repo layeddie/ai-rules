@@ -1,0 +1,5 @@
+# Glob patterns agents may write to (edit per project)
+lib/**
+test/**
+ai/notes/**
+ai/prompts/**
