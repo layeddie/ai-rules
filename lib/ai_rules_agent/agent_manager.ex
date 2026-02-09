@@ -39,7 +39,8 @@ defmodule AiRulesAgent.AgentManager do
     opts = normalize_opts(opts)
     reg = Keyword.get(opts, :registry, registry_name())
 
-    with [{pid, _}] <- Registry.lookup(reg, id) do
+    with :ok <- start_registry(reg),
+         [{pid, _}] <- Registry.lookup(reg, id) do
       Process.exit(pid, :normal)
       Registry.unregister(reg, id)
       :ok
@@ -51,6 +52,7 @@ defmodule AiRulesAgent.AgentManager do
   def list_agents(opts \\ []) do
     opts = normalize_opts(opts)
     reg = Keyword.get(opts, :registry, registry_name())
+    start_registry(reg)
     Registry.select(reg, [{{:"$1", :"$2", :"$3"}, [], [{{:"$1", :"$3"}}]}])
   end
 
@@ -58,6 +60,7 @@ defmodule AiRulesAgent.AgentManager do
     case Registry.start_link(keys: :unique, name: reg) do
       {:error, {:already_started, _}} -> :ok
       {:ok, _} -> :ok
+      {:error, {:already_registered, _}} -> :ok
     end
   end
 
