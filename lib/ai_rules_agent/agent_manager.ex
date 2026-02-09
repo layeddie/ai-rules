@@ -27,14 +27,14 @@ defmodule AiRulesAgent.AgentManager do
     sup = ensure_sup()
     {:ok, pid} = AgentSupervisor.start_agent(sup, attrs)
     id = attrs[:id] || pid
-    Registry.register(@registry, id, pid)
+    Registry.register(registry_name(), id, pid)
     {:ok, id, pid}
   end
 
   def stop_agent(id) do
-    with [{pid, _}] <- Registry.lookup(@registry, id) do
+    with [{pid, _}] <- Registry.lookup(registry_name(), id) do
       Process.exit(pid, :normal)
-      Registry.unregister(@registry, id)
+      Registry.unregister(registry_name(), id)
       :ok
     else
       _ -> {:error, :not_found}
@@ -42,26 +42,42 @@ defmodule AiRulesAgent.AgentManager do
   end
 
   def list_agents do
-    Registry.select(@registry, [{{:"$1", :"$2", :"$3"}, [], [{{:"$1", :"$3"}}]}])
+    Registry.select(registry_name(), [{{:"$1", :"$2", :"$3"}, [], [{{:"$1", :"$3"}}]}])
   end
 
   defp start_registry do
-    case Registry.start_link(keys: :unique, name: @registry) do
+    case Registry.start_link(keys: :unique, name: registry_name()) do
       {:error, {:already_started, _}} -> :ok
       {:ok, _} -> :ok
     end
   end
 
   defp ensure_sup do
+    sup_name = supervisor_name()
+
     case Process.get(:agent_manager_sup) do
       nil ->
-        {:ok, sup} = AgentSupervisor.start_link()
-        Process.unlink(sup)
-        Process.put(:agent_manager_sup, sup)
-        sup
+        case AgentSupervisor.start_link(name: sup_name) do
+          {:ok, sup} ->
+            Process.unlink(sup)
+            Process.put(:agent_manager_sup, sup)
+            sup
+
+          {:error, {:already_started, pid}} ->
+            Process.put(:agent_manager_sup, pid)
+            pid
+        end
 
       pid ->
         pid
     end
+  end
+
+  defp supervisor_name do
+    Application.get_env(:ai_rules_agent, :supervisor_name, AgentSupervisor)
+  end
+
+  defp registry_name do
+    Application.get_env(:ai_rules_agent, :registry, @registry)
   end
 end

@@ -7,9 +7,14 @@ defmodule AiRulesAgent.AgentManagerTest do
   alias AiRulesAgent.Memory.File, as: FileMemory
 
   setup do
-    # ensure manager registry is up for tests
-    Application.put_env(:ai_rules_agent, :req_recipient, self())
-    on_exit(fn -> Application.delete_env(:ai_rules_agent, :req_recipient) end)
+    reg = :"agent_registry_#{System.unique_integer()}"
+    sup_name = :"agent_sup_#{System.unique_integer()}"
+    Application.put_env(:ai_rules_agent, :registry, reg)
+    Application.put_env(:ai_rules_agent, :supervisor_name, sup_name)
+    on_exit(fn ->
+      Application.delete_env(:ai_rules_agent, :registry)
+      Application.delete_env(:ai_rules_agent, :supervisor_name)
+    end)
   end
 
   test "start/list/stop agent" do
