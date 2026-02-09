@@ -33,7 +33,9 @@ defmodule AiRulesAgent.MixProject do
   defp package do
     [
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/layeddie/ai-rules"}
+      links: %{"GitHub" => "https://github.com/layeddie/ai-rules"},
+      maintainers: ["ai-rules team"],
+      files: ~w(lib mix.exs README.md CHANGELOG.md LICENSE .formatter.exs)
     ]
   end
 

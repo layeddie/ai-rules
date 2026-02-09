@@ -91,3 +91,18 @@ mix ci
 ## Stdio server ops
 - Start stdio server: `AI_AGENT=1 MIX_ENV=dev mix run scripts/ai/serve_agent_stdio.exs`
 - Supported ops (JSON lines): `ctx/routes`, `ctx/ash`, `fs/read`, `fs/patch`, `test`, `doc/lookup`, `agents/start`, `agents/stop`, `agents/list`. Include `secret` if `AI_AGENT_SECRET` is set.
+
+## HTTP lifecycle request example
+POST `/agents/start` with body:
+```json
+{
+  "strategy": "react",
+  "provider": "openai",
+  "model": "gpt-4o",
+  "api_key": "...",
+  "headers": {"x-foo": "bar"},
+  "memory": "file",
+  "memory_id": "session-123"
+}
+```
+Responses include `{"status":"ok","id": "...", "pid": "..."}` or `{"error": {code, message}}` with HTTP 400 on errors.

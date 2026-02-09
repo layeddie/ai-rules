@@ -165,7 +165,8 @@ defmodule AiRulesAgent.API do
        AiRulesAgent.Transports.OpenAI.llm_fun(
          model: Map.get(params, "model", "gpt-4o"),
          api_key: key,
-         base_url: Map.get(params, "base_url")
+         base_url: Map.get(params, "base_url"),
+         headers: Map.get(params, "headers", %{})
        )}
     end
   end
@@ -176,7 +177,8 @@ defmodule AiRulesAgent.API do
        AiRulesAgent.Transports.Anthropic.llm_fun(
          model: Map.get(params, "model", "claude-3-sonnet"),
          api_key: key,
-         base_url: Map.get(params, "base_url")
+         base_url: Map.get(params, "base_url"),
+         headers: Map.get(params, "headers", %{})
        )}
     end
   end
@@ -187,7 +189,8 @@ defmodule AiRulesAgent.API do
        AiRulesAgent.Transports.OpenRouter.llm_fun(
          model: Map.get(params, "model", "openrouter/auto"),
          api_key: key,
-         base_url: Map.get(params, "base_url")
+         base_url: Map.get(params, "base_url"),
+         headers: Map.get(params, "headers", %{})
        )}
     end
   end
