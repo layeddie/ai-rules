@@ -35,6 +35,8 @@ defmodule AiRulesAgent.AgentManagerTest do
         llm_fun: fn _ -> {:ok, %{content: "hi"}} end,
         memory: FileMemory,
         memory_id: mem_id
+      ,
+        ctx
       )
 
     assert {:ok, "hi"} = AgentServer.ask(pid, "hello")
