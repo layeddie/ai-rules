@@ -148,6 +148,43 @@ defmodule AiRulesAgent.AgentServerTest do
     end
   end
 
+  describe "anthropic transport helper" do
+    test "decodes tool call" do
+      defmodule AnthropicStub do
+        def post(url: _u, headers: _h, json: body) do
+          send(self(), {:body, body})
+
+          {:ok,
+           %Req.Response{
+             status: 200,
+             body: %{
+               "content" => [
+                 %{
+                   "type" => "tool_use",
+                   "name" => "calc",
+                   "input" => %{"a" => 1}
+                 }
+               ]
+             }
+           }}
+        end
+      end
+
+      llm_fun = AiRulesAgent.Transports.Anthropic.llm_fun(model: "claude-3", api_key: "x", req: AnthropicStub)
+
+      {:ok, pid} =
+        AgentServer.start_link(
+          strategy: ReAct,
+          llm_fun: llm_fun,
+          tools: %{"calc" => fn %{"a" => a} -> a + 1 end},
+          max_steps: 2
+        )
+
+      assert {:ok, "2"} = AgentServer.ask(pid, "add 1")
+      assert_receive {:body, %{"model" => "claude-3"}}, 50
+    end
+  end
+
   describe "CoT strategy" do
     test "returns assistant content with system prompt prefixed" do
       llm_fun = fn %{messages: messages} ->
