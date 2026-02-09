@@ -9,5 +9,72 @@ Included components:
 - Allowlist policy file template.
 - Simple doc lookup (grep-based) until Hexdocs cache lands.
 - Installer task: `mix ai_rules_agent.install` to copy `ai/` scaffold and scripts into host project.
+- NEW (draft): OTP agent runtime (`AgentSupervisor`, `AgentServer`) plus strategy behaviour and ReAct strategy.
 
 Status: skeleton; not published.
+
+## Agent runtime (draft)
+
+Why: we want an OTP-native agent loop that mirrors Laravel AI SDK ergonomics (strategies, tools, transports), but keeps BEAM strengths: supervision, lightweight processes, and tool isolation.
+
+Pieces:
+- `AiRulesAgent.AgentSupervisor` — DynamicSupervisor to host many short-lived agents (per conversation).
+- `AiRulesAgent.AgentServer` — GenServer that runs a strategy with a bounded step loop. It executes tools inside the process to keep state in sync.
+- `AiRulesAgent.AgentManager` — start/stop/list convenience wrapper used by lifecycle endpoints.
+- `AiRulesAgent.Strategy` — behaviour for strategies (`init/2`, `next/7`, optional `handle_tool_result/9`).
+- Strategies:
+  - `AiRulesAgent.Strategies.ReAct` — minimal ReAct; expects an `llm_fun` that returns either `content` or `tool_call`.
+  - `AiRulesAgent.Strategies.CoT` — chain-of-thought; never calls tools, prepends a system prompt and returns content directly.
+- `AiRulesAgent.Transports.OpenAI.llm_fun/1` — helper to build an `llm_fun` that hits OpenAI-compatible chat endpoints via Req.
+- Memory:
+  - `AiRulesAgent.Memory.File` — ETS + file-backed history store under `priv/ai_memory/` keyed by `memory_id`.
+
+Minimal usage sketch:
+```elixir
+# Define LLM transport (OpenAI, Anthropic, etc.)
+llm_fun = AiRulesAgent.Transports.OpenAI.llm_fun(model: "gpt-4.1", api_key: System.fetch_env!("OPENAI_API_KEY"))
+
+# Define tools (name => fn args -> result end)
+tools = %{
+  "add" => fn %{"a" => a, "b" => b} -> a + b end
+}
+
+# Start supervisor and an agent
+{:ok, sup} = AiRulesAgent.AgentSupervisor.start_link([])
+{:ok, pid} =
+  AiRulesAgent.AgentSupervisor.start_agent(sup,
+    strategy: AiRulesAgent.Strategies.ReAct,
+    llm_fun: llm_fun,
+    tools: tools,
+    max_steps: 5
+  )
+
+# Ask
+{:ok, reply} = AiRulesAgent.AgentServer.ask(pid, "What is 2+3?")
+IO.inspect(reply, label: \"assistant\")
+```
+
+Behaviour contract:
+- `llm_fun` receives a map with `:messages` (history) and `:tools` (list of tool names). When invoked after a tool run, it also receives `:tool_result`. Return `{:ok, %{content: binary}}` or `{:ok, %{tool_call: %{name: binary, args: map()}, content: binary | nil}}`.
+- Strategies decide when to stop; the server enforces `max_steps` to avoid loops.
+- Tools are synchronous (arity 1 functions). Errors are trapped and returned as `{:error, {:tool_error, e}}`.
+- Memory (optional): pass `memory: AiRulesAgent.Memory.File, memory_id: "session-123"` to persist history between process restarts.
+
+Laravel AI SDK influence: strategies and transports stay decoupled; the Elixir runtime adds OTP supervision, explicit allowlists, and built-in step guards. Transports stay pluggable through `llm_fun`, mirroring Laravel's driver model while leaning on BEAM processes for safety.
+
+## Install & test locally (via flake.nix)
+
+```bash
+# enter dev shell (includes Elixir/OTP)
+nix develop .#universal
+
+# install deps
+cd tools/ai_rules_agent
+mix deps.get
+
+# run the suite (agent runtime + API helpers)
+mix test
+```
+
+## Session logging helper
+- Run `./scripts/log_session.sh` from repo root to append a stub entry under `ai/sessions/<date>.md` (directory is gitignored). Fill in Notes/Actions/Follow-ups as you work.

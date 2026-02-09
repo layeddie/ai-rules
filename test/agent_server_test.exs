@@ -1,0 +1,169 @@
+defmodule AiRulesAgent.AgentServerTest do
+  use ExUnit.Case, async: true
+
+  alias AiRulesAgent.AgentServer
+  alias AiRulesAgent.AgentSupervisor
+  alias AiRulesAgent.Strategies.ReAct
+
+  describe "ask/2 with ReAct" do
+    test "returns direct reply" do
+      llm_fun = fn _ -> {:ok, %{content: "hi there"}} end
+
+      {:ok, pid} =
+        AgentServer.start_link(strategy: ReAct, llm_fun: llm_fun, tools: %{}, max_steps: 3)
+
+      assert {:ok, "hi there"} = AgentServer.ask(pid, "hello")
+      assert [%{role: :user, content: "hello"}, %{role: :assistant, content: "hi there"}] =
+               AgentServer.history(pid)
+    end
+
+    test "calls tool then replies" do
+      # first call: request tool
+      # second call (with tool_result): craft final answer
+      llm_fun = fn
+        %{tool_result: _} -> {:ok, %{content: "done"}}
+        _ -> {:ok, %{tool_call: %{name: "echo", args: %{"msg" => "ok"}}}}
+      end
+
+      tools = %{"echo" => fn %{"msg" => msg} -> msg end}
+
+      {:ok, pid} =
+        AgentServer.start_link(strategy: ReAct, llm_fun: llm_fun, tools: tools, max_steps: 3)
+
+      assert {:ok, "done"} = AgentServer.ask(pid, "hi")
+
+      # history should include user, tool, assistant
+      history = AgentServer.history(pid)
+      assert [%{role: :user, content: "hi"}, %{role: :tool, content: "\"ok\""}, %{role: :assistant, content: "done"}] = history
+    end
+  end
+
+  describe "bounded loop guard" do
+    defmodule LoopStrategy do
+      @behaviour AiRulesAgent.Strategy
+
+      @impl true
+      def init(ctx, _opts), do: {:ok, %{}, ctx}
+
+      @impl true
+      def next(_msg, _history, ctx, _llm, _tools, _opts, st) do
+        {:tool, "noop", %{}, st, ctx}
+      end
+
+      @impl true
+      def handle_tool_result(_name, _args, _result, _history, ctx, _llm, _tools, _opts, st) do
+        {:tool, "noop", %{}, st, ctx}
+      end
+    end
+
+    test "stops when max_steps exceeded" do
+      tools = %{"noop" => fn _ -> :ok end}
+      {:ok, pid} =
+        AgentServer.start_link(strategy: LoopStrategy, llm_fun: fn _ -> {:ok, %{content: ""}} end, tools: tools, max_steps: 2)
+
+      assert {:error, :max_steps} = AgentServer.ask(pid, "go")
+    end
+  end
+
+  describe "supervisor helper" do
+    test "starts agents under DynamicSupervisor" do
+      {:ok, sup} = AgentSupervisor.start_link([])
+      {:ok, pid} =
+        AgentSupervisor.start_agent(sup, strategy: ReAct, llm_fun: fn _ -> {:ok, %{content: "ok"}} end)
+
+      assert Process.alive?(pid)
+      assert {:ok, "ok"} = AgentServer.ask(pid, "hi")
+    end
+  end
+
+  describe "openai transport helper" do
+    test "serialises messages and decodes tool calls" do
+      defmodule ReqStub do
+        def post(url: _u, headers: _h, json: body) do
+          recipient = Application.get_env(:ai_rules_agent, :req_recipient, self())
+          send(recipient, {:body, body})
+
+          msgs = Map.get(body, :messages) || Map.get(body, "messages", [])
+
+          has_tool_message? =
+            msgs
+            |> Enum.any?(fn m -> Map.get(m, :role) == "tool" or Map.get(m, "role") == "tool" end)
+
+          if has_tool_message? do
+            {:ok,
+             %Req.Response{
+               status: 200,
+               body: %{
+                 "choices" => [
+                   %{
+                     "message" => %{"content" => "hi"}
+                   }
+                 ]
+               }
+             }}
+          else
+            {:ok,
+             %Req.Response{
+               status: 200,
+               body: %{
+                 "choices" => [
+                   %{
+                     "message" => %{
+                       "tool_calls" => [
+                         %{
+                           "function" => %{
+                             "name" => "echo",
+                             "arguments" => ~s({\"msg\":\"hi\"})
+                           }
+                         }
+                       ],
+                       "content" => nil
+                     }
+                   }
+                 ]
+               }
+             }}
+          end
+        end
+      end
+
+      llm_fun =
+        AiRulesAgent.Transports.OpenAI.llm_fun(model: "gpt-4.1", api_key: "test", req: ReqStub)
+
+      Application.put_env(:ai_rules_agent, :req_recipient, self())
+      on_exit(fn -> Application.delete_env(:ai_rules_agent, :req_recipient) end)
+
+      {:ok, pid} =
+        AgentServer.start_link(
+          strategy: ReAct,
+          llm_fun: llm_fun,
+          tools: %{"echo" => fn %{"msg" => msg} -> msg end},
+          max_steps: 2
+        )
+
+      assert {:ok, "hi"} = AgentServer.ask(pid, "say hi")
+
+      assert_receive {:body, body}, 50
+      assert %{"model" => "gpt-4.1"} = Map.new(body, fn {k, v} -> {to_string(k), v} end)
+    end
+  end
+
+  describe "CoT strategy" do
+    test "returns assistant content with system prompt prefixed" do
+      llm_fun = fn %{messages: messages} ->
+        # ensure prompt is first
+        [%{content: prompt} | _] = messages
+        {:ok, %{content: prompt <> " done"}}
+      end
+
+      {:ok, pid} =
+        AgentServer.start_link(
+          strategy: AiRulesAgent.Strategies.CoT,
+          strategy_opts: [system_prompt: "Think slow."],
+          llm_fun: llm_fun
+        )
+
+      assert {:ok, "Think slow. done"} = AgentServer.ask(pid, "ping")
+    end
+  end
+end

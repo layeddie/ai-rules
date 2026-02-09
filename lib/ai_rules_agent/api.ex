@@ -11,13 +11,13 @@ defmodule AiRulesAgent.API do
 
     routes =
       if Code.ensure_loaded?(router) and function_exported?(router, :__routes__, 0) do
-        for %Phoenix.Router.Route{} = r <- router.__routes__() do
+        for r <- router.__routes__() do
           %{
-            verb: r.verb,
-            path: r.path,
-            plug: inspect(r.plug),
-            action: r.plug_opts,
-            pipe_through: r.pipe_through
+            verb: Map.get(r, :verb),
+            path: Map.get(r, :path),
+            plug: r |> Map.get(:plug) |> inspect(),
+            action: Map.get(r, :plug_opts),
+            pipe_through: Map.get(r, :pipe_through)
           }
         end
       else
@@ -104,6 +104,55 @@ defmodule AiRulesAgent.API do
 
     %{term: term, hits: hits, note: "simple grep; replace with hexdocs cache later"}
   end
+
+  def start_agent_payload(strategy_name, params) do
+    with {:ok, strat_mod} <- resolve_strategy(strategy_name),
+         llm_fun <- fn _ -> {:error, :llm_not_configured} end do
+      attrs =
+        [
+          strategy: strat_mod,
+          llm_fun: llm_fun,
+          tools: Map.get(params, "tools", %{}),
+          memory: maybe_memory(params),
+          memory_id: params["memory_id"]
+        ]
+        |> Enum.reject(fn {_k, v} -> is_nil(v) end)
+
+      case AiRulesAgent.AgentManager.start_agent(attrs) do
+        {:ok, id, pid} ->
+          %{status: "ok", id: inspect(id), pid: inspect(pid)}
+
+        {:error, reason} ->
+          %{error: reason}
+      end
+    else
+      {:error, reason} -> %{error: reason}
+    end
+  end
+
+  def stop_agent_payload(id) do
+    case AiRulesAgent.AgentManager.stop_agent(id) do
+      :ok -> %{status: "ok"}
+      {:error, reason} -> %{error: reason}
+    end
+  end
+
+  def list_agents_payload do
+    %{agents: AiRulesAgent.AgentManager.list_agents()}
+  end
+
+  defp resolve_strategy("react"), do: {:ok, AiRulesAgent.Strategies.ReAct}
+  defp resolve_strategy("cot"), do: {:ok, AiRulesAgent.Strategies.CoT}
+  defp resolve_strategy(mod) when is_binary(mod) do
+    try do
+      {:ok, Module.safe_concat([mod])}
+    rescue
+      _ -> {:error, :unknown_strategy}
+    end
+  end
+
+  defp maybe_memory(%{"memory" => "file"}), do: AiRulesAgent.Memory.File
+  defp maybe_memory(_), do: nil
 
   # --- helpers ---
 
