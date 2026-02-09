@@ -297,5 +297,26 @@ defmodule AiRulesAgent.AgentServerTest do
 
       assert {:error, {:invalid_tool_args, _}} = AgentServer.ask(pid, "go")
     end
+
+    test "builds schema from spec helper" do
+      llm_fun = fn _ -> {:ok, %{tool_call: %{name: "add", args: %{"a" => 1, "b" => 2}}}} end
+
+      tools = %{
+        "add" => %{
+          fun: fn %{"a" => a, "b" => b} -> a + b end,
+          schema_spec: %{a: :integer, b: :integer}
+        }
+      }
+
+      {:ok, pid} =
+        AgentServer.start_link(
+          strategy: ReAct,
+          llm_fun: llm_fun,
+          tools: tools,
+          max_steps: 1
+        )
+
+      assert {:ok, "3"} = AgentServer.ask(pid, "add")
+    end
   end
 end

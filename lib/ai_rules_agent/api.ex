@@ -160,33 +160,46 @@ defmodule AiRulesAgent.API do
   defp build_llm_fun("stub", _params), do: {:ok, fn _ -> {:ok, %{content: "stub"}} end}
 
   defp build_llm_fun("openai", params) do
-    {:ok,
-     AiRulesAgent.Transports.OpenAI.llm_fun(
-       model: Map.get(params, "model", "gpt-4o"),
-       api_key: Map.get(params, "api_key"),
-       base_url: Map.get(params, "base_url")
-     )}
+    with {:ok, key} <- required(params, "api_key") do
+      {:ok,
+       AiRulesAgent.Transports.OpenAI.llm_fun(
+         model: Map.get(params, "model", "gpt-4o"),
+         api_key: key,
+         base_url: Map.get(params, "base_url")
+       )}
+    end
   end
 
   defp build_llm_fun("anthropic", params) do
-    {:ok,
-     AiRulesAgent.Transports.Anthropic.llm_fun(
-       model: Map.get(params, "model", "claude-3-sonnet"),
-       api_key: Map.get(params, "api_key"),
-       base_url: Map.get(params, "base_url")
-     )}
+    with {:ok, key} <- required(params, "api_key") do
+      {:ok,
+       AiRulesAgent.Transports.Anthropic.llm_fun(
+         model: Map.get(params, "model", "claude-3-sonnet"),
+         api_key: key,
+         base_url: Map.get(params, "base_url")
+       )}
+    end
   end
 
   defp build_llm_fun("openrouter", params) do
-    {:ok,
-     AiRulesAgent.Transports.OpenRouter.llm_fun(
-       model: Map.get(params, "model", "openrouter/auto"),
-       api_key: Map.get(params, "api_key"),
-       base_url: Map.get(params, "base_url")
-     )}
+    with {:ok, key} <- required(params, "api_key") do
+      {:ok,
+       AiRulesAgent.Transports.OpenRouter.llm_fun(
+         model: Map.get(params, "model", "openrouter/auto"),
+         api_key: key,
+         base_url: Map.get(params, "base_url")
+       )}
+    end
   end
 
   defp build_llm_fun(other, _params), do: {:error, {:unknown_provider, other}}
+
+  defp required(map, key) do
+    case Map.get(map, key) do
+      nil -> {:error, {:missing, key}}
+      v -> {:ok, v}
+    end
+  end
 
   # --- helpers ---
 

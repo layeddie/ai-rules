@@ -245,14 +245,23 @@ defmodule AiRulesAgent.AgentServer do
 
   defp normalize_tools(map) when is_map(map) do
     Map.new(map, fn
-      {name, %{fun: _fun} = tool} -> {name, Map.update(tool, :schema, nil, &compile_schema/1)}
-      {name, fun} when is_function(fun, 1) -> {name, %{fun: fun, schema: nil}}
+      {name, %{fun: _fun} = tool} ->
+        {name,
+         tool
+         |> maybe_build_schema()
+         |> Map.update(:schema, nil, &compile_schema/1)}
+
+      {name, fun} when is_function(fun, 1) ->
+        {name, %{fun: fun, schema: nil}}
     end)
   end
 
   defp normalize_tools(list) when is_list(list) do
     Enum.into(list, %{}, fn %{name: name, fun: _fun} = t ->
-      {name, Map.update(t, :schema, nil, &compile_schema/1)}
+      {name,
+       t
+       |> maybe_build_schema()
+       |> Map.update(:schema, nil, &compile_schema/1)}
     end)
   end
 
@@ -271,6 +280,13 @@ defmodule AiRulesAgent.AgentServer do
   defp compile_schema(map) when is_map(map) do
     ExJsonSchema.Schema.resolve(map)
   end
+
+  defp maybe_build_schema(%{schema_spec: spec} = tool) when not is_nil(spec) do
+    schema = AiRulesAgent.ToolSchema.from_spec(spec)
+    Map.put(tool, :schema, schema)
+  end
+
+  defp maybe_build_schema(tool), do: tool
 
   defp arity(:next), do: 7
   defp arity(:handle_tool_result), do: 9
