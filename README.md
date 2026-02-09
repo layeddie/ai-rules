@@ -29,6 +29,7 @@ Pieces:
 - `AiRulesAgent.Transports.OpenAI.llm_fun/1` — helper to build an `llm_fun` that hits OpenAI-compatible chat endpoints via Req.
 - `AiRulesAgent.Transports.Anthropic.llm_fun/1` — Anthropic Messages API helper.
 - `AiRulesAgent.Transports.OpenRouter.llm_fun/1` — OpenRouter helper (OpenAI-compatible).
+- Tool validation: tools can include `schema` (JSON Schema map). Args are validated via ExJsonSchema before execution; invalid args return `{:error, {:invalid_tool_args, reason}}`.
 - Memory:
   - `AiRulesAgent.Memory.File` — ETS + file-backed history store under `priv/ai_memory/` keyed by `memory_id`.
 
