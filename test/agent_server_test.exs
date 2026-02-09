@@ -299,7 +299,10 @@ defmodule AiRulesAgent.AgentServerTest do
     end
 
     test "builds schema from spec helper" do
-      llm_fun = fn _ -> {:ok, %{tool_call: %{name: "add", args: %{"a" => 1, "b" => 2}}}} end
+      llm_fun = fn
+        %{tool_result: _} -> {:ok, %{content: "3"}}
+        _ -> {:ok, %{tool_call: %{name: "add", args: %{"a" => 1, "b" => 2}}}}
+      end
 
       tools = %{
         "add" => %{
