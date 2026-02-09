@@ -42,7 +42,7 @@ defmodule AiRulesAgent.AgentManager do
   end
 
   def list_agents do
-    Registry.select(@registry, [{{:"$1", :"$2", :"$3"}, [], [{{:"$1", :"$2"}}]}])
+    Registry.select(@registry, [{{:"$1", :"$2", :"$3"}, [], [{{:"$1", :"$3"}}]}])
   end
 
   defp start_registry do
@@ -52,17 +52,11 @@ defmodule AiRulesAgent.AgentManager do
     end
   end
 
-  defp fetch_sup do
-    case Process.get(:agent_manager_sup) do
-      nil -> AgentSupervisor
-      pid -> pid
-    end
-  end
-
   defp ensure_sup do
     case Process.get(:agent_manager_sup) do
       nil ->
         {:ok, sup} = AgentSupervisor.start_link()
+        Process.unlink(sup)
         Process.put(:agent_manager_sup, sup)
         sup
 

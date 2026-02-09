@@ -235,7 +235,7 @@ defmodule AiRulesAgent.AgentServer do
 
   defp persist_history(%{memory: nil} = state), do: state
 
-  defp persist_history(%{memory: mod, memory_id: nil} = state), do: state
+  defp persist_history(%{memory: _mod, memory_id: nil} = state), do: state
 
   defp persist_history(%{memory: mod, memory_id: id, history: history} = state) do
     _ = mod.store(id, history)
