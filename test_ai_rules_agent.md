@@ -38,4 +38,8 @@ echo '{"op":"agents/list","args":{}}' | nc localhost 4040
 - File, Log, “SQLite” (file-backed); select via `memory:`, `memory_id:`.
 
 ## Known gaps (next)
-- Vector store adapter (pgvector/sqlite-vss) for RAG; current RAG.MemoryIndex is in-memory only.
+- pgvector adapter added (optional); ensure pgvector extension enabled and table exists:
+  ```sql
+  CREATE TABLE ai_vectors (id text primary key, embedding vector, content text);
+  ```
+  Set `POSTGRES_URL` and use `AiRulesAgent.RAG.PgVectorStore`.
