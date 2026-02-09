@@ -313,7 +313,7 @@ defmodule AiRulesAgent.AgentServerTest do
           strategy: ReAct,
           llm_fun: llm_fun,
           tools: tools,
-          max_steps: 1
+          max_steps: 2
         )
 
       assert {:ok, "3"} = AgentServer.ask(pid, "add")
