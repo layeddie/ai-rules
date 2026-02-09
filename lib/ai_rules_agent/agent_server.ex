@@ -256,6 +256,7 @@ defmodule AiRulesAgent.AgentServer do
     rescue
       _ -> :ok
     end
+    AiRulesAgent.Hooks.broadcast({:agent_event, msg})
 
     state
   end
