@@ -36,6 +36,7 @@ Pieces:
   - `AiRulesAgent.Memory.SQLite` — ETS cache + `priv/ai_memory.sqlite3` for persistence.
   - Tool schema helper: `AiRulesAgent.ToolSchema.from_spec/1` turns simple specs (e.g., `%{n: :integer, tags: {:list, :string}}`) into JSON Schema; set `schema_spec` on a tool to auto-compile.
   - Bundled tool: `AiRulesAgent.Tools.WebFetch.spec/0` — simple HTTP GET tool (read-only, truncate body).
+  - Bundled tools: `AiRulesAgent.Tools.WebSearch` (DuckDuckGo JSON), `AiRulesAgent.Tools.FileSearch` (allowlisted grep).
 
 Minimal usage sketch:
 ```elixir
