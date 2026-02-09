@@ -81,3 +81,7 @@ mix test
 
 ## Session logging helper
 - Run `./scripts/log_session.sh` from repo root to append a stub entry under `ai/sessions/<date>.md` (directory is gitignored). Fill in Notes/Actions/Follow-ups as you work.
+
+## Stdio server ops
+- Start stdio server: `AI_AGENT=1 MIX_ENV=dev mix run scripts/ai/serve_agent_stdio.exs`
+- Supported ops (JSON lines): `ctx/routes`, `ctx/ash`, `fs/read`, `fs/patch`, `test`, `doc/lookup`, `agents/start`, `agents/stop`, `agents/list`. Include `secret` if `AI_AGENT_SECRET` is set.
