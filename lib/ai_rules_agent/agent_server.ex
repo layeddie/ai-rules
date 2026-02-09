@@ -22,6 +22,7 @@ defmodule AiRulesAgent.AgentServer do
             strategy_state: nil,
             llm_fun: nil,
             tools: %{},
+            stream_cb: nil,
             ctx: %{},
             history: [],
             max_steps: 5,
@@ -72,6 +73,7 @@ defmodule AiRulesAgent.AgentServer do
     strategy = Keyword.fetch!(opts, :strategy)
     llm_fun = Keyword.fetch!(opts, :llm_fun)
     tools = normalize_tools(Keyword.get(opts, :tools, %{}))
+    stream_cb = Keyword.get(opts, :stream, nil)
     ctx = Keyword.get(opts, :ctx, %{})
     strategy_opts = Keyword.get(opts, :strategy_opts, [])
     max_steps = Keyword.get(opts, :max_steps, 5)
@@ -97,6 +99,7 @@ defmodule AiRulesAgent.AgentServer do
       strategy_state: strategy_state,
       llm_fun: llm_fun,
       tools: tools,
+      stream_cb: stream_cb,
       ctx: ctx,
       history: history,
       max_steps: max_steps,
@@ -181,6 +184,7 @@ defmodule AiRulesAgent.AgentServer do
           state
           |> put_strategy(strategy_state, ctx)
           |> push_history(msg)
+          |> maybe_stream(msg)
 
         {:ok, msg, new_state}
 
@@ -240,6 +244,18 @@ defmodule AiRulesAgent.AgentServer do
 
   defp persist_history(%{memory: mod, memory_id: id, history: history} = state) do
     _ = mod.store(id, history)
+    state
+  end
+
+  defp maybe_stream(%{stream_cb: nil} = state, _msg), do: state
+
+  defp maybe_stream(%{stream_cb: cb} = state, msg) when is_function(cb, 1) do
+    try do
+      cb.(msg)
+    rescue
+      _ -> :ok
+    end
+
     state
   end
 

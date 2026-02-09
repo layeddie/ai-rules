@@ -321,5 +321,29 @@ defmodule AiRulesAgent.AgentServerTest do
 
       assert {:ok, "3"} = AgentServer.ask(pid, "add")
     end
+
+    test "stream callback receives messages" do
+      llm_fun = fn
+        %{tool_result: _} -> {:ok, %{content: "done"}}
+        _ -> {:ok, %{tool_call: %{name: "noop", args: %{}}}}
+      end
+
+      parent = self()
+
+      tools = %{"noop" => fn _ -> "ok" end}
+
+      {:ok, pid} =
+        AgentServer.start_link(
+          strategy: ReAct,
+          llm_fun: llm_fun,
+          tools: tools,
+          stream: fn msg -> send(parent, {:stream, msg}) end,
+          max_steps: 2
+        )
+
+      assert {:ok, "done"} = AgentServer.ask(pid, "hi")
+      assert_receive {:stream, %{role: :tool}}, 50
+      assert_receive {:stream, %{role: :assistant, content: "done"}}, 50
+    end
   end
 end

@@ -30,10 +30,12 @@ Pieces:
 - `AiRulesAgent.Transports.Anthropic.llm_fun/1` — Anthropic Messages API helper.
 - `AiRulesAgent.Transports.OpenRouter.llm_fun/1` — OpenRouter helper (OpenAI-compatible).
 - Tool validation: tools can include `schema` (JSON Schema map) or `schema_spec` (see below). Args are validated via ExJsonSchema before execution; invalid args return `{:error, {:invalid_tool_args, reason}}`.
+- Streaming: pass `stream: fn msg -> ... end` to `AgentServer.start_link/1` to receive each emitted message (tool + assistant).
 - Memory:
   - `AiRulesAgent.Memory.File` — ETS + file-backed history store under `priv/ai_memory/` keyed by `memory_id`.
   - `AiRulesAgent.Memory.SQLite` — ETS cache + `priv/ai_memory.sqlite3` for persistence.
   - Tool schema helper: `AiRulesAgent.ToolSchema.from_spec/1` turns simple specs (e.g., `%{n: :integer, tags: {:list, :string}}`) into JSON Schema; set `schema_spec` on a tool to auto-compile.
+  - Bundled tool: `AiRulesAgent.Tools.WebFetch.spec/0` — simple HTTP GET tool (read-only, truncate body).
 
 Minimal usage sketch:
 ```elixir
