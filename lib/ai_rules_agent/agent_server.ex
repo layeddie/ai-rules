@@ -198,6 +198,7 @@ defmodule AiRulesAgent.AgentServer do
             state
             |> put_strategy(strategy_state, ctx)
             |> push_history(tool_msg)
+            |> maybe_stream(tool_msg)
 
           step(:handle_tool_result, %{tool_name: name, tool_args: args, tool_result: tool_result}, new_state, remaining - 1, opts)
         else
