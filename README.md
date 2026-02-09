@@ -25,7 +25,10 @@ Pieces:
 - Strategies:
   - `AiRulesAgent.Strategies.ReAct` — minimal ReAct; expects an `llm_fun` that returns either `content` or `tool_call`.
   - `AiRulesAgent.Strategies.CoT` — chain-of-thought; never calls tools, prepends a system prompt and returns content directly.
+  - `AiRulesAgent.Strategies.TreeOfThought` — two-phase: generate candidate thoughts, then rank/select best.
 - `AiRulesAgent.Transports.OpenAI.llm_fun/1` — helper to build an `llm_fun` that hits OpenAI-compatible chat endpoints via Req.
+- `AiRulesAgent.Transports.Anthropic.llm_fun/1` — Anthropic Messages API helper.
+- `AiRulesAgent.Transports.OpenRouter.llm_fun/1` — OpenRouter helper (OpenAI-compatible).
 - Memory:
   - `AiRulesAgent.Memory.File` — ETS + file-backed history store under `priv/ai_memory/` keyed by `memory_id`.
 

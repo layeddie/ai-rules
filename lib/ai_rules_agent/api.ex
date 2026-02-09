@@ -143,6 +143,7 @@ defmodule AiRulesAgent.API do
 
   defp resolve_strategy("react"), do: {:ok, AiRulesAgent.Strategies.ReAct}
   defp resolve_strategy("cot"), do: {:ok, AiRulesAgent.Strategies.CoT}
+  defp resolve_strategy("tot"), do: {:ok, AiRulesAgent.Strategies.TreeOfThought}
   defp resolve_strategy(mod) when is_binary(mod) do
     try do
       {:ok, Module.safe_concat([mod])}

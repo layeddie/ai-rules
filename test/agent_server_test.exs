@@ -240,4 +240,27 @@ defmodule AiRulesAgent.AgentServerTest do
       assert_receive {:body, %{"model" => "openrouter/model"}}, 50
     end
   end
+
+  describe "tree of thought strategy" do
+    test "chooses best candidate" do
+      llm_fun = fn %{messages: msgs} ->
+        case Enum.find(msgs, fn m -> m[:content] =~ "bullet" end) do
+          nil ->
+            {:ok, %{content: "best"}}
+
+          _ ->
+            {:ok, %{content: "- first\n- second\n- best"}}
+        end
+      end
+
+      {:ok, pid} =
+        AgentServer.start_link(
+          strategy: AiRulesAgent.Strategies.TreeOfThought,
+          llm_fun: llm_fun,
+          strategy_opts: [branches: 3]
+        )
+
+      assert {:ok, "best"} = AgentServer.ask(pid, "solve")
+    end
+  end
 end
