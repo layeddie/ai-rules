@@ -41,7 +41,13 @@ defmodule AiRulesAgent.AgentManager do
 
     with :ok <- start_registry(reg),
          [{pid, _}] <- Registry.lookup(reg, id) do
+      ref = Process.monitor(pid)
       Process.exit(pid, :normal)
+      receive do
+        {:DOWN, ^ref, :process, ^pid, _} -> :ok
+      after
+        50 -> :ok
+      end
       Registry.unregister(reg, id)
       :ok
     else
