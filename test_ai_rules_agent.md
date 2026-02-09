@@ -36,3 +36,6 @@ echo '{"op":"agents/list","args":{}}' | nc localhost 4040
 
 ## Memory adapters
 - File, Log, “SQLite” (file-backed); select via `memory:`, `memory_id:`.
+
+## Known gaps (next)
+- Vector store adapter (pgvector/sqlite-vss) for RAG; current RAG.MemoryIndex is in-memory only.
