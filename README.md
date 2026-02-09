@@ -32,6 +32,7 @@ Pieces:
 - Tool validation: tools can include `schema` (JSON Schema map). Args are validated via ExJsonSchema before execution; invalid args return `{:error, {:invalid_tool_args, reason}}`.
 - Memory:
   - `AiRulesAgent.Memory.File` — ETS + file-backed history store under `priv/ai_memory/` keyed by `memory_id`.
+  - `AiRulesAgent.Memory.SQLite` — ETS cache + `priv/ai_memory.sqlite3` for persistence.
 
 Minimal usage sketch:
 ```elixir

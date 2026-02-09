@@ -153,6 +153,7 @@ defmodule AiRulesAgent.API do
   end
 
   defp maybe_memory(%{"memory" => "file"}), do: AiRulesAgent.Memory.File
+  defp maybe_memory(%{"memory" => "sqlite"}), do: AiRulesAgent.Memory.SQLite
   defp maybe_memory(_), do: nil
 
   # --- helpers ---

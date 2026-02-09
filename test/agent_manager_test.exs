@@ -46,4 +46,25 @@ defmodule AiRulesAgent.AgentManagerTest do
     {:ok, history} = FileMemory.load(mem_id)
     assert Enum.any?(history, fn m -> m[:content] == "hello" end)
   end
+
+  test "memory sqlite store persists history", ctx do
+    mem_id = :sqlite_agent
+
+    {:ok, id, pid} =
+      AgentManager.start_agent(
+        [
+          strategy: ReAct,
+          llm_fun: fn _ -> {:ok, %{content: "ok"}} end,
+          memory: AiRulesAgent.Memory.SQLite,
+          memory_id: mem_id
+        ],
+        ctx
+      )
+
+    assert {:ok, "ok"} = AgentServer.ask(pid, "persist")
+    :ok = AgentManager.stop_agent(id, ctx)
+
+    {:ok, history} = AiRulesAgent.Memory.SQLite.load(mem_id)
+    assert Enum.any?(history, fn m -> m[:content] == "persist" end)
+  end
 end
