@@ -67,4 +67,22 @@ defmodule AiRulesAgent.AgentManagerTest do
     {:ok, history} = AiRulesAgent.Memory.SQLite.load(mem_id)
     assert Enum.any?(history, fn m -> m[:content] == "persist" end)
   end
+
+  test "memory log store compacts" do
+    mem_id = :log_agent
+
+    {:ok, id, pid} =
+      AgentManager.start_agent(
+        strategy: ReAct,
+        llm_fun: fn _ -> {:ok, %{content: "ok"}} end,
+        memory: AiRulesAgent.Memory.Log,
+        memory_id: mem_id
+      )
+
+    Enum.each(1..5, fn i -> AgentServer.ask(pid, "msg #{i}") end)
+    :ok = AgentManager.stop_agent(id)
+
+    {:ok, history} = AiRulesAgent.Memory.Log.load(mem_id)
+    assert Enum.any?(history, fn m -> m[:content] == "msg 5" end)
+  end
 end
