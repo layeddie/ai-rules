@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: erlef/setup-elixir@v1
+        with:
+          elixir-version: '1.17'
+          otp-version: '27'
+      - name: Install deps
+        run: |
+          cd tools/ai_rules_agent
+          mix deps.get
+      - name: Run CI alias
+        run: |
+          cd tools/ai_rules_agent
+          mix ci

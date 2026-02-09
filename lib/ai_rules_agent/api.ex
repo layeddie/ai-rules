@@ -123,17 +123,17 @@ defmodule AiRulesAgent.API do
           %{status: "ok", id: inspect(id), pid: inspect(pid)}
 
         {:error, reason} ->
-          %{error: reason}
+          %{error: AiRulesAgent.Error.render(reason)}
       end
     else
-      {:error, reason} -> %{error: reason}
+      {:error, reason} -> %{error: AiRulesAgent.Error.render(reason)}
     end
   end
 
   def stop_agent_payload(id) do
     case AiRulesAgent.AgentManager.stop_agent(id) do
       :ok -> %{status: "ok"}
-      {:error, reason} -> %{error: reason}
+      {:error, reason} -> %{error: AiRulesAgent.Error.render(reason)}
     end
   end
 
