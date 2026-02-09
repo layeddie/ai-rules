@@ -7,6 +7,7 @@ defmodule AiRulesAgent.AgentManagerTest do
   alias AiRulesAgent.Memory.File, as: FileMemory
 
   setup do
+    Process.flag(:trap_exit, true)
     reg = :"agent_registry_#{System.unique_integer()}"
     sup_name = :"agent_sup_#{System.unique_integer()}"
     [registry: reg, supervisor: sup_name]

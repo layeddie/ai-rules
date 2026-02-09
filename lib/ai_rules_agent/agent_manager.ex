@@ -58,8 +58,11 @@ defmodule AiRulesAgent.AgentManager do
 
   defp start_registry(reg) do
     case Registry.start_link(keys: :unique, name: reg) do
+      {:ok, pid} ->
+        Process.unlink(pid)
+        :ok
+
       {:error, {:already_started, _}} -> :ok
-      {:ok, _} -> :ok
       {:error, {:already_registered, _}} -> :ok
     end
   end
