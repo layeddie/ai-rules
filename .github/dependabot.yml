@@ -1,0 +1,6 @@
+version: 2
+updates:
+  - package-ecosystem: "mix"
+    directory: "/tools/ai_rules_agent"
+    schedule:
+      interval: "weekly"
