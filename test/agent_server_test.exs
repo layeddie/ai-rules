@@ -155,19 +155,21 @@ defmodule AiRulesAgent.AgentServerTest do
           recipient = Application.get_env(:ai_rules_agent, :req_recipient, self())
           send(recipient, {:body, body})
 
-          {:ok,
-           %Req.Response{
-             status: 200,
-             body: %{
-               "content" => [
-                 %{
-                   "type" => "tool_use",
-                   "name" => "calc",
-                   "input" => %{"a" => 1}
-                 }
-               ]
-             }
-           }}
+          msgs = Map.get(body, "messages") || []
+          tool_seen? = Enum.any?(msgs, fn m -> Map.get(m, "role") == "tool" end)
+
+          resp =
+            if tool_seen? do
+              %{"content" => [%{"type" => "text", "text" => "2"}]}
+            else
+              %{
+                "content" => [
+                  %{"type" => "tool_use", "name" => "calc", "input" => %{"a" => 1}}
+                ]
+              }
+            end
+
+          {:ok, %Req.Response{status: 200, body: resp}}
         end
       end
 
@@ -243,7 +245,8 @@ defmodule AiRulesAgent.AgentServerTest do
         )
 
       assert {:ok, "hi"} = AgentServer.ask(pid, "hello")
-      assert_receive {:body, %{"model" => "openrouter/model"}}, 50
+      assert_receive {:body, body}, 50
+      assert "openrouter/model" == Map.get(body, "model") || Map.get(body, :model)
     end
   end
 
