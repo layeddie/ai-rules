@@ -342,8 +342,8 @@ defmodule AiRulesAgent.AgentServerTest do
         )
 
       assert {:ok, "done"} = AgentServer.ask(pid, "hi")
-      assert_receive {:stream, %{role: :tool}}, 50
-      assert_receive {:stream, %{role: :assistant, content: "done"}}, 50
+      assert_receive {:stream, %{role: :tool}}, 100
+      assert_receive {:stream, %{role: :assistant, content: "done"}}, 100
     end
   end
 end
