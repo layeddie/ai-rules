@@ -85,7 +85,7 @@ defmodule AiRulesAgent.Transports.OpenAI do
     end)
   end
 
-  defp decode_choice(%{"message" => %{"tool_calls" => [tool | _]} = msg}) do
+  def decode_choice(%{"message" => %{"tool_calls" => [tool | _]} = msg}) do
     tool_call = %{
       name: tool["function"]["name"],
       args: decode_args(tool["function"]["arguments"])
@@ -94,11 +94,11 @@ defmodule AiRulesAgent.Transports.OpenAI do
     %{tool_call: tool_call, content: msg["content"]}
   end
 
-  defp decode_choice(%{"message" => %{"content" => content}}) do
+  def decode_choice(%{"message" => %{"content" => content}}) do
     %{content: content}
   end
 
-  defp decode_choice(other), do: %{content: inspect(other)}
+  def decode_choice(other), do: %{content: inspect(other)}
 
   defp decode_args(args) when is_binary(args) do
     case Jason.decode(args) do

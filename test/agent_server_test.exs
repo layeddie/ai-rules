@@ -203,4 +203,41 @@ defmodule AiRulesAgent.AgentServerTest do
       assert {:ok, "Think slow. done"} = AgentServer.ask(pid, "ping")
     end
   end
+
+  describe "openrouter transport helper" do
+    test "routes through openrouter helper" do
+      defmodule ORStub do
+        def post(url: _u, headers: _h, json: body) do
+          send(self(), {:body, body})
+
+          {:ok,
+           %Req.Response{
+             status: 200,
+             body: %{
+               "choices" => [
+                 %{
+                   "message" => %{
+                     "content" => "hi"
+                   }
+                 }
+               ]
+             }
+           }}
+        end
+      end
+
+      llm_fun = AiRulesAgent.Transports.OpenRouter.llm_fun(model: "openrouter/model", api_key: "x", req: ORStub)
+
+      {:ok, pid} =
+        AgentServer.start_link(
+          strategy: ReAct,
+          llm_fun: llm_fun,
+          tools: %{},
+          max_steps: 1
+        )
+
+      assert {:ok, "hi"} = AgentServer.ask(pid, "hello")
+      assert_receive {:body, %{"model" => "openrouter/model"}}, 50
+    end
+  end
 end
