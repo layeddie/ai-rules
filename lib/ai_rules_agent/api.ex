@@ -107,7 +107,7 @@ defmodule AiRulesAgent.API do
 
   def start_agent_payload(strategy_name, params) do
     with {:ok, strat_mod} <- resolve_strategy(strategy_name),
-         llm_fun <- fn _ -> {:error, :llm_not_configured} end do
+         {:ok, llm_fun} <- build_llm_fun(Map.get(params, "provider"), params) do
       attrs =
         [
           strategy: strat_mod,
@@ -155,6 +155,38 @@ defmodule AiRulesAgent.API do
   defp maybe_memory(%{"memory" => "file"}), do: AiRulesAgent.Memory.File
   defp maybe_memory(%{"memory" => "sqlite"}), do: AiRulesAgent.Memory.SQLite
   defp maybe_memory(_), do: nil
+
+  defp build_llm_fun(nil, _params), do: {:ok, fn _ -> {:ok, %{content: "llm not configured"}} end}
+  defp build_llm_fun("stub", _params), do: {:ok, fn _ -> {:ok, %{content: "stub"}} end}
+
+  defp build_llm_fun("openai", params) do
+    {:ok,
+     AiRulesAgent.Transports.OpenAI.llm_fun(
+       model: Map.get(params, "model", "gpt-4o"),
+       api_key: Map.get(params, "api_key"),
+       base_url: Map.get(params, "base_url")
+     )}
+  end
+
+  defp build_llm_fun("anthropic", params) do
+    {:ok,
+     AiRulesAgent.Transports.Anthropic.llm_fun(
+       model: Map.get(params, "model", "claude-3-sonnet"),
+       api_key: Map.get(params, "api_key"),
+       base_url: Map.get(params, "base_url")
+     )}
+  end
+
+  defp build_llm_fun("openrouter", params) do
+    {:ok,
+     AiRulesAgent.Transports.OpenRouter.llm_fun(
+       model: Map.get(params, "model", "openrouter/auto"),
+       api_key: Map.get(params, "api_key"),
+       base_url: Map.get(params, "base_url")
+     )}
+  end
+
+  defp build_llm_fun(other, _params), do: {:error, {:unknown_provider, other}}
 
   # --- helpers ---
 
