@@ -1,26 +1,22 @@
 defmodule AiRulesAgent.Memory.SQLite do
   @moduledoc """
-  SQLite-backed memory store with ETS cache.
+  Lightweight persistent memory using ETS cache and per-id files under `priv/ai_memory_sqlite/`.
+
+  Named SQLite for parity, but implemented via term files to avoid native deps.
   """
 
   @behaviour AiRulesAgent.Memory
-
   @table __MODULE__.Cache
 
-  def start_link(opts \\ []) do
-    Task.start_link(fn ->
-      ensure_started(opts)
-      Process.sleep(:infinity)
-    end)
-  end
+  def ensure_started do
+    case :ets.whereis(@table) do
+      :undefined ->
+        :ets.new(@table, [:set, :public, :named_table, read_concurrency: true, write_concurrency: true])
+        :ok
 
-  def ensure_started(opts \\ []) do
-    maybe_start_cache()
-    db = opts |> Keyword.get(:db_path, default_db())
-    {:ok, conn} = Exqlite.Sqlite3.open(db)
-    :ok = Exqlite.Sqlite3.execute(conn, "CREATE TABLE IF NOT EXISTS memories (id TEXT PRIMARY KEY, blob BLOB)")
-    Process.put({__MODULE__, :conn}, conn)
-    :ok
+      _ ->
+        :ok
+    end
   end
 
   @impl true
@@ -32,25 +28,16 @@ defmodule AiRulesAgent.Memory.SQLite do
         {:ok, history}
 
       [] ->
-        conn = conn!()
-        case Exqlite.Sqlite3.prepare(conn, "SELECT blob FROM memories WHERE id = ?1") do
-          {:ok, stmt} ->
-            :ok = Exqlite.Sqlite3.bind(conn, stmt, [to_string(id)])
-            result = Exqlite.Sqlite3.step(conn, stmt)
-            Exqlite.Sqlite3.release(conn, stmt)
+        path = path_for(id)
 
-            case result do
-              {:row, [blob]} ->
-                history = :erlang.binary_to_term(blob)
-                :ets.insert(@table, {id, history})
-                {:ok, history}
-
-              :done ->
-                {:ok, []}
-            end
-
-          {:error, reason} ->
-            {:error, reason}
+        if File.exists?(path) do
+          with {:ok, bin} <- File.read(path) do
+            history = :erlang.binary_to_term(bin)
+            :ets.insert(@table, {id, history})
+            {:ok, history}
+          end
+        else
+          {:ok, []}
         end
     end
   end
@@ -59,29 +46,17 @@ defmodule AiRulesAgent.Memory.SQLite do
   def store(id, history) when is_list(history) do
     ensure_started()
     :ets.insert(@table, {id, history})
-    conn = conn!()
-    blob = :erlang.term_to_binary(history)
 
-    with {:ok, stmt} <- Exqlite.Sqlite3.prepare(conn, "REPLACE INTO memories (id, blob) VALUES (?1, ?2)") do
-      :ok = Exqlite.Sqlite3.bind(conn, stmt, [to_string(id), blob])
-      _ = Exqlite.Sqlite3.step(conn, stmt)
-      Exqlite.Sqlite3.release(conn, stmt)
-      :ok
-    end
+    :ok = File.mkdir_p(base_dir())
+    File.write(path_for(id), :erlang.term_to_binary(history))
   end
 
-  defp default_db do
-    Path.join(File.cwd!(), "priv/ai_memory.sqlite3")
+  defp base_dir do
+    Path.join(File.cwd!(), "priv/ai_memory_sqlite")
   end
 
-  defp conn! do
-    Process.get({__MODULE__, :conn}) || raise "memory sqlite not started"
-  end
-
-  defp maybe_start_cache do
-    case :ets.whereis(@table) do
-      :undefined -> :ets.new(@table, [:set, :public, :named_table, read_concurrency: true])
-      _ -> :ok
-    end
+  defp path_for(id) do
+    safe = :erlang.phash2(id, 1_000_000)
+    Path.join(base_dir(), "#{safe}.bin")
   end
 end

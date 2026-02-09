@@ -152,7 +152,8 @@ defmodule AiRulesAgent.AgentServerTest do
     test "decodes tool call" do
       defmodule AnthropicStub do
         def post(url: _u, headers: _h, json: body) do
-          send(self(), {:body, body})
+          recipient = Application.get_env(:ai_rules_agent, :req_recipient, self())
+          send(recipient, {:body, body})
 
           {:ok,
            %Req.Response{
@@ -171,6 +172,8 @@ defmodule AiRulesAgent.AgentServerTest do
       end
 
       llm_fun = AiRulesAgent.Transports.Anthropic.llm_fun(model: "claude-3", api_key: "x", req: AnthropicStub)
+      Application.put_env(:ai_rules_agent, :req_recipient, self())
+      on_exit(fn -> Application.delete_env(:ai_rules_agent, :req_recipient) end)
 
       {:ok, pid} =
         AgentServer.start_link(
@@ -208,7 +211,8 @@ defmodule AiRulesAgent.AgentServerTest do
     test "routes through openrouter helper" do
       defmodule ORStub do
         def post(url: _u, headers: _h, json: body) do
-          send(self(), {:body, body})
+          recipient = Application.get_env(:ai_rules_agent, :req_recipient, self())
+          send(recipient, {:body, body})
 
           {:ok,
            %Req.Response{
@@ -227,6 +231,8 @@ defmodule AiRulesAgent.AgentServerTest do
       end
 
       llm_fun = AiRulesAgent.Transports.OpenRouter.llm_fun(model: "openrouter/model", api_key: "x", req: ORStub)
+      Application.put_env(:ai_rules_agent, :req_recipient, self())
+      on_exit(fn -> Application.delete_env(:ai_rules_agent, :req_recipient) end)
 
       {:ok, pid} =
         AgentServer.start_link(

@@ -42,16 +42,16 @@ defmodule AiRulesAgent.Transports.OpenRouter do
         |> Enum.reject(fn {_k, v} -> is_nil(v) end)
         |> Map.new()
 
-        case req_mod.post(url: base_url, headers: headers, json: body) do
-          {:ok, %Req.Response{status: 200, body: %{"choices" => [choice | _]}}} ->
-            {:ok, AiRulesAgent.Transports.OpenAI.decode_choice(choice)}
+      case req_mod.post(url: base_url, headers: headers, json: body) do
+        {:ok, %Req.Response{status: 200, body: %{"choices" => [choice | _]}}} ->
+          {:ok, AiRulesAgent.Transports.OpenAI.decode_choice(choice)}
 
-          {:ok, %Req.Response{status: status, body: body}} ->
-            {:error, {:http_error, status, body}}
+        {:ok, %Req.Response{status: status, body: body}} ->
+          {:error, {:http_error, status, body}}
 
-          {:error, reason} ->
-            {:error, reason}
-        end
+        {:error, reason} ->
+          {:error, reason}
+      end
     end
   end
 

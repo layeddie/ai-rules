@@ -75,7 +75,7 @@ defmodule AiRulesAgent.Transports.Anthropic do
   end
 
   defp decode_content(%{"content" => [%{"type" => "tool_use", "name" => name, "input" => input}]}, _raw) do
-    {:ok, {:tool, name, input}}
+    %{tool_call: %{name: name, args: input}}
   end
 
   defp decode_content(_resp, [%{"type" => "text", "text" => text}]), do: %{content: text}

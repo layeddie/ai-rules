@@ -245,13 +245,13 @@ defmodule AiRulesAgent.AgentServer do
 
   defp normalize_tools(map) when is_map(map) do
     Map.new(map, fn
-      {name, %{fun: fun} = tool} -> {name, Map.update(tool, :schema, nil, &compile_schema/1)}
+      {name, %{fun: _fun} = tool} -> {name, Map.update(tool, :schema, nil, &compile_schema/1)}
       {name, fun} when is_function(fun, 1) -> {name, %{fun: fun, schema: nil}}
     end)
   end
 
   defp normalize_tools(list) when is_list(list) do
-    Enum.into(list, %{}, fn %{name: name, fun: fun} = t ->
+    Enum.into(list, %{}, fn %{name: name, fun: _fun} = t ->
       {name, Map.update(t, :schema, nil, &compile_schema/1)}
     end)
   end
