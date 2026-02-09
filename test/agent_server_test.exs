@@ -278,6 +278,8 @@ defmodule AiRulesAgent.AgentServerTest do
     end
   end
 
+  describe "tool schema validation" do
+
   describe "tree of thought strategy" do
     test "chooses best candidate" do
       llm_fun = fn %{messages: msgs} ->
@@ -372,6 +374,14 @@ defmodule AiRulesAgent.AgentServerTest do
       assert {:ok, "done"} = AgentServer.ask(pid, "hi")
       assert_receive {:stream, %{role: :tool}}, 200
       assert_receive {:stream, %{role: :assistant, content: "done"}}, 100
+    end
+
+    test "uses in-memory rag index helper" do
+      emb = [1.0, 0.0]
+      AiRulesAgent.RAG.MemoryIndex.upsert(:a, "hello world", emb)
+
+      results = AiRulesAgent.RAG.MemoryIndex.search([1.0, 0.0], 1)
+      assert [%{id: :a}] = results
     end
   end
 end
