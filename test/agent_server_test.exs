@@ -67,7 +67,7 @@ defmodule AiRulesAgent.AgentServerTest do
 
   describe "supervisor helper" do
     test "starts agents under DynamicSupervisor" do
-      {:ok, sup} = AgentSupervisor.start_link([])
+      {:ok, sup} = AgentSupervisor.start_link(name: :"sup_#{System.unique_integer()}")
       {:ok, pid} =
         AgentSupervisor.start_agent(sup, strategy: ReAct, llm_fun: fn _ -> {:ok, %{content: "ok"}} end)
 

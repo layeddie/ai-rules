@@ -9,7 +9,7 @@ defmodule AiRulesAgent.AgentManagerTest do
   setup do
     reg = :"agent_registry_#{System.unique_integer()}"
     sup_name = :"agent_sup_#{System.unique_integer()}"
-    %{registry: reg, supervisor: sup_name}
+    [registry: reg, supervisor: sup_name]
   end
 
   test "start/list/stop agent", ctx do

@@ -24,6 +24,7 @@ defmodule AiRulesAgent.AgentManager do
   end
 
   def start_agent(attrs, opts \\ []) do
+    opts = normalize_opts(opts)
     reg = Keyword.get(opts, :registry, registry_name())
     sup_name = Keyword.get(opts, :supervisor, supervisor_name())
     start_registry(reg)
@@ -35,6 +36,7 @@ defmodule AiRulesAgent.AgentManager do
   end
 
   def stop_agent(id, opts \\ []) do
+    opts = normalize_opts(opts)
     reg = Keyword.get(opts, :registry, registry_name())
 
     with [{pid, _}] <- Registry.lookup(reg, id) do
@@ -47,6 +49,7 @@ defmodule AiRulesAgent.AgentManager do
   end
 
   def list_agents(opts \\ []) do
+    opts = normalize_opts(opts)
     reg = Keyword.get(opts, :registry, registry_name())
     Registry.select(reg, [{{:"$1", :"$2", :"$3"}, [], [{{:"$1", :"$3"}}]}])
   end
@@ -84,4 +87,7 @@ defmodule AiRulesAgent.AgentManager do
   defp registry_name do
     Application.get_env(:ai_rules_agent, :registry, @registry)
   end
+
+  defp normalize_opts(opts) when is_list(opts), do: opts
+  defp normalize_opts(%{} = map), do: Map.to_list(map)
 end
