@@ -278,8 +278,6 @@ defmodule AiRulesAgent.AgentServerTest do
     end
   end
 
-  describe "tool schema validation" do
-
   describe "tree of thought strategy" do
     test "chooses best candidate" do
       llm_fun = fn %{messages: msgs} ->
