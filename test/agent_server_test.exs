@@ -263,4 +263,30 @@ defmodule AiRulesAgent.AgentServerTest do
       assert {:ok, "best"} = AgentServer.ask(pid, "solve")
     end
   end
+
+  describe "tool schema validation" do
+    test "rejects invalid args" do
+      schema = %{
+        "type" => "object",
+        "required" => ["n"],
+        "properties" => %{"n" => %{"type" => "integer"}}
+      }
+
+      llm_fun = fn _ -> {:ok, %{tool_call: %{name: "double", args: %{"n" => "bad"}}}} end
+
+      tools = %{
+        "double" => %{fun: fn %{"n" => n} -> n * 2 end, schema: schema}
+      }
+
+      {:ok, pid} =
+        AgentServer.start_link(
+          strategy: ReAct,
+          llm_fun: llm_fun,
+          tools: tools,
+          max_steps: 1
+        )
+
+      assert {:error, {:invalid_tool_args, _}} = AgentServer.ask(pid, "go")
+    end
+  end
 end

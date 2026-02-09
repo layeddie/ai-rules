@@ -71,7 +71,7 @@ defmodule AiRulesAgent.AgentServer do
   def init(opts) do
     strategy = Keyword.fetch!(opts, :strategy)
     llm_fun = Keyword.fetch!(opts, :llm_fun)
-    tools = Keyword.get(opts, :tools, %{})
+    tools = normalize_tools(Keyword.get(opts, :tools, %{}))
     ctx = Keyword.get(opts, :ctx, %{})
     strategy_opts = Keyword.get(opts, :strategy_opts, [])
     max_steps = Keyword.get(opts, :max_steps, 5)
@@ -143,7 +143,7 @@ defmodule AiRulesAgent.AgentServer do
     result =
       case {call, function_exported?(state.strategy, call, arity(call))} do
         {:handle_tool_result, false} ->
-          {:reply, %{role: :assistant, content: inspect(trigger_msg)}, state.strategy_state, state.ctx}
+      {:reply, %{role: :assistant, content: inspect(trigger_msg)}, state.strategy_state, state.ctx}
 
         _ ->
           case call do
@@ -185,8 +185,9 @@ defmodule AiRulesAgent.AgentServer do
         {:ok, msg, new_state}
 
       {:tool, name, args, strategy_state, ctx} ->
-        with {:ok, fun} <- fetch_tool(state.tools, name),
-             {:ok, tool_result} <- safe_call_tool(fun, args) do
+        with {:ok, tool} <- fetch_tool(state.tools, name),
+             :ok <- validate_tool_args(tool, args),
+             {:ok, tool_result} <- safe_call_tool(tool.fun, args) do
           tool_msg = %{role: :tool, name?: name, content: inspect(tool_result)}
 
           new_state =
@@ -209,7 +210,7 @@ defmodule AiRulesAgent.AgentServer do
 
   defp fetch_tool(tools, name) do
     case Map.fetch(tools, name) do
-      {:ok, fun} when is_function(fun, 1) -> {:ok, fun}
+      {:ok, %{fun: fun} = tool} when is_function(fun, 1) -> {:ok, tool}
       {:ok, _} -> {:error, {:invalid_tool_fun, name}}
       :error -> {:error, {:unknown_tool, name}}
     end
@@ -240,6 +241,35 @@ defmodule AiRulesAgent.AgentServer do
   defp persist_history(%{memory: mod, memory_id: id, history: history} = state) do
     _ = mod.store(id, history)
     state
+  end
+
+  defp normalize_tools(map) when is_map(map) do
+    Map.new(map, fn
+      {name, %{fun: fun} = tool} -> {name, Map.update(tool, :schema, nil, &compile_schema/1)}
+      {name, fun} when is_function(fun, 1) -> {name, %{fun: fun, schema: nil}}
+    end)
+  end
+
+  defp normalize_tools(list) when is_list(list) do
+    Enum.into(list, %{}, fn %{name: name, fun: fun} = t ->
+      {name, Map.update(t, :schema, nil, &compile_schema/1)}
+    end)
+  end
+
+  defp validate_tool_args(%{schema: nil}, _args), do: :ok
+
+  defp validate_tool_args(%{schema: schema}, args) do
+    case ExJsonSchema.Validator.validate(schema, args) do
+      :ok -> :ok
+      {:error, reason} -> {:error, {:invalid_tool_args, reason}}
+    end
+  end
+
+  defp compile_schema(nil), do: nil
+  defp compile_schema(%ExJsonSchema.Schema.Root{} = s), do: s
+
+  defp compile_schema(map) when is_map(map) do
+    ExJsonSchema.Schema.resolve(map)
   end
 
   defp arity(:next), do: 7

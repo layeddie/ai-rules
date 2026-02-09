@@ -23,7 +23,8 @@ defmodule AiRulesAgent.MixProject do
     [
       {:bandit, "~> 1.5", only: :dev},
       {:jason, "~> 1.4"},
-      {:req, "~> 0.4"}
+      {:req, "~> 0.4"},
+      {:ex_json_schema, "~> 0.10"}
     ]
   end
 
