@@ -9,25 +9,23 @@ defmodule AiRulesAgent.AgentManagerTest do
   setup do
     reg = :"agent_registry_#{System.unique_integer()}"
     sup_name = :"agent_sup_#{System.unique_integer()}"
-    Application.put_env(:ai_rules_agent, :registry, reg)
-    Application.put_env(:ai_rules_agent, :supervisor_name, sup_name)
-    on_exit(fn ->
-      Application.delete_env(:ai_rules_agent, :registry)
-      Application.delete_env(:ai_rules_agent, :supervisor_name)
-    end)
+    %{registry: reg, supervisor: sup_name}
   end
 
-  test "start/list/stop agent" do
+  test "start/list/stop agent", ctx do
     {:ok, id, pid} =
-      AgentManager.start_agent(strategy: ReAct, llm_fun: fn _ -> {:ok, %{content: "ok"}} end)
+      AgentManager.start_agent(
+        [strategy: ReAct, llm_fun: fn _ -> {:ok, %{content: "ok"}} end],
+        ctx
+      )
 
     assert is_pid(pid)
-    assert [{^id, ^pid}] = AgentManager.list_agents()
+    assert [{^id, ^pid}] = AgentManager.list_agents(ctx)
 
-    assert :ok = AgentManager.stop_agent(id)
+    assert :ok = AgentManager.stop_agent(id, ctx)
   end
 
-  test "memory file store persists history" do
+  test "memory file store persists history", ctx do
     mem_id = :test_agent
 
     {:ok, id, pid} =
@@ -39,7 +37,7 @@ defmodule AiRulesAgent.AgentManagerTest do
       )
 
     assert {:ok, "hi"} = AgentServer.ask(pid, "hello")
-    :ok = AgentManager.stop_agent(id)
+    :ok = AgentManager.stop_agent(id, ctx)
 
     {:ok, history} = FileMemory.load(mem_id)
     assert Enum.any?(history, fn m -> m[:content] == "hello" end)

@@ -16,55 +16,59 @@ defmodule AiRulesAgent.AgentManager do
   end
 
   def init(opts) do
-    {:ok, sup} = AgentSupervisor.start_link(name: Keyword.get(opts, :supervisor, AgentSupervisor))
-    start_registry()
-    Process.put(:agent_manager_sup, sup)
+    sup_name = Keyword.get(opts, :supervisor, supervisor_name())
+    reg = Keyword.get(opts, :registry, registry_name())
+    start_registry(reg)
+    ensure_sup(sup_name)
     Process.sleep(:infinity)
   end
 
-  def start_agent(attrs) do
-    start_registry()
-    sup = ensure_sup()
+  def start_agent(attrs, opts \\ []) do
+    reg = Keyword.get(opts, :registry, registry_name())
+    sup_name = Keyword.get(opts, :supervisor, supervisor_name())
+    start_registry(reg)
+    sup = ensure_sup(sup_name)
     {:ok, pid} = AgentSupervisor.start_agent(sup, attrs)
     id = attrs[:id] || pid
-    Registry.register(registry_name(), id, pid)
+    Registry.register(reg, id, pid)
     {:ok, id, pid}
   end
 
-  def stop_agent(id) do
-    with [{pid, _}] <- Registry.lookup(registry_name(), id) do
+  def stop_agent(id, opts \\ []) do
+    reg = Keyword.get(opts, :registry, registry_name())
+
+    with [{pid, _}] <- Registry.lookup(reg, id) do
       Process.exit(pid, :normal)
-      Registry.unregister(registry_name(), id)
+      Registry.unregister(reg, id)
       :ok
     else
       _ -> {:error, :not_found}
     end
   end
 
-  def list_agents do
-    Registry.select(registry_name(), [{{:"$1", :"$2", :"$3"}, [], [{{:"$1", :"$3"}}]}])
+  def list_agents(opts \\ []) do
+    reg = Keyword.get(opts, :registry, registry_name())
+    Registry.select(reg, [{{:"$1", :"$2", :"$3"}, [], [{{:"$1", :"$3"}}]}])
   end
 
-  defp start_registry do
-    case Registry.start_link(keys: :unique, name: registry_name()) do
+  defp start_registry(reg) do
+    case Registry.start_link(keys: :unique, name: reg) do
       {:error, {:already_started, _}} -> :ok
       {:ok, _} -> :ok
     end
   end
 
-  defp ensure_sup do
-    sup_name = supervisor_name()
-
-    case Process.get(:agent_manager_sup) do
+  defp ensure_sup(sup_name) do
+    case Process.get({:agent_manager_sup, sup_name}) do
       nil ->
         case AgentSupervisor.start_link(name: sup_name) do
           {:ok, sup} ->
             Process.unlink(sup)
-            Process.put(:agent_manager_sup, sup)
+            Process.put({:agent_manager_sup, sup_name}, sup)
             sup
 
           {:error, {:already_started, pid}} ->
-            Process.put(:agent_manager_sup, pid)
+            Process.put({:agent_manager_sup, sup_name}, pid)
             pid
         end
 
