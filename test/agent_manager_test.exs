@@ -31,11 +31,12 @@ defmodule AiRulesAgent.AgentManagerTest do
 
     {:ok, id, pid} =
       AgentManager.start_agent(
-        strategy: ReAct,
-        llm_fun: fn _ -> {:ok, %{content: "hi"}} end,
-        memory: FileMemory,
-        memory_id: mem_id
-      ,
+        [
+          strategy: ReAct,
+          llm_fun: fn _ -> {:ok, %{content: "hi"}} end,
+          memory: FileMemory,
+          memory_id: mem_id
+        ],
         ctx
       )
 
