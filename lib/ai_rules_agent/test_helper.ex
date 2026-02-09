@@ -23,4 +23,8 @@ defmodule AiRulesAgent.TestHelper do
   end
 
   def noop_tool, do: %{"noop" => fn _ -> "ok" end}
+
+  def fake_embedding(vec) do
+    fn _texts, _opts -> {:ok, [vec]} end
+  end
 end
