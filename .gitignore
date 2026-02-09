@@ -1,0 +1,5 @@
+/deps/
+/_build/
+/priv/
+/.nix-mix/
+/.nix-hex/
