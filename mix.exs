@@ -8,6 +8,7 @@ defmodule AiRulesAgent.MixProject do
       elixir: "~> 1.17",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
+      aliases: aliases(),
       description: "AI agent surface for Elixir/Phoenix/Ash projects (HTTP + stdio, allowlist, tests, docs)",
       package: package()
     ]
@@ -24,7 +25,8 @@ defmodule AiRulesAgent.MixProject do
       {:bandit, "~> 1.5", only: :dev},
       {:jason, "~> 1.4"},
       {:req, "~> 0.4"},
-      {:ex_json_schema, "~> 0.10"}
+      {:ex_json_schema, "~> 0.10"},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
     ]
   end
 
@@ -32,6 +34,16 @@ defmodule AiRulesAgent.MixProject do
     [
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/layeddie/ai-rules"}
+    ]
+  end
+
+  defp aliases do
+    [
+      ci: [
+        "format --check-formatted",
+        "credo --strict",
+        "test"
+      ]
     ]
   end
 end
