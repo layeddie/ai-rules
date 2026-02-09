@@ -250,6 +250,34 @@ defmodule AiRulesAgent.AgentServerTest do
     end
   end
 
+  describe "provider failover" do
+    test "falls back when first provider errors" do
+      bad_fun = fn _ -> {:error, :boom} end
+      good_fun = fn _ -> {:ok, %{content: "ok"}} end
+
+      chain = fn payload ->
+        Enum.reduce_while([bad_fun, good_fun], {:error, :none}, fn fun, _ ->
+          case fun.(payload) do
+            {:ok, res} -> {:halt, {:ok, res}}
+            {:error, _} = err -> {:cont, err}
+          end
+        end)
+      end
+
+      tools = %{}
+
+      {:ok, pid} =
+        AgentServer.start_link(
+          strategy: ReAct,
+          llm_fun: chain,
+          tools: tools,
+          max_steps: 1
+        )
+
+      assert {:ok, "ok"} = AgentServer.ask(pid, "hello")
+    end
+  end
+
   describe "tree of thought strategy" do
     test "chooses best candidate" do
       llm_fun = fn %{messages: msgs} ->

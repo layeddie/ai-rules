@@ -107,7 +107,7 @@ defmodule AiRulesAgent.API do
 
   def start_agent_payload(strategy_name, params) do
     with {:ok, strat_mod} <- resolve_strategy(strategy_name),
-         {:ok, llm_fun} <- build_llm_fun(Map.get(params, "provider"), params) do
+         {:ok, llm_fun} <- build_llm_chain(params) do
       attrs =
         [
           strategy: strat_mod,
@@ -156,7 +156,7 @@ defmodule AiRulesAgent.API do
   defp maybe_memory(%{"memory" => "sqlite"}), do: AiRulesAgent.Memory.SQLite
   defp maybe_memory(_), do: nil
 
-  defp build_llm_fun(nil, _params), do: {:ok, fn _ -> {:ok, %{content: "llm not configured"}} end}
+  defp build_llm_fun(nil, _params), do: {:error, :missing_provider}
   defp build_llm_fun("stub", _params), do: {:ok, fn _ -> {:ok, %{content: "stub"}} end}
 
   defp build_llm_fun("openai", params) do
@@ -197,10 +197,38 @@ defmodule AiRulesAgent.API do
 
   defp build_llm_fun(other, _params), do: {:error, {:unknown_provider, other}}
 
+  defp build_llm_chain(%{"providers" => [_ | _] = providers} = params) do
+    funs =
+      Enum.map(providers, fn provider ->
+        build_llm_fun(provider, params)
+      end)
+
+    case Enum.find(funs, fn
+           {:error, _} -> true
+           _ -> false
+         end) do
+      {:error, reason} -> {:error, reason}
+      _ -> {:ok, fallback_chain(Enum.map(funs, fn {:ok, f} -> f end))}
+    end
+  end
+
+  defp build_llm_chain(params), do: build_llm_fun(Map.get(params, "provider"), params)
+
   defp required(map, key) do
     case Map.get(map, key) do
       nil -> {:error, {:missing, key}}
       v -> {:ok, v}
+    end
+  end
+
+  defp fallback_chain(funs) do
+    fn payload ->
+      Enum.reduce_while(funs, {:error, :no_provider_succeeded}, fn fun, _acc ->
+        case fun.(payload) do
+          {:ok, res} -> {:halt, {:ok, res}}
+          {:error, _} = err -> {:cont, err}
+        end
+      end)
     end
   end
 
