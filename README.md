@@ -110,6 +110,10 @@ opencode --config .opencode/opencode.build.json
 - **Claude**: Full agent, skills, commands support
 - **Cursor**: .cursorrules-based prompting
 
+**Optional Claude bridge (opt-in)**  
+- See `tools/claude/` for hooks/skills/templates tuned for Claude Code/Desktop.  
+- User-copyable versions live in `templates/claude/`; nothing is auto-enabled for OpenCode.
+
 ---
 
 ## 🎯 Elixir/BEAM Focus

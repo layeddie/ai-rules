@@ -1,0 +1,84 @@
+{
+  // Optional snippet for Claude settings.json merge.
+  // Add under "hooks": [] in your Claude config.
+  "hooks": [
+    {
+      "name": "missing-impl",
+      "description": "Block callbacks missing @impl true",
+      "action": "block",
+      "patterns": [
+        {
+          "regex": "def (handle_call|handle_cast|handle_info|terminate|init|handle_event|handle_params)\\(",
+          "negativeRegex": "@impl true",
+          "message": "Add @impl true to callbacks for clarity and Dialyzer."
+        }
+      ]
+    },
+    {
+      "name": "hardcoded-paths",
+      "description": "Block hardcoded absolute paths",
+      "action": "block",
+      "patterns": [
+        {
+          "regex": "\"/(Users|home|var|tmp)/",
+          "message": "Avoid hardcoded absolute paths; use Application.app_dir/1 or config."
+        }
+      ]
+    },
+    {
+      "name": "hardcoded-sizes",
+      "description": "Block magic file size limits",
+      "action": "block",
+      "patterns": [
+        {
+          "regex": "\\b(1_?0{6,}|[1-9][0-9]{6,})\\b",
+          "message": "Avoid magic upload size constants; move to config."
+        }
+      ]
+    },
+    {
+      "name": "static-paths-validator",
+      "description": "Block static asset references not in static_paths/0",
+      "action": "block",
+      "patterns": [
+        {
+          "regex": "\"/assets/[^\"]+\"",
+          "message": "Ensure asset is listed in static_paths/0 (endpoint)."
+        }
+      ]
+    },
+    {
+      "name": "nested-if-else",
+      "description": "Warn on nested if/else",
+      "action": "warn",
+      "patterns": [
+        {
+          "regex": "if .*\\n\\s*if ",
+          "message": "Prefer pattern matching/guards over nested if/else."
+        }
+      ]
+    },
+    {
+      "name": "inefficient-enum",
+      "description": "Warn on multiple Enum passes",
+      "action": "warn",
+      "patterns": [
+        {
+          "regex": "Enum\\.(map|filter|reduce).*\\|>\\s*Enum\\.(map|filter|reduce)",
+          "message": "Consider a single Enum.reduce or comprehension."
+        }
+      ]
+    },
+    {
+      "name": "string-concat",
+      "description": "Warn on string concatenation in loops",
+      "action": "warn",
+      "patterns": [
+        {
+          "regex": "Enum\\.(map|each).*<~>\"|\"<>",
+          "message": "Use IO lists or binaries with :erlang.iolist_to_binary/1."
+        }
+      ]
+    }
+  ]
+}
