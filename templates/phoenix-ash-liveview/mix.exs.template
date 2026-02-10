@@ -55,6 +55,7 @@ defmodule [PROJECT_NAME].MixProject do
       {:ex_machina, "~> 2.8", only: [:dev, :test]},
 
       # Optional Elixir-native AI helpers (kept explicit but off prod path)
+      {:req_llm, "~> 1.5", optional: true},
       {:anubis_mcp, "~> 0.17", only: [:dev, :test]},
       {:jido_ai, "~> 0.5", only: [:dev, :test]},
       {:swarm_ex, "~> 0.2", only: [:dev, :test]},

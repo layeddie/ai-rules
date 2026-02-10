@@ -40,6 +40,7 @@ project_requirements.md # project brief
 - OTP: supervised processes, avoid blocking callbacks, prefer pattern matching.
 - DB: preload to avoid N+1; index critical queries.
 - Claude users (optional): copy hooks/skills/CLAUDE.md/mix_quality snippet from `tools/claude/` or `templates/claude/`; OpenCode configs stay unchanged.
+- ReqLLM users (optional): enable the optional `:req_llm` dep in templates, see `docs/req_llm.md` for keys, telemetry, streaming, and fixture checks.
 - Quick Elixir examples reference: `/Users/elay14/projects/2026/ai-rules/elixir_examples.md`
 
 ## 6) Git workflow

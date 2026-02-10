@@ -114,6 +114,10 @@ opencode --config .opencode/opencode.build.json
 - See `tools/claude/` for hooks/skills/templates tuned for Claude Code/Desktop.  
 - User-copyable versions live in `templates/claude/`; nothing is auto-enabled for OpenCode.
 
+**Optional ReqLLM (opt-in)**  
+- See `docs/req_llm.md` for adding the ReqLLM client as a unified LLM layer (multi-provider, streaming, telemetry, cost metadata).  
+- Template dependency is marked optional; enable only when you want LLM calls wired in.
+
 **Reference snippets**  
 - Elixir idioms and small code examples: `/Users/elay14/projects/2026/ai-rules/elixir_examples.md`
 
