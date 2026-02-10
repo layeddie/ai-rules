@@ -114,6 +114,9 @@ opencode --config .opencode/opencode.build.json
 - See `tools/claude/` for hooks/skills/templates tuned for Claude Code/Desktop.  
 - User-copyable versions live in `templates/claude/`; nothing is auto-enabled for OpenCode.
 
+**Reference snippets**  
+- Elixir idioms and small code examples: `/Users/elay14/projects/2026/ai-rules/elixir_examples.md`
+
 ---
 
 ## 🎯 Elixir/BEAM Focus
