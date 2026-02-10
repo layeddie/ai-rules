@@ -39,4 +39,4 @@
 - Any naming preference for the mirrored template folder (`templates/claude/` chosen for now)?
 
 ## Next Steps
-- Await approval, then implement according to steps above, committing in small chunks.
+- Implement according to steps above, committing in small chunks. (Completed on branch `codex/claude-bridge-plan`: assets/hooks/skills/templates/docs + optional mix quality snippet.)
