@@ -6,7 +6,7 @@ This guide explains how to use `.ai_rules` with Claude Code, Claude Desktop, or 
 
 ## Overview
 
-`.ai_rules` is **compatible with Claude** through the `.claude/` folder structure:
+`.ai_rules` is **compatible with Claude** through the `.claude/` folder structure. This folder now includes optional, Claude-only bridge assets (hooks, skills, templates) kept separate from OpenCode/Cursor defaults.
 
 ```
 .claude/
@@ -20,6 +20,8 @@ This guide explains how to use `.ai_rules` with Claude Code, Claude Desktop, or 
 - **Agent Definitions**: Role-based agents for different tasks
 - **Custom Commands**: Slash commands for common workflows
 - **Technical Skills**: Reusable skill modules
+- **Optional Hooks**: Block/warn rules mirroring ai-rules guardrails
+- **Templates**: `CLAUDE.md` project template and `mix quality` snippet
 - **Integration**: Works with Claude Code, Claude Desktop, Cursor
 
 ---
@@ -130,7 +132,9 @@ test/my_app/accounts/user/
 
 ### Available Skills
 
-Skills are **reusable technical modules** that can be invoked by any agent:
+Skills are **reusable technical modules** that can be invoked by any agent. New in this bridge:
+- **skill-discovery** (invoke first; auto-suggests skills by file pattern)
+- **ash-guardrails**, **otp-patterns**, **ecto-query-analysis**, **liveview-lifecycle** (aligned with ai-rules personas)
 
 #### otp-patterns
 **Purpose**: Implement OTP design patterns including GenServer, Supervisor, and Application behaviors.
@@ -227,6 +231,20 @@ claude-code
 ```
 
 ---
+
+## Hooks (optional)
+- Sample hook bundle: `tools/claude/hooks/hooks-settings.json` (also mirrored under `templates/claude/`).
+- Merge into your Claude `settings.json` manually or with `tools/claude/scripts/install_claude_hooks.sh ~/.claude/settings.json` (requires jq).
+- All hooks are opt-in; they do not affect OpenCode or Cursor.
+
+## CLAUDE.md Template (optional)
+- Copy `tools/claude/CLAUDE.md.template` into your project as `.claude/CLAUDE.md`.
+- Mirrors ai-rules personas and references the hook bundle + `mix quality` snippet.
+
+## Optional `mix quality`
+- Copy `tools/claude/mix_tasks/mix_quality.exs` into your project (e.g., `lib/mix/tasks/quality.check.ex`).
+- Add alias: `quality: ["format --check-formatted", "credo --strict", "quality.check"]`.
+- Runs the same guardrails as the hooks without relying on Claude.
 
 ## Configuration
 

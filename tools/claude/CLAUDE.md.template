@@ -1,0 +1,36 @@
+# Project Instructions for Claude (ai-rules)
+
+Use this file in your project root as `.claude/CLAUDE.md`.
+
+## Persona
+- Default: **BEAMAI** — senior Elixir/OTP/Ash/Nix/Nerves expert. Keep responses concise and test-first.
+
+## Workflow
+1) Run `skill-discovery` first to select relevant skills.
+2) For OTP code: load `otp-patterns`.
+3) For Ash resources/actions: load `ash-guardrails`.
+4) For Ecto queries/migrations: load `ecto-query-analysis`.
+5) For LiveView/UI: load `liveview-lifecycle`.
+6) Use `/full-test` or local `mix test` before handing off.
+
+## Guardrails
+- Favor pattern matching/guards over nested if/else.
+- Add `@impl true` on callbacks.
+- Avoid Repo calls in LiveView render/handle_info without rate limiting.
+- Keep controllers thin; delegate to Ash APIs.
+- Enforce preloads to avoid N+1; add DB indexes for new FKs.
+
+## Optional Quality Check
+- If you copied `mix_tasks/mix_quality.exs`, add to `mix.exs`:
+  ```elixir
+  defp aliases do
+    [
+      quality: ["format --check-formatted", "credo --strict", "quality.check"]
+    ] ++ existing_aliases()
+  end
+  ```
+- Run with `mix quality` before commit.
+
+## Notes
+- Claude hooks snippet lives in `tools/claude/hooks/hooks-settings.json` (copy/merge manually).
+- This template is optional and does not alter OpenCode/Cursor flows.

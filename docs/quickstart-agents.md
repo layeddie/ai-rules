@@ -39,6 +39,7 @@ project_requirements.md # project brief
 - TDD; thin controllers; business logic in Ash actions/resources.
 - OTP: supervised processes, avoid blocking callbacks, prefer pattern matching.
 - DB: preload to avoid N+1; index critical queries.
+- Claude users (optional): copy hooks/skills/CLAUDE.md/mix_quality snippet from `tools/claude/` or `templates/claude/`; OpenCode configs stay unchanged.
 
 ## 6) Git workflow
 - Branch from main (e.g., `codex/<short>`), conventional commits, PR before merge. See `git_rules.md`.

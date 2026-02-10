@@ -44,6 +44,8 @@ This directory contains tool-specific configurations for integrating `.ai_rules`
 - `.claude/agents/` - Agent definitions
 - `.claude/commands/` - Slash commands
 - `.claude/skills/` - Technical skills
+- `hooks/` (opt-in) - Block/warn snippets mirroring ai-rules guardrails
+- `CLAUDE.md.template` + `mix_tasks/mix_quality.exs` (opt-in quality gate)
 
 **Structure**:
 ```

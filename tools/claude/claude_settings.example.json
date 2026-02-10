@@ -1,0 +1,10 @@
+{
+  // Example Claude Desktop/Code config snippet.
+  // Merge the "hooks" entries into your existing settings.json.
+  "hooks": [
+    {
+      "$include": "PATH/TO/ai-rules/tools/claude/hooks/hooks-settings.json"
+    }
+  ],
+  "aiRulesPath": "~/path/to/ai-rules"
+}
