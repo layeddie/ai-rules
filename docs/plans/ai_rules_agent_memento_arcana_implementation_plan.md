@@ -3,6 +3,7 @@
 - Target repo: `ai_rules_agent` (companion runtime)
 - Goal: Introduce production-credible memory/retrieval options using `memento` and `arcana` with minimal API breakage.
 - Constraint: Ignore `que` for this phase.
+- Positioning reference: see `docs/plans/ai_rules_agent_positioning_vs_jido.md` for scope boundaries and differentiation.
 
 ## Branch
 - Planning branch in this repo: `codex/memento-arcana-implementation-plans`
