@@ -37,7 +37,10 @@ Targeted test runs:
 mix test test/path/to/file_test.exs
 mix test test/path/to/file_test.exs:42
 mix test --failed
+mix test --include live_call
 ```
+
+Before using unfamiliar tasks, check options with `mix help <task>`.
 
 ## High-Impact Guardrails
 
@@ -61,6 +64,10 @@ mix test --failed
 - Avoid sleep-based synchronization in tests.
 - Prefer monitors/assertions (`Process.monitor`, `assert_receive`) over timing sleeps.
 - Keep examples deterministic and local-first unless a live test is explicitly required.
+
+## usage_rules (when available)
+
+- If `usage_rules` is installed, consult docs early with `mix usage_rules.docs` and `mix usage_rules.search_docs`.
 
 ## Role + Skill Routing
 
