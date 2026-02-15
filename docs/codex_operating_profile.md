@@ -1,10 +1,11 @@
 # Codex Operating Profile (Short)
 
 ## Session Order
-1. Clarity audit first (before feature work) when requested.
-2. Plan in `docs/plans/`.
-3. Implement on a dedicated `codex/*` branch.
-4. Review (bugs/regressions/tests first).
+1. On new Codex app session: run `/Users/elay14/.local/bin/codex-fix-shell` and open a fresh terminal pane.
+2. Clarity audit first (before feature work) when requested.
+3. Plan in `docs/plans/`.
+4. Implement on a dedicated `codex/*` branch.
+5. Review (bugs/regressions/tests first).
 
 ## Working Rules
 - Keep AGENTS/tooling guidance token-efficient.
@@ -16,6 +17,7 @@
 - Prefer `rg` for search.
 - Run: `mix format`, `mix credo --strict`, `mix test` (and `mix dialyzer` if configured).
 - Avoid destructive git actions unless explicitly requested.
+- Codex shell bootstrap check: `echo $0` should show `zsh` in a new Codex terminal.
 
 ## Documentation Standards
 - Public modules: `@moduledoc`.
@@ -24,4 +26,3 @@
 
 ## Escalation Preference
 - Approve safe recurring prefixes when stable (`git`, `mix`, `rg`).
-
