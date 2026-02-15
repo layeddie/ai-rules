@@ -179,6 +179,30 @@ Skills are **reusable technical modules** that can be invoked by any agent. New 
 
 ## Workflow with Claude
 
+## Repository Hygiene (ai-rules + ai_rules_agent)
+
+When working across both repositories, keep one source of truth per feature and
+close branches quickly after merge.
+
+### Guardrails
+
+- Use one active feature branch per repository.
+- Do not split one feature across both repositories at the same time.
+- Decide source-of-truth first: `ai-rules` or `ai_rules_agent`.
+- Push daily (including WIP) to avoid large local-only drift.
+- After merge, delete local feature branches in the same session.
+- If code is split into a new repository, tag old-repo branches, then delete.
+
+### End-of-Session Git Check (required)
+
+Run this in each repository before stopping:
+
+```bash
+git status -sb
+git branch -vv
+git log --oneline --decorate -5
+```
+
 ### Single-Session Workflow
 
 If using **Claude Code** (single session), you can still follow a plan/build/review workflow:
