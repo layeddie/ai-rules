@@ -4,6 +4,7 @@
 - - Need attribution section added to bottom of main README.md
 - - Goal: Add Claude-only bridge assets while keeping ai-rules tool-agnostic and OpenCode defaults untouched.
 - Scope: Confine new files under `tools/claude/` and mirror end-user templates in `templates/` for easy project copy. No Cursor changes this pass.
+- Status update (2026-02-14): attribution section has been added to `README.md`.
 
 ## Branch
 

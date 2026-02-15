@@ -114,10 +114,6 @@ opencode --config .opencode/opencode.build.json
 - See `tools/claude/` for hooks/skills/templates tuned for Claude Code/Desktop.  
 - User-copyable versions live in `templates/claude/`; nothing is auto-enabled for OpenCode.
 
-**Optional ReqLLM (opt-in)**  
-- See `docs/req_llm.md` for adding the ReqLLM client as a unified LLM layer (multi-provider, streaming, telemetry, cost metadata).  
-- Template dependency is marked optional; enable only when you want LLM calls wired in.
-
 **Reference snippets**  
 - Elixir idioms and small code examples: `/Users/elay14/projects/2026/ai-rules/elixir_examples.md`
 
@@ -361,6 +357,22 @@ All tools (mgrep, Serena) are open-source and free.
 - Elixir/BEAM best practices
 
 **Perfect for**: Full-stack web applications, libraries, or embedded systems!
+
+---
+
+## Attribution & Licensing
+
+This repository includes ideas, patterns, and adaptation work informed by public Elixir/AI projects and docs.
+
+- `claude-code-elixir` (George Guimarães): https://github.com/georgeguimaraes/claude-code-elixir
+- `sagents` (Mark Ericksen): https://github.com/sagents-ai/sagents
+- `usage_rules` (Ash Project): https://github.com/ash-project/usage_rules
+- AgentJido ecosystem: https://github.com/agentjido
+
+Where content is inspired or adapted, this repo prefers paraphrased integration over verbatim copying and follows upstream license terms (for example, Apache-2.0/MIT where applicable).
+
+For local research/source inventory, see:
+- `/Users/elay14/projects/2026/elixir-ai/Elixir-AI-Development-Environment-Outline.md`
 
 ---
 
