@@ -7,6 +7,10 @@ description: Elixir-specific security patterns, OWASP mitigations, and complianc
 
 Use this skill when implementing security features, handling user data, or ensuring compliance in Elixir applications.
 
+## Comprehensive Security Hardening Guide
+
+For a complete security hardening guide with OWASP Top 10 for Elixir, cryptography best practices, secrets management, and security audit checklists, see **`docs/security-hardening.md`**.
+
 ## When to Use
 
 - Implementing authentication and authorization
