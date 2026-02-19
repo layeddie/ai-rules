@@ -580,3 +580,297 @@ Distributed systems on BEAM/OTP provide:
 - ✅ Conflict resolution strategies
 
 **Key**: Design for partial connectivity, use quorum for consensus, and test distributed scenarios.
+
+---
+
+## Advanced: Horde Distributed Registry
+
+Horde provides distributed process registries and supervisors that maintain consistency across node changes.
+
+### Dependencies
+
+```elixir
+# mix.exs
+defp deps do
+  [{:horde, "~> 0.9"}]
+end
+```
+
+### Horde.Registry
+
+Distributed process registry that survives network partitions:
+
+```elixir
+defmodule MyApp.DistributedRegistry do
+  use Horde.Registry
+
+  def start_link(_opts) do
+    Horde.Registry.start_link(__MODULE__, __MODULE__, [keys: :unique])
+  end
+
+  @impl true
+  def init(_init_arg) do
+    Horde.Registry.init(
+      keys: :unique,
+      members: :auto,
+      process_termination_timeout: 5_000
+    )
+  end
+
+  def via_tuple(name) do
+    {:via, Horde.Registry, {__MODULE__, name}}
+  end
+end
+```
+
+### Horde.DynamicSupervisor
+
+Distributes child processes across the cluster:
+
+```elixir
+defmodule MyApp.DistributedSupervisor do
+  use Horde.DynamicSupervisor
+
+  def start_link(_opts) do
+    Horde.DynamicSupervisor.start_link(__MODULE__, __MODULE__, name: __MODULE__)
+  end
+
+  @impl true
+  def init(_init_arg) do
+    Horde.DynamicSupervisor.init(
+      strategy: :one_for_one,
+      distribution_strategy: Horde.DynamicSupervisor.DistributionStrategy.OneForOne,
+      members: :auto
+    )
+  end
+end
+```
+
+**See**: `examples/horde_registry.ex` for complete implementation.
+
+---
+
+## Advanced: Raft Consensus
+
+Raft provides strong consistency through leader election and log replication.
+
+### When to Use
+
+- Need strong consistency (linearizability)
+- Leader-based coordination required
+- Configuration changes need consensus
+- Distributed locking with guarantees
+
+### Implementation Options
+
+1. **:ra** (RabbitMQ team) - Production-ready Erlang implementation
+2. **raft** library - Pure Elixir implementation
+
+### Key Concepts
+
+- **Leader Election**: One node elected as leader via voting
+- **Log Replication**: Leader replicates commands to followers
+- **Safety**: All committed entries are durable and consistent
+- **Membership Changes**: Add/remove nodes safely
+
+```elixir
+# Using :ra library
+defmodule MyApp.RaftCluster do
+  @cluster_name :my_raft_cluster
+
+  def start_cluster(nodes) do
+    :ra.start_cluster(
+      @cluster_name,
+      {:module, MyApp.RaftStateMachine, []},
+      nodes,
+      %{}
+    )
+  end
+
+  def command(cmd) do
+    :ra.process_command(@cluster_name, cmd, 5_000)
+  end
+end
+```
+
+**See**: `examples/raft_consensus.ex` for educational implementation.
+
+---
+
+## Advanced: Event Sourcing
+
+Store all changes as immutable events. State is derived from event replay.
+
+### When to Use
+
+- Need complete audit trail
+- Complex domain logic
+- Time-travel debugging
+- Event-driven architecture
+
+### Libraries
+
+- **commanded** - CQRS/ES framework
+- **eventstore** - Event store for Elixir
+
+### Key Components
+
+1. **Events**: Immutable facts about what happened
+2. **Aggregates**: Apply events to build state
+3. **Projections**: Read models built from events
+4. **Snapshots**: Performance optimization
+
+```elixir
+# Define an aggregate
+defmodule MyApp.BankAccount do
+  use MyApp.Aggregate
+
+  def execute_command(%DepositMoney{amount: amount}, state) do
+    {:ok, [%MoneyDeposited{amount: amount, balance: state.balance + amount}]}
+  end
+
+  def apply_event(%MoneyDeposited{balance: balance}, state) do
+    %{state | balance: balance}
+  end
+end
+```
+
+**See**: `examples/event_sourcing.ex` for complete patterns.
+
+---
+
+## Advanced: CRDTs (Conflict-Free Replicated Data Types)
+
+Achieve eventual consistency without coordination. Conflicts resolve automatically.
+
+### When to Use
+
+- High availability required
+- Network partitions common
+- Offline-first applications
+- Real-time collaboration
+
+### Common CRDT Types
+
+| Type | Use Case | Merge Strategy |
+|------|----------|----------------|
+| G-Counter | Page views, likes | Max per node |
+| PN-Counter | Account balance | P-N difference |
+| G-Set | Tags, unique visitors | Union |
+| OR-Set | Shopping cart, active users | Add wins |
+| LWW-Register | User settings | Last timestamp |
+| MV-Register | Concurrent updates | Keep all values |
+
+### Libraries
+
+- **delta_crdt** - Delta-state CRDTs for efficiency
+- **state_crdt** - State-based CRDTs
+
+```elixir
+# PN-Counter example
+defmodule MyApp.DistributedCounter do
+  def increment(counter, node) do
+    # Each node maintains its own count
+    %{counter | p: Map.update(counter.p, node, 1, &(&1 + 1))}
+  end
+
+  def value(counter) do
+    # Total = sum of all positive - sum of all negative
+    sum_values(counter.p) - sum_values(counter.n)
+  end
+
+  def merge(c1, c2) do
+    # Take max for each node
+    %{p: merge_maps(c1.p, c2.p), n: merge_maps(c1.n, c2.n)}
+  end
+end
+```
+
+**See**: `examples/crdt_patterns.ex` for complete implementations.
+
+---
+
+## Choosing the Right Approach
+
+| Requirement | Recommended Approach |
+|-------------|---------------------|
+| Global process registration | Horde.Registry |
+| Distributed supervision | Horde.DynamicSupervisor |
+| Strong consistency | Raft (:ra library) |
+| Event sourcing | Commanded + EventStore |
+| High availability | CRDTs (DeltaCrdt) |
+| Simple clustering | libcluster |
+| Multi-region | Regional clusters + CRDTs |
+
+---
+
+## Anti-Patterns
+
+### ❌ Avoid
+
+1. **Blocking RPC calls without timeout** - Always set timeout
+2. **Assuming nodes are equal** - Some may be slower
+3. **Ignoring partitions** - Must handle gracefully
+4. **Single point of failure** - Distribute critical processes
+5. **Clock-based ordering** - Use vector clocks or LWW
+6. **Overusing :global** - Becomes bottleneck
+7. **Hardcoded node names** - Use service discovery
+
+### ✅ Prefer
+
+1. **Async when possible** - Use cast over call
+2. **Idempotent operations** - Safe to retry
+3. **Circuit breakers** - Fail fast on remote errors
+4. **Bulk operations** - Reduce network round-trips
+5. **Health checks** - Monitor node health
+6. **Graceful degradation** - Continue with reduced functionality
+
+---
+
+## Testing Distributed Systems
+
+### Strategies
+
+1. **Local clustering** - Multiple nodes on localhost
+2. **Chaos testing** - Random node failures
+3. **Network partition simulation** - Block connections
+4. **Property-based testing** - Verify invariants
+
+```elixir
+# Test with local cluster
+test "process migrates on node failure" do
+  # Start cluster
+  {:ok, node1} = :slave.start('127.0.0.1', :node1)
+  {:ok, node2} = :slave.start('127.0.0.1', :node2)
+  
+  # Start process on node1
+  {:ok, pid} = start_process_on(node1)
+  
+  # Kill node1
+  :slave.stop(node1)
+  
+  # Process should restart on node2
+  assert Process.alive?(lookup_process())
+end
+```
+
+---
+
+## Examples Index
+
+| File | Description |
+|------|-------------|
+| `examples/horde_registry.ex` | Horde distributed registry and supervisor |
+| `examples/libcluster.ex` | Node discovery strategies |
+| `examples/raft_consensus.ex` | Raft consensus implementation |
+| `examples/event_sourcing.ex` | Event sourcing with CQRS |
+| `examples/crdt_patterns.ex` | CRDT implementations |
+
+---
+
+## Related Patterns
+
+- `patterns/distributed_advanced.md` - Advanced distributed patterns
+- `patterns/clustering_strategies.md` - Clustering decision guide
+- `skills/otp-patterns/` - Supervision and GenServer patterns
+- `skills/observability/` - Monitoring distributed systems
