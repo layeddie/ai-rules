@@ -4,6 +4,13 @@ Scope: this file is the compact, tool-agnostic operating guide for coding agents
 Precedence: explicit user/developer instructions > this file > linked role/skill/tool docs.
 Safety: never expose secrets, never run destructive git/shell commands without explicit approval.
 
+## Cross-Tool Compatibility Contract
+
+- This guide is designed to work with any LLM model, CLI, IDE, or app.
+- Do not assume one vendor, one IDE, or one MCP host.
+- Work by capability: exact search, semantic discovery, symbol-aware editing, Elixir dependency analysis, and test execution.
+- If a preferred tool is unavailable, use the closest fallback and continue; explicitly note missing capabilities.
+
 ## Workflow (tool-agnostic)
 
 1. Plan
@@ -19,6 +26,15 @@ Safety: never expose secrets, never run destructive git/shell commands without e
 3. Review
 - Check correctness first, then OTP/performance, then readability.
 - Focus on actionable findings and missing tests.
+
+## Local Phoenix Tool Baseline
+
+- For local Phoenix/Ash development, use this baseline whenever available: `usage_rules`, `codicil`, `mgrep`, `serena`.
+- `usage_rules`: consult docs early (`mix usage_rules.docs`, `mix usage_rules.search_docs`).
+- `codicil`: run Elixir-native semantic/dependency analysis before risky refactors.
+- `mgrep`: use for conceptual discovery and broad semantic pattern search.
+- `serena`: use for symbol-aware navigation and structured multi-file edits.
+- Keep `mgrep + serena` as standard `ai-rules` workflow; layer `usage_rules + codicil` to improve Phoenix/Elixir depth.
 
 ## Common Commands
 
@@ -65,9 +81,10 @@ Before using unfamiliar tasks, check options with `mix help <task>`.
 - Prefer monitors/assertions (`Process.monitor`, `assert_receive`) over timing sleeps.
 - Keep examples deterministic and local-first unless a live test is explicitly required.
 
-## usage_rules (when available)
+## usage_rules
 
-- If `usage_rules` is installed, consult docs early with `mix usage_rules.docs` and `mix usage_rules.search_docs`.
+- In local Phoenix/Ash projects, add and enable `usage_rules` during project setup when possible.
+- Consult docs early with `mix usage_rules.docs` and `mix usage_rules.search_docs`.
 
 ## Role + Skill Routing
 
