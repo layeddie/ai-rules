@@ -1,0 +1,430 @@
+# Complete Kubernetes Deployment Examples
+
+## Namespace
+
+```yaml
+# k8s/namespace.yml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: my-app
+  labels:
+    name: my-app
+```
+
+## Full Deployment with All Features
+
+```yaml
+# k8s/deployment-full.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app
+  namespace: my-app
+  labels:
+    app: my-app
+    version: v1
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+        version: v1
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "4000"
+        prometheus.io/path: "/metrics"
+    spec:
+      # Service account
+      serviceAccountName: my-app-sa
+      
+      # Security context
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      
+      # Init containers
+      initContainers:
+      - name: migrate
+        image: my-registry/my-app:latest
+        command: ["bin/my_app", "eval", "MyApp.Release.migrate()"]
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: my-app-secrets
+              key: database-url
+      
+      containers:
+      - name: my-app
+        image: my-registry/my-app:latest
+        imagePullPolicy: Always
+        
+        ports:
+        - name: http
+          containerPort: 4000
+          protocol: TCP
+        
+        # Environment variables
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        
+        # From ConfigMap
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: my-app-secrets
+              key: database-url
+        - name: SECRET_KEY_BASE
+          valueFrom:
+            secretKeyRef:
+              name: my-app-secrets
+              key: secret-key-base
+        
+        # Resource limits
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        
+        # Health checks
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        
+        # Startup probe for slow-starting containers
+        startupProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 30
+        
+        # Volume mounts
+        volumeMounts:
+        - name: config
+          mountPath: /app/config/runtime.exs
+          subPath: runtime.exs
+          readOnly: true
+        - name: tmp
+          mountPath: /tmp
+        
+        # Security context for container
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+      
+      volumes:
+      - name: config
+        configMap:
+          name: my-app-config
+      - name: tmp
+        emptyDir: {}
+      
+      # Node affinity
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - my-app
+              topologyKey: kubernetes.io/hostname
+      
+      # Tolerations
+      tolerations:
+      - key: "node-role.kubernetes.io/master"
+        operator: "Exists"
+        effect: "NoSchedule"
+      
+      # Pod priority
+      priorityClassName: high-priority
+```
+
+## Service Account and RBAC
+
+```yaml
+# k8s/rbac.yml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: my-app-sa
+  namespace: my-app
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: my-app-role
+  namespace: my-app
+rules:
+- apiGroups: [""]
+  resources: ["configmaps", "secrets"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: my-app-rolebinding
+  namespace: my-app
+subjects:
+- kind: ServiceAccount
+  name: my-app-sa
+  namespace: my-app
+roleRef:
+  kind: Role
+  name: my-app-role
+  apiGroup: rbac.authorization.k8s.io
+```
+
+## Network Policy
+
+```yaml
+# k8s/network-policy.yml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: my-app-network-policy
+  namespace: my-app
+spec:
+  podSelector:
+    matchLabels:
+      app: my-app
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+    ports:
+    - protocol: TCP
+      port: 4000
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: database
+    ports:
+    - protocol: TCP
+      port: 5432
+  - to:
+    - namespaceSelector: {}
+    ports:
+    - protocol: UDP
+      port: 53  # DNS
+```
+
+## Pod Disruption Budget
+
+```yaml
+# k8s/pdb.yml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: my-app-pdb
+  namespace: my-app
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: my-app
+```
+
+## Priority Class
+
+```yaml
+# k8s/priority-class.yml
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: high-priority
+value: 1000000
+globalDefault: false
+description: "High priority class for critical services"
+```
+
+## Complete Monitoring Stack
+
+```yaml
+# k8s/monitoring.yml
+# Prometheus ServiceMonitor
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: my-app
+  namespace: my-app
+  labels:
+    app: my-app
+spec:
+  selector:
+    matchLabels:
+      app: my-app
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s
+---
+# PrometheusRule for alerts
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: my-app-rules
+  namespace: my-app
+spec:
+  groups:
+  - name: my-app
+    rules:
+    - alert: MyAppDown
+      expr: up{job="my-app"} == 0
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: "MyApp is down"
+        description: "MyApp has been down for more than 5 minutes"
+    
+    - alert: MyAppHighErrorRate
+      expr: |
+        sum(rate(http_requests_total{status=~"5..",job="my-app"}[5m])) 
+        / sum(rate(http_requests_total{job="my-app"}[5m])) > 0.05
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: "High error rate detected"
+        description: "Error rate is {{ $value }}"
+```
+
+## GitOps with ArgoCD
+
+```yaml
+# k8s/argocd-application.yml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/your-org/my-app.git
+    targetRevision: HEAD
+    path: k8s
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: my-app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+```
+
+## Database Migrations Job
+
+```yaml
+# k8s/migration-job.yml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: my-app-migration
+  namespace: my-app
+spec:
+  template:
+    spec:
+      containers:
+      - name: migrate
+        image: my-registry/my-app:latest
+        command: ["bin/my_app", "eval", "MyApp.Release.migrate()"]
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: my-app-secrets
+              key: database-url
+      restartPolicy: Never
+  backoffLimit: 3
+```
+
+## Canary Deployment
+
+```yaml
+# k8s/canary-deployment.yml
+apiVersion: flagger.app/v1beta3
+kind: Canary
+metadata:
+  name: my-app
+  namespace: my-app
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: my-app
+  progressDeadlineSeconds: 600
+  service:
+    port: 4000
+    targetPort: 4000
+  analysis:
+    interval: 1m
+    threshold: 5
+    maxWeight: 50
+    stepWeight: 10
+    metrics:
+    - name: request-success-rate
+      thresholdRange:
+        min: 99
+      interval: 1m
+    - name: request-duration
+      thresholdRange:
+        max: 500
+      interval: 1m
+```
