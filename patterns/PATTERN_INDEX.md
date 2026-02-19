@@ -2,9 +2,12 @@
 
 ## How to Use This Index
 
-1. Search for your problem in the Quick Problem Search table
-2. Load the specified pattern file and section
-3. Each pattern includes code examples ready to copy
+1. **New**: Check `DECISION_TREES.md` for scenario-based navigation
+2. Search for your problem in the Quick Problem Search table
+3. Load the specified pattern file and section
+4. Each pattern includes code examples ready to copy
+
+**Recommended**: Use decision trees for conceptual understanding, keyword search for specifics
 
 ## Quick Problem Search
 
