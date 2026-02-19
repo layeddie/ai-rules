@@ -1,0 +1,317 @@
+# Livebook Examples for ML in Elixir
+
+## Getting Started with Livebook
+
+```elixir
+# ---
+# livebook: {"persist_outputs": true}
+# ---
+
+# Install dependencies
+Mix.install([
+  {:nx, "~> 0.7"},
+  {:exla, "~> 0.7"},
+  {:axon, "~> 0.6"},
+  {:explorer, "~> 0.8"},
+  {:kino, "~> 0.12"},
+  {:scholar, "~> 0.3"}
+])
+
+# Configure backend
+Nx.default_backend(EXLA.Backend)
+
+# Check GPU availability
+System.cmd("nvidia-smi", [])
+```
+
+## Interactive Neural Network Visualization
+
+```elixir
+# Define a simple network
+model = Axon.input({nil, 784})
+|> Axon.dense(128, activation: :relu)
+|> Axon.dropout(rate: 0.3)
+|> Axon.dense(64, activation: :relu)
+|> Axon.dropout(rate: 0.2)
+|> Axon.dense(10, activation: :softmax)
+
+# Visualize the model
+Axon.Display.as_graph(model, %{})
+```
+
+## Real-time Training Visualization
+
+```elixir
+# Training with live updates
+defmodule TrainingViz do
+  use Kino.JS
+
+  def new do
+    Kino.JS.new(__MODULE__, %{})
+  end
+
+  def push_metric(pid, epoch, loss, accuracy) do
+    Kino.JS.push_event(pid, "metric", %{epoch: epoch, loss: loss, accuracy: accuracy})
+  end
+end
+
+# Create visualization widget
+viz = TrainingViz.new()
+Kino.render(viz)
+
+# Custom training loop with visualization
+defn train_step(model, params, opt_state, x, y) do
+  {loss, gradients} = Nx.Defn.value_and_grad(
+    params,
+    fn p -> Axon.Losses.categorical_cross_entropy(y, Axon.forward(model, p, x)) end
+  )
+  
+  {updates, new_opt_state} = Axon.Optimizers.adam(0.001).(gradients, opt_state)
+  new_params = Axon.Updates.apply_updates(params, updates)
+  
+  {new_params, new_opt_state, loss}
+end
+
+# Training loop
+params = Axon.init(model)
+opt_state = Axon.Optimizers.init(Axon.Optimizers.adam(0.001), params)
+
+for epoch <- 1..50 do
+  {params, opt_state, loss} = train_step(model, params, opt_state, x_train, y_train)
+  
+  # Push to visualization
+  TrainingViz.push_metric(viz.pid, epoch, Nx.to_number(loss), 0.0)
+end
+```
+
+## Data Exploration Dashboard
+
+```elixir
+# Load dataset
+alias Explorer.DataFrame, as: DF
+
+df = DF.read_csv!("/path/to/dataset.csv")
+
+# Summary statistics
+DF.describe(df)
+
+# Interactive data table
+Kino.DataTable.new(df)
+
+# Correlation matrix
+correlation_matrix = 
+  df
+  |> DF.select(DF.numeric_columns(df))
+  |> DF.to_numpy()
+  |> Nx.tensor()
+  |> Scholar.Covariance.covariance()
+  |> Nx.to_list()
+
+# Heatmap visualization
+VegaLite.new(width: 400, height: 400)
+|> VegaLite.data_from_values(correlation_matrix)
+|> VegaLite.mark(:rect)
+|> VegaLite.encode_field(:x, "column_1", type: :ordinal)
+|> VegaLite.encode_field(:y, "column_2", type: :ordinal)
+|> VegaLite.encode_field(:color, "correlation", type: :quantitative)
+```
+
+## Hyperparameter Tuning Dashboard
+
+```elixir
+# Interactive hyperparameter selection
+learning_rate = Kino.Input.slider("Learning Rate", default: 0.001, min: 0.0001, max: 0.1)
+batch_size = Kino.Input.select("Batch Size", options: [16, 32, 64, 128], default: 32)
+epochs = Kino.Input.number("Epochs", default: 10)
+
+# Display controls
+Kino.render(Kino.Layout.grid([learning_rate, batch_size, epochs]))
+
+# Train button
+train_button = Kino.Control.button("Train")
+form = Kino.Control.form([lr: learning_rate, bs: batch_size, epochs: epochs], submit: train_button)
+
+# Handle training
+Kino.listen(form, fn %{lr: lr, bs: bs, epochs: epochs} ->
+  # Train model with selected hyperparameters
+  {model, params} = train_with_hyperparams(lr, bs, epochs)
+  
+  # Display results
+  Kino.render(display_results(model, params))
+end)
+```
+
+## Model Comparison Tool
+
+```elixir
+# Compare multiple model architectures
+architectures = [
+  {"Simple", fn -> create_simple_model() end},
+  {"Medium", fn -> create_medium_model() end},
+  {"Complex", fn -> create_complex_model() end}
+]
+
+results = 
+  for {name, model_fn} <- architectures do
+    model = model_fn.()
+    {time, {trained_model, params}} = 
+      :timer.tc(fn -> train_model(model, train_data) end)
+    
+    accuracy = evaluate_model(trained_model, params, test_data)
+    
+    %{
+      architecture: name,
+      training_time_ms: time / 1000,
+      accuracy: Nx.to_number(accuracy),
+      parameters: count_parameters(params)
+    }
+  end
+
+# Display comparison table
+Kino.DataTable.new(results)
+
+# Visualize comparison
+VegaLite.new(width: 600, height: 300)
+|> VegaLite.data_from_values(results)
+|> VegaLite.mark(:bar)
+|> VegaLite.encode_field(:x, "architecture", type: :nominal)
+|> VegaLite.encode_field(:y, "accuracy", type: :quantitative)
+```
+
+## Feature Importance Analysis
+
+```elixir
+# Calculate feature importance using gradient-based method
+def calculate_feature_importance(model, params, input) do
+  {_, gradients} = Nx.Defn.value_and_grad(
+    params,
+    fn p ->
+      output = Axon.forward(model, p, input)
+      Nx.reduce_max(output)
+    end
+  )
+  
+  gradients
+  |> Nx.abs()
+  |> Nx.reduce_mean(axes: [0])
+end
+
+# Visualize feature importance
+importance = calculate_feature_importance(model, params, sample_input)
+
+VegaLite.new(width: 600, height: 400)
+|> VegaLite.data_from_values(%{
+  feature: 0..(Nx.size(importance) - 1) |> Enum.to_list(),
+  importance: Nx.to_list(importance)
+})
+|> VegaLite.mark(:bar)
+|> VegaLite.encode_field(:x, "feature", type: :ordinal)
+|> VegaLite.encode_field(:y, "importance", type: :quantitative)
+```
+
+## Real-time Model Serving Demo
+
+```elixir
+# Live inference demo
+input_widget = Kino.Input.textarea("Input Data", default: "[1.0, 2.0, 3.0, 4.0]")
+predict_button = Kino.Control.button("Predict")
+
+form = Kino.Control.form([input: input_widget], submit: predict_button)
+
+# Load model
+{model, params} = load_pretrained_model()
+
+Kino.listen(form, fn %{input: input_str} ->
+  # Parse input
+  input = 
+    input_str
+    |> Jason.decode!()
+    |> Nx.tensor()
+    |> Nx.new_axis(0)
+  
+  # Make prediction
+  prediction = Axon.predict(model, params, input)
+  
+  # Display result
+  Kino.render(Kino.Markdown.new("**Prediction:** #{Nx.to_list(prediction) |> inspect()}"))
+end)
+```
+
+## Model Debugging Tools
+
+```elixir
+# Gradient flow visualization
+defmodule GradientViz do
+  def visualize_gradient_flow(model, params, input, output) do
+    gradients = compute_all_gradients(model, params, input, output)
+    
+    # Plot gradient magnitudes per layer
+    gradient_norms = 
+      gradients
+      |> Enum.map(fn {layer, grad} ->
+        {layer, Nx.norm(grad)}
+      end)
+    
+    Kino.DataTable.new(gradient_norms)
+  end
+  
+  defp compute_all_gradients(model, params, input, output) do
+    # Implementation
+  end
+end
+
+# Activation visualization
+defmodule ActivationViz do
+  def visualize_activations(model, params, input) do
+    activations = get_all_activations(model, params, input)
+    
+    # Plot activation distributions
+    for {layer, activation} <- activations do
+      Kino.render(Kino.Markdown.new("### #{layer}"))
+      Kino.render(plot_activation_distribution(activation))
+    end
+  end
+end
+```
+
+## AutoML Prototype
+
+```elixir
+# Simple AutoML implementation
+defmodule AutoML do
+  def search_best_model(data, max_trials \\ 20) do
+    results = 
+      for trial <- 1..max_trials do
+        # Sample hyperparameters
+        lr = sample_learning_rate()
+        hidden = sample_hidden_dim()
+        activation = sample_activation()
+        
+        # Create and train model
+        model = create_model(hidden, activation)
+        {trained_model, params} = train_model(model, data, lr)
+        
+        # Evaluate
+        score = evaluate_model(trained_model, params)
+        
+        %{
+          trial: trial,
+          learning_rate: lr,
+          hidden_dim: hidden,
+          activation: activation,
+          score: score
+        }
+      end
+    
+    # Return best model
+    Enum.max_by(results, & &1.score)
+  end
+  
+  defp sample_learning_rate, do: Enum.random([0.001, 0.01, 0.1])
+  defp sample_hidden_dim, do: Enum.random([32, 64, 128, 256])
+  defp sample_activation, do: Enum.random([:relu, :tanh, :sigmoid])
+end
+
+# Run AutoML
+best_config = AutoML.search_best_model(train_data)
+```
