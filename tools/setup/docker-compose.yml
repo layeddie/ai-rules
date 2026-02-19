@@ -1,0 +1,103 @@
+# ai-rules Development Environment
+#
+# Usage:
+#   docker-compose up -d        # Start in background
+#   docker-compose exec dev bash # Get a shell
+#   docker-compose down          # Stop
+#
+# Or for full setup:
+#   docker-compose run --rm setup
+
+version: '3.8'
+
+services:
+  # Main development container
+  dev:
+    build:
+      context: ../..
+      dockerfile: tools/setup/Dockerfile
+    volumes:
+      - ../..:/app
+      - mix_build:/app/_build
+      - mix_deps:/app/deps
+      - hex_cache:/home/developer/.mix
+      - asdf_data:/home/developer/.asdf
+    working_dir: /app
+    environment:
+      - MIX_ENV=dev
+      - SHELL=/bin/bash
+    ports:
+      - "4000:4000"   # Phoenix default
+      - "4001:4001"   # Additional Phoenix apps
+      - "8080:8080"   # Generic web apps
+    tty: true
+    stdin_open: true
+    command: bash
+
+  # Setup container - runs setup script once
+  setup:
+    build:
+      context: ../..
+      dockerfile: tools/setup/Dockerfile
+    volumes:
+      - ../..:/app
+      - mix_build:/app/_build
+      - mix_deps:/app/deps
+      - hex_cache:/home/developer/.mix
+    working_dir: /app
+    environment:
+      - MIX_ENV=dev
+    command: >
+      bash -c "
+        mix local.hex --force &&
+        mix local.rebar --force &&
+        mix deps.get &&
+        mix compile &&
+        echo 'Setup complete!'
+      "
+
+  # Test container - runs tests
+  test:
+    build:
+      context: ../..
+      dockerfile: tools/setup/Dockerfile
+    volumes:
+      - ../..:/app
+      - mix_build:/app/_build
+      - mix_deps:/app/deps
+    working_dir: /app
+    environment:
+      - MIX_ENV=test
+    command: >
+      bash -c "
+        mix deps.get &&
+        mix compile &&
+        mix test
+      "
+
+  # CI container - runs all quality checks
+  ci:
+    build:
+      context: ../..
+      dockerfile: tools/setup/Dockerfile
+    volumes:
+      - ../..:/app
+      - mix_build:/app/_build
+      - mix_deps:/app/deps
+    working_dir: /app
+    environment:
+      - MIX_ENV=test
+    command: >
+      bash -c "
+        mix deps.get &&
+        mix compile --warnings-as-errors &&
+        mix format --check-formatted &&
+        mix credo --strict &&
+        mix test
+      "
+
+volumes:
+  mix_build:
+  mix_deps:
+  hex_cache:
+  asdf_data:
