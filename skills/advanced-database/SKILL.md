@@ -541,6 +541,19 @@ def list_users do
 end
 ```
 
+## Multi-Tenancy Patterns
+
+For comprehensive multi-tenancy patterns, see `patterns/multi_tenancy.md` which includes:
+
+- **Pattern 1**: Shared Database with Tenant ID (Row-Level Isolation)
+- **Pattern 2**: Tenant Context Plug (Phoenix)
+- **Pattern 3**: Schema-Based Isolation (PostgreSQL)
+- **Pattern 4**: Database Per Tenant
+- **Pattern 5**: Tenant-Aware Ecto Queries
+- **Pattern 6**: Tenant Configuration
+- **Pattern 7**: Multi-Tenancy with Ash Framework
+- **Pattern 8**: Testing Multi-Tenancy
+
 ## Related Skills
 
 - [Ecto Query Analysis](../ecto-query-analysis/SKILL.md) - Query performance analysis
@@ -548,5 +561,6 @@ end
 
 ## Related Patterns
 
-- [Migration Strategies](../migration_strategies.md) - Database migration patterns
-- [Circuit Breaker](../circuit_breaker.md) - Database failure handling
+- [Multi-Tenancy Patterns](../../patterns/multi_tenancy.md) - Comprehensive multi-tenancy guide
+- [Migration Strategies](../../patterns/migration_strategies.md) - Database migration patterns
+- [Circuit Breaker](../../patterns/circuit_breaker.md) - Database failure handling
