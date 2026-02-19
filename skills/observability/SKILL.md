@@ -372,6 +372,28 @@ export default function(data) {
 }
 ```
 
+## Expanded Examples
+
+For comprehensive examples, see the `examples/` directory:
+
+- **`examples/opentelemetry.ex`** - Complete OpenTelemetry integration
+  - Phoenix, Ecto, Oban integration
+  - Custom tracing and context propagation
+  - Sampling strategies
+  - Testing with OpenTelemetry
+
+- **`examples/prometheus.ex`** - Complete Prometheus setup
+  - Counter, histogram, and gauge metrics
+  - Phoenix plugs and Ecto integration
+  - Business metrics instrumentation
+  - Alerting rules
+
+- **`examples/grafana_dashboards.json`** - Grafana dashboards
+  - Pre-built dashboards for Elixir/Phoenix
+  - Business metrics visualization
+  - Alerting configuration
+  - Docker Compose stack
+
 ## Best Practices
 
 ### 1. Structured Logging
@@ -440,6 +462,38 @@ Use observability for:
 - **Performance insights** (~40% faster than manual profiling)
 - **Capacity planning** (~30% token savings vs ad-hoc investigations)
 - **Incident response** (~70% faster with distributed tracing)
+
+## OpenTelemetry Integration
+
+**Setup**: See `examples/opentelemetry.ex` for complete integration guide
+
+Key features:
+- Automatic Phoenix/Oban/Ecto instrumentation
+- Custom span creation and attributes
+- Distributed tracing across services
+- Multiple exporter support (OTLP, Jaeger, Zipkin)
+
+## Prometheus Metrics
+
+**Setup**: See `examples/prometheus.ex` for complete metrics guide
+
+Key features:
+- HTTP request/response metrics
+- Database query performance
+- Business metrics (orders, users)
+- WebSocket connection tracking
+- Custom alerting rules
+
+## Grafana Dashboards
+
+**Setup**: See `examples/grafana_dashboards.json` for pre-built dashboards
+
+Key features:
+- Request rate and response time graphs
+- Error rate monitoring
+- Database performance
+- Business metrics visualization
+- BEAM process metrics
 
 ## Tools to Use
 

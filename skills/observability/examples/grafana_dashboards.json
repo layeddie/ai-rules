@@ -1,0 +1,417 @@
+# Grafana Dashboard Configuration
+
+## Dashboard JSON for Elixir/Phoenix Applications
+
+```json
+{
+  "dashboard": {
+    "title": "Elixir/Phoenix Application Dashboard",
+    "tags": ["elixir", "phoenix", "my_app"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "title": "Request Rate",
+        "type": "graph",
+        "gridPos": {"x": 0, "y": 0, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total[5m])) by (method)",
+            "legendFormat": "{{method}}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          {"format": "reqps", "label": "Requests/s"},
+          {"format": "short"}
+        ]
+      },
+      {
+        "title": "Response Time (95th percentile)",
+        "type": "graph",
+        "gridPos": {"x": 12, "y": 0, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le, path))",
+            "legendFormat": "{{path}}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          {"format": "s", "label": "Seconds"},
+          {"format": "short"}
+        ]
+      },
+      {
+        "title": "Error Rate",
+        "type": "graph",
+        "gridPos": {"x": 0, "y": 8, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total{status=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m]))",
+            "legendFormat": "Error Rate",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          {"format": "percentunit", "label": "Error Rate"},
+          {"format": "short"}
+        ],
+        "alert": {
+          "conditions": [
+            {
+              "evaluator": {"type": "gt", "params": [0.05]},
+              "operator": {"type": "and"},
+              "query": {"params": ["A", "5m", "now"]},
+              "reducer": {"type": "avg"},
+              "type": "query"
+            }
+          ],
+          "message": "Error rate exceeded 5%",
+          "name": "High Error Rate",
+          "severity": "critical"
+        }
+      },
+      {
+        "title": "Active Connections",
+        "type": "graph",
+        "gridPos": {"x": 12, "y": 8, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "active_connections",
+            "legendFormat": "{{type}}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          {"format": "short", "label": "Connections"},
+          {"format": "short"}
+        ]
+      },
+      {
+        "title": "Database Query Duration",
+        "type": "graph",
+        "gridPos": {"x": 0, "y": 16, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(ecto_repo_query_duration_seconds_bucket[5m])) by (le))",
+            "legendFormat": "95th percentile",
+            "refId": "A"
+          },
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(ecto_repo_query_duration_seconds_bucket[5m])) by (le))",
+            "legendFormat": "50th percentile",
+            "refId": "B"
+          }
+        ],
+        "yaxes": [
+          {"format": "s", "label": "Seconds"},
+          {"format": "short"}
+        ]
+      },
+      {
+        "title": "Database Query Rate",
+        "type": "graph",
+        "gridPos": {"x": 12, "y": 16, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "sum(rate(ecto_repo_query_total[5m]))",
+            "legendFormat": "Queries/s",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          {"format": "ops", "label": "Queries/s"},
+          {"format": "short"}
+        ]
+      },
+      {
+        "title": "Business Metrics - Orders",
+        "type": "graph",
+        "gridPos": {"x": 0, "y": 24, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "sum(rate(orders_total[1h])) by (status)",
+            "legendFormat": "{{status}}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          {"format": "ops", "label": "Orders/h"},
+          {"format": "short"}
+        ]
+      },
+      {
+        "title": "Order Value Distribution",
+        "type": "histogram",
+        "gridPos": {"x": 12, "y": 24, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "sum(rate(order_value_euros_bucket[1h])) by (le)",
+            "legendFormat": "{{le}}",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          {"format": "currencyEUR", "label": "Order Value"},
+          {"format": "short"}
+        ]
+      },
+      {
+        "title": "BEAM Process Metrics",
+        "type": "graph",
+        "gridPos": {"x": 0, "y": 32, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "erlang_vm_process_count",
+            "legendFormat": "Total Processes",
+            "refId": "A"
+          },
+          {
+            "expr": "erlang_vm_memory_total_bytes",
+            "legendFormat": "Memory (bytes)",
+            "refId": "B"
+          }
+        ],
+        "yaxes": [
+          {"format": "short", "label": "Count"},
+          {"format": "bytes", "label": "Memory"}
+        ]
+      },
+      {
+        "title": "WebSocket Connections",
+        "type": "graph",
+        "gridPos": {"x": 12, "y": 32, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "rate(websocket_connections_total[5m])",
+            "legendFormat": "Connections/s",
+            "refId": "A"
+          },
+          {
+            "expr": "rate(websocket_messages_total[5m])",
+            "legendFormat": "Messages/s",
+            "refId": "B"
+          }
+        ],
+        "yaxes": [
+          {"format": "ops", "label": "Operations/s"},
+          {"format": "short"}
+        ]
+      }
+    ],
+    "refresh": "5s",
+    "schemaVersion": 27,
+    "version": 0
+  }
+}
+```
+
+## Dashboard Provisioning Configuration
+
+```yaml
+# provisioning/dashboards/my_app.yml
+apiVersion: 1
+
+providers:
+  - name: 'MyApp'
+    orgId: 1
+    folder: ''
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 10
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards
+```
+
+## Data Source Configuration
+
+```yaml
+# provisioning/datasources/prometheus.yml
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    version: 1
+    editable: false
+```
+
+## Grafana Configuration
+
+```ini
+# grafana.ini
+[server]
+domain = localhost
+root_url = http://localhost:3000/
+
+[security]
+admin_user = admin
+admin_password = admin
+
+[auth.anonymous]
+enabled = true
+org_name = Main Org.
+org_role = Viewer
+
+[dashboards]
+default_home_dashboard_path = /etc/grafana/provisioning/dashboards/my_app.json
+
+[alerting]
+enabled = true
+execute_alerts = true
+```
+
+## Elixir Dashboard Generator
+
+```elixir
+# lib/my_app/grafana/dashboard.ex
+defmodule MyApp.Grafana.Dashboard do
+  def generate do
+    %{
+      title: "MyApp Dashboard",
+      tags: ["my_app", "elixir", "phoenix"],
+      timezone: "browser",
+      panels: [
+        panel("Request Rate", "graph", request_rate_query()),
+        panel("Response Time", "graph", response_time_query()),
+        panel("Error Rate", "graph", error_rate_query()),
+        panel("Active Connections", "graph", active_connections_query()),
+        panel("Database Performance", "graph", database_query()),
+        panel("Business Metrics", "graph", business_metrics_query())
+      ],
+      refresh: "5s"
+    }
+  end
+
+  defp panel(title, type, targets) do
+    %{
+      title: title,
+      type: type,
+      gridPos: generate_grid_pos(),
+      targets: targets
+    }
+  end
+
+  defp request_rate_query do
+    [
+      %{
+        expr: "sum(rate(http_requests_total[5m])) by (method)",
+        legendFormat: "{{method}}",
+        refId: "A"
+      }
+    ]
+  end
+
+  defp response_time_query do
+    [
+      %{
+        expr: "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))",
+        legendFormat: "95th percentile",
+        refId: "A"
+      }
+    ]
+  end
+
+  defp error_rate_query do
+    [
+      %{
+        expr: "sum(rate(http_requests_total{status=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m]))",
+        legendFormat: "Error Rate",
+        refId: "A"
+      }
+    ]
+  end
+
+  defp active_connections_query do
+    [
+      %{
+        expr: "active_connections",
+        legendFormat: "{{type}}",
+        refId: "A"
+      }
+    ]
+  end
+
+  defp database_query do
+    [
+      %{
+        expr: "histogram_quantile(0.95, sum(rate(ecto_repo_query_duration_seconds_bucket[5m])) by (le))",
+        legendFormat: "95th percentile",
+        refId: "A"
+      }
+    ]
+  end
+
+  defp business_metrics_query do
+    [
+      %{
+        expr: "sum(rate(orders_total[1h])) by (status)",
+        legendFormat: "{{status}}",
+        refId: "A"
+      }
+    ]
+  end
+
+  defp generate_grid_pos do
+    # Auto-position panels
+    %{x: 0, y: 0, w: 12, h: 8}
+  end
+end
+```
+
+## Docker Compose Stack
+
+```yaml
+# docker-compose.yml
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "4000:4000"
+    environment:
+      - DATABASE_URL=postgres://user:pass@db:5432/myapp
+    depends_on:
+      - db
+      - prometheus
+
+  prometheus:
+    image: prom/prometheus:v2.45.0
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+
+  grafana:
+    image: grafana/grafana:10.0.0
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=myapp
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  prometheus_data:
+  grafana_data:
+  postgres_data:
+```
