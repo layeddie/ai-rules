@@ -45,3 +45,13 @@ project_requirements.md # project brief
 
 ## 6) Git workflow
 - Branch from main (e.g., `codex/<short>`), conventional commits, PR before merge. See `git_rules.md`.
+
+## 7) Visual Workflows
+- See `docs/workflow-diagrams.md` for:
+  - Multi-session workflow diagram
+  - Tool selection decision tree
+  - Role interaction diagram
+  - TDD workflow diagram
+  - Git workflow visualization
+  - Troubleshooting flowchart
+  - Directory structure map
