@@ -12,3 +12,6 @@ erl_crash.dump
 /.nix-mix/
 /.nix-hex/
 /docs/plans/
+!/docs/plans/
+/docs/plans/*
+!/docs/plans/nix_strategy_local_elixir_projects_implementation_plan_2026-02-21.md
