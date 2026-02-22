@@ -65,9 +65,9 @@ nix profile install nixpkgs#direnv
 
 | Template | Use Case | Description |
 |----------|-----------|-------------|
-| **`nix_flake_universal.nix`** | General Elixir Development | Elixir, Phoenix, LiveView, Ash, Livebook, PostgreSQL |
-| **`nix_flake_phoenix_ash.nix`** | Phoenix + Ash Web Apps | Optimized for Phoenix LiveView with Ash framework |
-| **`nix_flake_nerves.nix`** | Embedded Systems | Firmware development with Nerves framework |
+| **`universal.nix`** | General Elixir Development | Elixir, Phoenix, LiveView, Ash, Livebook, PostgreSQL |
+| **`phoenix_ash.nix`** | Phoenix + Ash Web Apps | Optimized for Phoenix LiveView with Ash framework |
+| **`nerves.nix`** | Embedded Systems | Firmware development with Nerves framework |
 
 ### Quick Start
 
@@ -75,13 +75,13 @@ Choose and copy the appropriate template for your project:
 
 ```bash
 # Universal template (all Elixir projects)
-cp ai-rules/configs/nix_flake_universal.nix flake.nix
+cp ai-rules/tools/nixos/flakes/universal.nix flake.nix
 
 # Phoenix + Ash template (web applications)
-cp ai-rules/configs/nix_flake_phoenix_ash.nix flake.nix
+cp ai-rules/tools/nixos/flakes/phoenix_ash.nix flake.nix
 
 # Nerves template (embedded systems)
-cp ai-rules/configs/nix_flake_nerves.nix flake.nix
+cp ai-rules/tools/nixos/flakes/nerves.nix flake.nix
 
 # Or use init_project.sh (automatically selects appropriate template)
 bash ai-rules/scripts/init_project.sh my_app phoenix-ash
@@ -89,7 +89,7 @@ bash ai-rules/scripts/init_project.sh my_app phoenix-ash
 
 ### Template Details
 
-#### Universal Template (`nix_flake_universal.nix`)
+#### Universal Template (`universal.nix`)
 
 **Use for**: Any Elixir project including Phoenix, LiveView, Ash, Livebook
 
@@ -114,7 +114,7 @@ mix phx.server    # Phoenix
 mix livebook      # Livebook
 ```
 
-#### Phoenix + Ash Template (`nix_flake_phoenix_ash.nix`)
+#### Phoenix + Ash Template (`phoenix_ash.nix`)
 
 **Use for**: Web applications using Phoenix LiveView with Ash framework
 
@@ -135,7 +135,7 @@ mix phx.gen.resource  # Generate Phoenix resource
 mix phx.server        # Start Phoenix
 ```
 
-#### Nerves Template (`nix_flake_nerves.nix`)
+#### Nerves Template (`nerves.nix`)
 
 **Use for**: Embedded systems and firmware development with Nerves
 
@@ -230,13 +230,13 @@ When initializing a project with `ai-rules`, copy appropriate Nix template:
 
 ```bash
 # Universal template (recommended for most projects)
-cp ai-rules/configs/nix_flake_universal.nix flake.nix
+cp ai-rules/tools/nixos/flakes/universal.nix flake.nix
 
 # Phoenix + Ash template (web applications)
-cp ai-rules/configs/nix_flake_phoenix_ash.nix flake.nix
+cp ai-rules/tools/nixos/flakes/phoenix_ash.nix flake.nix
 
 # Nerves template (embedded systems)
-cp ai-rules/configs/nix_flake_nerves.nix flake.nix
+cp ai-rules/tools/nixos/flakes/nerves.nix flake.nix
 
 # Or use ai-rules/scripts/init_project.sh with template selection
 bash ai-rules/scripts/init_project.sh my_app phoenix-ash
@@ -707,9 +707,9 @@ Nix integration with `.ai_rules` provides:
 ✅ **.ai_rules Integration**: Scripts and configs available in PATH
 
 **For detailed configuration**, see:
-- `configs/nix_flake_universal.nix` - Universal Elixir template
-- `configs/nix_flake_phoenix_ash.nix` - Phoenix + Ash template
-- `configs/nix_flake_nerves.nix` - Nerves embedded systems template
+- `tools/nixos/flakes/universal.nix` - Universal Elixir template
+- `tools/nixos/flakes/phoenix_ash.nix` - Phoenix + Ash template
+- `tools/nixos/flakes/nerves.nix` - Nerves embedded systems template
 - `configs/mlx_gpu_config.yml` - MLX GPU settings
 - `PROJECT_INIT.md` - Overall project initialization
 

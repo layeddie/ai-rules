@@ -4,7 +4,7 @@ This repository uses a per-project `flake.nix` standard.
 
 ## Canonical template
 
-- Universal template source: `/Users/elay14/projects/2026/ai-rules/configs/nix_flake_universal.nix`
+- Universal template source: `/Users/elay14/projects/2026/ai-rules/tools/nixos/flakes/universal.nix`
 - `ai-rules` root `flake.nix` imports this template directly.
 
 ## Standard commands

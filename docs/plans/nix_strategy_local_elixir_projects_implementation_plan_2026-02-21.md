@@ -14,6 +14,7 @@ Define and implement a modern, reproducible Nix strategy for local Elixir develo
 - Works cleanly with Determinate Nix + direnv on macOS.
 - Adds explicit guidance for OrbStack-based NixOS/container workflows.
 - Produces AI-consumable guidance in `tools/nixos/`.
+- Consolidates flake templates from `configs/` into `tools/nixos/` so all Nix configuration lives in one place.
 - Replaces legacy init flow with an LLM-agnostic v2 flow while preserving old files.
 
 ---
@@ -26,11 +27,17 @@ Define and implement a modern, reproducible Nix strategy for local Elixir develo
 - `tools/nixos/nixos.md`
 - `tools/nixos/elixir_flakes.md`
 
-2. Updated project bootstrap artifacts (without deleting legacy files):
+2. Canonical flake templates relocated under `tools/nixos/`:
+- `tools/nixos/flakes/universal.nix`
+- `tools/nixos/flakes/phoenix_ash.nix`
+- `tools/nixos/flakes/nerves.nix`
+- `tools/nixos/flakes/with_expert.nix`
+
+3. Updated project bootstrap artifacts (without deleting legacy files):
 - `scripts/init_project_v2.sh` (new)
 - `PROJECT_INIT_V2.md` (new)
 
-3. Curated flake examples and patterns:
+4. Curated flake examples and patterns:
 - Elixir library
 - Phoenix + Ash + LiveView
 - Nerves
@@ -38,23 +45,28 @@ Define and implement a modern, reproducible Nix strategy for local Elixir develo
 - Elixir + Rust (Rustler)
 - Universal mixed stack
 
-4. Validation matrix and runbook alignment:
+5. Validation matrix and runbook alignment:
 - Local `nix develop` flow
 - direnv flow
 - containerized dev shell flow
 - basic CI compatibility checks
 
+6. Migration-safe reference updates:
+- all internal references moved from `configs/nix_flake_*.nix` to `tools/nixos/flakes/*.nix`
+- temporary compatibility stubs in `configs/` (or explicit one-shot migration) decided before rollout
+
 ---
 
 ## 3. Current-State Findings (From Repo Review)
 
-1. Good baseline exists:
+1. Good baseline exists, but templates are split across locations:
 - `configs/nix_flake_universal.nix`
 - `configs/nix_flake_phoenix_ash.nix`
 - `configs/nix_flake_nerves.nix`
+- `configs/nix_flake_with-expert.nix`
 - `docs/nix_flake_runbook.md`
 
-2. `tools/nixos/` exists but is currently empty.
+2. `tools/nixos/` should become the single canonical Nix location, with flakes and docs co-located.
 
 3. `scripts/init_project.sh` and `PROJECT_INIT.md` are tied to older workflow assumptions and should remain as legacy references.
 
@@ -84,7 +96,34 @@ Define and implement a modern, reproducible Nix strategy for local Elixir develo
 
 ---
 
-## Phase 2: Canonical Flake Patterns and Version Policy
+## Phase 2: Flake Template Consolidation (`configs/` -> `tools/nixos/`)
+
+**Objective**: Move all flake templates into `tools/nixos/` and make this directory authoritative.
+
+**Tasks**:
+1. Create `tools/nixos/flakes/` and move:
+- `configs/nix_flake_universal.nix` -> `tools/nixos/flakes/universal.nix`
+- `configs/nix_flake_phoenix_ash.nix` -> `tools/nixos/flakes/phoenix_ash.nix`
+- `configs/nix_flake_nerves.nix` -> `tools/nixos/flakes/nerves.nix`
+- `configs/nix_flake_with-expert.nix` -> `tools/nixos/flakes/with_expert.nix`
+
+2. Update all internal references in scripts/docs to new paths.
+
+3. Decide migration strategy:
+- temporary compatibility files in `configs/` that point to new location, or
+- one-shot hard cut with explicit release note.
+
+4. Verify `scripts/init_project.sh` and planned `scripts/init_project_v2.sh` both resolve the new canonical locations.
+
+**Deliverable**:
+- Nix templates consolidated under `tools/nixos/flakes/` with no stale internal references.
+
+**Commit**:
+- `refactor: consolidate nix flake templates under tools/nixos`
+
+---
+
+## Phase 3: Canonical Flake Patterns and Version Policy
 
 **Objective**: Standardize flake patterns used by ai-rules templates.
 
@@ -99,6 +138,8 @@ Define and implement a modern, reproducible Nix strategy for local Elixir develo
 
 3. Map each template to required tools and optional tools.
 
+4. Add version-selectable BEAM policy (e.g. `latest` aliases + explicit `elixir/erlang` pins) aligned with `expert` style flake usage.
+
 **Deliverable**:
 - Flake pattern matrix documented in `tools/nixos/elixir_flakes.md`.
 
@@ -107,7 +148,7 @@ Define and implement a modern, reproducible Nix strategy for local Elixir develo
 
 ---
 
-## Phase 3: Local Container and NixOS Strategy
+## Phase 4: Local Container and NixOS Strategy
 
 **Objective**: Document and validate containerized dev shell options.
 
@@ -133,7 +174,7 @@ Define and implement a modern, reproducible Nix strategy for local Elixir develo
 
 ---
 
-## Phase 4: Bootstrap Modernization (LLM-Agnostic)
+## Phase 5: Bootstrap Modernization (LLM-Agnostic)
 
 **Objective**: Create v2 initialization flow aligned with current strategy.
 
@@ -144,13 +185,16 @@ Define and implement a modern, reproducible Nix strategy for local Elixir develo
 - create nix shell and ai-rules symlink
 - run mix/new-project bootstrap inside nix shell
 
-2. Keep provider/tool neutrality:
+2. Add explicit flow for initializing project scaffolds via nix shell:
+- `nix develop <template-selector> -c mix new ...` or `mix phx.new ...`
+
+3. Keep provider/tool neutrality:
 - no hard dependency on one coding assistant tool
 - optional integration hooks documented, not coupled
 
-3. Create `PROJECT_INIT_V2.md` with end-to-end bootstrap examples.
+4. Create `PROJECT_INIT_V2.md` with end-to-end bootstrap examples.
 
-4. Keep existing `scripts/init_project.sh` and `PROJECT_INIT.md` untouched as legacy.
+5. Keep existing `scripts/init_project.sh` and `PROJECT_INIT.md` untouched as legacy.
 
 **Deliverable**:
 - New v2 bootstrap path and docs.
@@ -160,7 +204,7 @@ Define and implement a modern, reproducible Nix strategy for local Elixir develo
 
 ---
 
-## Phase 5: Validation and Rollout
+## Phase 6: Validation and Rollout
 
 **Objective**: Ensure new strategy is practical and stable.
 
@@ -170,10 +214,13 @@ Define and implement a modern, reproducible Nix strategy for local Elixir develo
 - `nix develop -c bash -lc 'mix deps.get && mix test'` (where applicable)
 
 2. Validate direnv entry for at least one template.
+3. Validate remote flake bootstrap pattern in `.envrc` and local canonical equivalent:
+- remote: `use flake github:<repo>#<template>`
+- local canonical: `use flake .#<template>`
 
-3. Validate one OrbStack/NixOS-oriented flow and capture caveats.
+4. Validate one OrbStack/NixOS-oriented flow and capture caveats.
 
-4. Update cross-links:
+5. Update cross-links:
 - `docs/nix_flake_runbook.md`
 - `README.md` (if needed)
 - `docs/quickstart-agents.md` (if needed)
@@ -193,6 +240,10 @@ Define and implement a modern, reproducible Nix strategy for local Elixir develo
 - `tools/nixos/nix.md`
 - `tools/nixos/nixos.md`
 - `tools/nixos/elixir_flakes.md`
+- `tools/nixos/flakes/universal.nix`
+- `tools/nixos/flakes/phoenix_ash.nix`
+- `tools/nixos/flakes/nerves.nix`
+- `tools/nixos/flakes/with_expert.nix`
 - `scripts/init_project_v2.sh`
 - `PROJECT_INIT_V2.md`
 - `docs/plans/nix_strategy_local_elixir_projects_implementation_plan_2026-02-21.md` (this file)
@@ -201,9 +252,15 @@ Define and implement a modern, reproducible Nix strategy for local Elixir develo
 - `docs/nix_flake_runbook.md`
 - `README.md`
 - `docs/quickstart-agents.md`
+- `scripts/init_project.sh`
+
+**Move**:
+- `configs/nix_flake_universal.nix`
+- `configs/nix_flake_phoenix_ash.nix`
+- `configs/nix_flake_nerves.nix`
+- `configs/nix_flake_with-expert.nix`
 
 **Leave unchanged (legacy retained)**:
-- `scripts/init_project.sh`
 - `PROJECT_INIT.md`
 
 ---
@@ -272,10 +329,12 @@ The following links should be included and classified in `tools/nixos/elixir_fla
 1. `tools/nixos/elixir_flakes.md` contains copy-ready flakes for all required project types.
 2. `tools/nixos/nix.md` clearly documents Determinate + direnv on macOS.
 3. `tools/nixos/nixos.md` clearly documents OrbStack/NixOS workflows and limitations.
-4. `scripts/init_project_v2.sh` exists and matches the new four-step initialization model.
-5. `PROJECT_INIT_V2.md` provides an LLM-agnostic bootstrap guide.
-6. Legacy files remain intact and explicitly marked as legacy in the new docs.
-7. Git commit messages and branch workflow follow `git_rules.md` conventions.
+4. All canonical flake templates reside in `tools/nixos/flakes/`.
+5. No active internal references remain to `configs/nix_flake_*.nix` unless intentionally kept as compatibility stubs.
+6. `scripts/init_project_v2.sh` exists and matches the new four-step initialization model.
+7. `PROJECT_INIT_V2.md` provides an LLM-agnostic bootstrap guide.
+8. Legacy files remain intact and explicitly marked as legacy in the new docs.
+9. Git commit messages and branch workflow follow `git_rules.md` conventions.
 
 ---
 
@@ -293,6 +352,9 @@ The following links should be included and classified in `tools/nixos/elixir_fla
 4. Container workflow complexity.
 - Mitigation: start with one validated path, then expand after proving reliability.
 
+5. Breakage from path migration (`configs/` -> `tools/nixos/flakes/`).
+- Mitigation: ship compatibility stubs or perform hard cut with explicit migration notes and grep-based verification.
+
 ---
 
 ## 9. Decisions Needed Before Build Phase
@@ -300,15 +362,18 @@ The following links should be included and classified in `tools/nixos/elixir_fla
 1. Default pinned versions for Erlang/Elixir in v2 templates (stay on 1.17/OTP 27 or move forward).
 2. Whether to introduce `flake-parts` now or keep plain flakes for readability.
 3. Whether containerized devshell support is required-by-default or optional.
-4. Which templates are mandatory in v1 of `elixir_flakes.md` versus phased-in later.
+4. Whether to keep `configs/nix_flake_*.nix` compatibility shims during one release cycle.
+5. Which templates are mandatory in v1 of `elixir_flakes.md` versus phased-in later.
 
 ---
 
 ## 10. Recommended Execution Order
 
-1. Complete Phase 1 docs skeleton in `tools/nixos/`.
-2. Draft `elixir_flakes.md` with existing local configs as baseline.
-3. Add external reference annotations and rationale for each link.
-4. Build `init_project_v2.sh` + `PROJECT_INIT_V2.md`.
-5. Validate with one Phoenix/Ash project and one Nerves project.
-6. Update runbook/README links and finalize.
+1. Work on feature branch `codex/nix-tools-nixos-consolidation` until validation passes.
+2. Complete Phase 1 docs skeleton in `tools/nixos/`.
+3. Execute Phase 2 consolidation (`configs/` -> `tools/nixos/flakes/`) and update references.
+4. Draft `elixir_flakes.md` with migrated templates as baseline.
+5. Add external reference annotations and rationale for each link.
+6. Build `init_project_v2.sh` + `PROJECT_INIT_V2.md`.
+7. Validate with one Phoenix/Ash project and one Nerves project.
+8. Update runbook/README links and finalize.

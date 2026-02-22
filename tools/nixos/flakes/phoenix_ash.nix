@@ -7,22 +7,32 @@
   };
 
   outputs = { self, nixpkgs, flake-utils }:
-    let
-      overlay = final: prev: {
-        erlang = final.beam.interpreters.erlang_27;
-        pkgs-beam = final.beam.packagesWith final.erlang;
-        elixir = final.pkgs-beam.elixir_1_17;
-      };
-    in
-      flake-utils.lib.eachDefaultSystem (system:
-        let
-          pkgs = import nixpkgs {
-            inherit system;
-            overlays = [ overlay ];
-          };
-        in
-        {
-          devShells.default = pkgs.mkShell {
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        mkDevShell =
+          {
+            erlangAttr ? "erlang_27",
+            elixirAttr ? "elixir_1_17",
+          }:
+          let
+            overlay =
+              final: prev:
+              let
+                erlangPkg = final.beam.interpreters.${erlangAttr};
+                beamPkgs = final.beam.packagesWith erlangPkg;
+              in
+              {
+                erlang = erlangPkg;
+                pkgs-beam = beamPkgs;
+                elixir = beamPkgs.${elixirAttr};
+              };
+
+            pkgs = import nixpkgs {
+              inherit system;
+              overlays = [ overlay ];
+            };
+          in
+          pkgs.mkShell {
             buildInputs = with pkgs; [
               elixir
               erlang
@@ -104,6 +114,15 @@
               # export LMSTUDIO_HOST="http://localhost:1234/v1"
             '';
           };
-        }
+      in
+      {
+        devShells = {
+          default = mkDevShell { };
+          elixir_1_17_erlang_27 = mkDevShell {
+            elixirAttr = "elixir_1_17";
+            erlangAttr = "erlang_27";
+          };
+        };
+      }
     );
 }

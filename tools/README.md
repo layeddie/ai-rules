@@ -71,7 +71,7 @@ This directory contains tool-specific configurations for integrating `.ai_rules`
 
 **See**: `tools/cursor/README.md` for detailed usage guide
 
-### Nix (`tools/nix/`)
+### Nix (`tools/nixos/`)
 
 **Optional Tool**: Nix for reproducible development
 
@@ -82,9 +82,12 @@ This directory contains tool-specific configurations for integrating `.ai_rules`
 - Local LLM path configuration
 
 **Configuration Files**:
-- `nix_flake_template.nix` - Nix flake template (created after you provide flake.nix)
+- `tools/nixos/flakes/universal.nix` - Universal Nix flake template
+- `tools/nixos/flakes/phoenix_ash.nix` - Phoenix + Ash Nix flake template
+- `tools/nixos/flakes/nerves.nix` - Nerves Nix flake template
+- `tools/nixos/flakes/with_expert.nix` - Expert-style flake template
 
-**See**: `tools/nix/README.md` for detailed integration guide
+**See**: `tools/cursor/nix/README.md` for detailed integration guide
 
 ---
 
@@ -220,7 +223,7 @@ All tools use:
 - **OpenCode**: `tools/opencode/README.md`
 - **Claude**: `tools/claude/README.md`
 - **Cursor**: `tools/cursor/README.md`
-- **Nix**: `tools/nix/README.md`
+- **Nix**: `tools/nixos/README.md`
 
 ---
 

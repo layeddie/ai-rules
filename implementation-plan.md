@@ -21,7 +21,7 @@
    - Target: main body ≤ ~250 lines.
 
 4) **ShellHook verbosity toggle (optional but easy)**
-   - Files: `configs/nix_flake_*.nix`
+   - Files: `tools/nixos/flakes/*.nix`
    - Add env guard `if [ "${AI_RULES_SILENT:-0}" = "1" ]; then return; fi` around banner block; keep commands available.
    - Document env toggle in quickstart.
 

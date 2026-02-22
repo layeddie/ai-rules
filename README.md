@@ -197,7 +197,7 @@ Compatible
 
 ### Nix (Optional)
 
-- **Flake template**: `configs/nix_flake_template.nix`
+- **Flake template**: `tools/nixos/flakes/universal.nix`
 - **Integration**: MLX GPU support for M2 Max
 
 ---

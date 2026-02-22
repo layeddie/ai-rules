@@ -323,6 +323,8 @@ graph TB
     Tools --> T1[opencode/]
     Tools --> T2[claude/]
     Tools --> T3[cursor/]
+    Tools --> T4[nixos/]
+    T4 --> N1[flakes/universal.nix]
     
     Templates --> TM1[phoenix-ash-liveview/]
     Templates --> TM2[elixir-library/]
@@ -334,7 +336,6 @@ graph TB
     
     Configs --> C1[project_requirements.md]
     Configs --> C2[opencode_mcp.json]
-    Configs --> C3[nix_flake_template.nix]
     
     Scripts --> SC1[init_project.sh]
     Scripts --> SC2[setup_opencode.sh]

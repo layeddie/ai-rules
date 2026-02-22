@@ -211,7 +211,7 @@ See `configs/project_requirements.md` template for full structure.
 cp ~/path/to/your/flake.nix .
 
 # Otherwise, use ai-rules template
-cp ai-rules/configs/nix_flake_template.nix flake.nix
+cp ai-rules/tools/nixos/flakes/universal.nix flake.nix
 
 # Enter Nix development shell
 nix develop
@@ -798,7 +798,7 @@ git diff HEAD~1 HEAD  # See what changed
 - **tools/opencode/README.md**: OpenCode integration
 - **tools/claude/README.md**: Claude compatibility
 - **tools/cursor/README.md**: Cursor usage
-- **tools/nix/README.md**: Nix integration
+- **tools/nixos/README.md**: Nix integration
 - **roles/README.md**: Role definitions
 - **skills/README.md**: Skill documentation
 

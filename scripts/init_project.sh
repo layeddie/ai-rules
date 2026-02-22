@@ -16,9 +16,10 @@ PROJECT_NAME=${1}
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 AI_RULES_PATH=${2:-"$(cd "$SCRIPT_DIR/.." && pwd)"}
 TEMPLATE=${3:-"phoenix-ash-liveview"}
+FLAKE_ATTR=${4:-"elixir_1_17_erlang_27"}
 
 if [ -z "$PROJECT_NAME" ]; then
-    echo -e "${RED}Usage: $0 <project-name> [ai_rules_path] [template]${NC}"
+    echo -e "${RED}Usage: $0 <project-name> [ai_rules_path] [template] [flake_attr]${NC}"
     echo ""
  echo "Available templates:"
      echo "  - phoenix-ash-liveview (default) - Phoenix + Ash web application"
@@ -26,11 +27,15 @@ if [ -z "$PROJECT_NAME" ]; then
      echo "  - elixir-library - Elixir library"
      echo "  - nerves - Nerves embedded systems"
      echo "  - universal - Universal Elixir development"
+     echo ""
+     echo "Flake attr examples:"
+     echo "  - elixir_1_17_erlang_27 (default)"
      exit 1
 fi
 
 echo -e "${GREEN}🚀 Initializing Elixir project: $PROJECT_NAME${NC}"
 echo -e "${YELLOW}📋 Template: $TEMPLATE${NC}"
+echo -e "${YELLOW}🧪 Flake Attr: $FLAKE_ATTR${NC}"
 echo -e "${YELLOW}🔗 AI Rules: $AI_RULES_PATH${NC}"
 
 # Validate AI rules path
@@ -91,30 +96,36 @@ fi
 echo -e "${GREEN}📦 Copying Nix flake...${NC}"
 case "$TEMPLATE" in
   "nerves")
-    cp ai-rules/configs/nix_flake_nerves.nix flake.nix
+    cp ai-rules/tools/nixos/flakes/nerves.nix flake.nix
     echo -e "${GREEN}   Using Nerves flake template${NC}"
     ;;
   "universal")
-    cp ai-rules/configs/nix_flake_universal.nix flake.nix
+    cp ai-rules/tools/nixos/flakes/universal.nix flake.nix
     echo -e "${GREEN}   Using Universal flake template${NC}"
     ;;
   "phoenix-basic"|"elixir-library")
     # For these templates, use universal
-    cp ai-rules/configs/nix_flake_universal.nix flake.nix
+    cp ai-rules/tools/nixos/flakes/universal.nix flake.nix
     echo -e "${GREEN}   Using Universal flake template${NC}"
     ;;
   "phoenix-ash-liveview"|*)
     # Default template uses Phoenix + Ash
-    cp ai-rules/configs/nix_flake_phoenix_ash.nix flake.nix
+    cp ai-rules/tools/nixos/flakes/phoenix_ash.nix flake.nix
     echo -e "${GREEN}   Using Phoenix + Ash flake template${NC}"
     ;;
 esac
 
-# 8. Create basic file structure
+# 8. Create direnv configuration
+echo -e "${GREEN}🧭 Creating .envrc...${NC}"
+cat > .envrc << EOF
+use flake .#${FLAKE_ATTR}
+EOF
+
+# 9. Create basic file structure
 echo -e "${GREEN}📁 Creating file structure...${NC}"
 mkdir -p {lib,test,config,priv}
 
-# 9. Create .gitignore
+# 10. Create .gitignore
 echo -e "${GREEN}📝 Creating .gitignore...${NC}"
 cat > .gitignore << 'EOF'
 # AI rules (symlinked)
@@ -123,6 +134,7 @@ ai-rules
 # OpenCode
 .opencode/
 .serena/
+.direnv/
 
 # MCP servers
 .tidewave/
@@ -145,7 +157,7 @@ erl_crash.dump
 
 EOF
 
-# 10. Create initial mix.exs if not from template
+# 11. Create initial mix.exs if not from template
 if [ ! -f mix.exs ]; then
     echo -e "${GREEN}📦 Creating basic mix.exs...${NC}"
     cat > mix.exs << 'EOF'
@@ -191,7 +203,7 @@ end
 EOF
 fi
 
-# 11. Initial git commit
+# 12. Initial git commit
 echo -e "${GREEN}💾 Creating initial git commit...${NC}"
 git add .
 git commit -m "chore: initialize project with ai-rules
@@ -200,30 +212,34 @@ git commit -m "chore: initialize project with ai-rules
 - Link ai-rules repository
 - Add OpenCode configuration
 - Apply template: $TEMPLATE
+- Configure flake attr: $FLAKE_ATTR
 - Create .gitignore
 - Create initial mix.exs"
 
-# 11. Print success message and next steps
+# 13. Print success message and next steps
 echo ""
 echo -e "${GREEN}✅ Project initialized successfully!${NC}"
 echo ""
 echo -e "${YELLOW}📋 Next steps:${NC}"
-echo "  1. Enter Nix development environment:"
-echo "     nix develop"
+echo "  1. Allow direnv:"
+echo "     direnv allow"
 echo ""
-echo "  2. Install Elixir dependencies:"
+echo "  2. Enter Nix development environment:"
+echo "     nix develop .#${FLAKE_ATTR}"
+echo ""
+echo "  3. Install Elixir dependencies:"
 echo "     mix deps.get"
 echo ""
-echo "  3. Edit project_requirements.md with your requirements"
+echo "  4. Edit project_requirements.md with your requirements"
 echo "     vim project_requirements.md"
 echo ""
-echo "  2. Start plan session (Terminal 1):"
+echo "  5. Start plan session (Terminal 1):"
 echo "     opencode --config .opencode/opencode.plan.json"
 echo ""
-echo "  3. Start build session (Terminal 2):"
+echo "  6. Start build session (Terminal 2):"
 echo "     opencode --config .opencode/opencode.build.json"
 echo ""
-echo "  4. Start review session (Terminal 3, optional):"
+echo "  7. Start review session (Terminal 3, optional):"
 echo "     opencode --config .opencode/opencode.review.json"
 echo ""
 echo -e "${YELLOW}📚 For more information, see:${NC}"
