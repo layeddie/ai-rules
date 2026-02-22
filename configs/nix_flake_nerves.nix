@@ -34,6 +34,7 @@
               curl
               x11_ssh_askpass
               postgresql_16
+              fresh-editor
             ] ++ lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
               CoreFoundation
               CoreServices

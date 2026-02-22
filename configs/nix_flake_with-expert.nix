@@ -78,6 +78,7 @@
               just
               _7zz
               git
+              fresh-editor
             ];
           };
         };

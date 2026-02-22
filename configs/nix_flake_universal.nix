@@ -31,6 +31,7 @@
               nodejs_20
               pkg-config
               openssl
+              fresh-editor
             ] ++ lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
               CoreFoundation
               CoreServices
