@@ -110,6 +110,12 @@ opencode --config .opencode/opencode.build.json
 - **Claude**: Full agent, skills, commands support
 - **Cursor**: .cursorrules-based prompting
 
+### Optional Retrieval Sidecar
+
+- **Arcana (optional)**: Local document retrieval sidecar for all agents (not OpenCode-only)
+- Setup/search scripts: `scripts/arcana_setup.sh`, `scripts/arcana_ingest_ai_rules_docs.sh`, `scripts/arcana_search_ai_rules_docs.sh`
+- Guide: `docs/arcana-sidecar.md`
+
 **Optional Claude bridge (opt-in)**  
 - See `tools/claude/` for hooks/skills/templates tuned for Claude Code/Desktop.  
 - User-copyable versions live in `templates/claude/`; nothing is auto-enabled for OpenCode.

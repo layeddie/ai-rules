@@ -1,5 +1,9 @@
 # Migration Guide: Arcana Removal + New Tools Integration
 
+> Historical note (January 2026): this document describes the Arcana removal phase.
+> Current policy is "Arcana optional sidecar" for document retrieval.
+> See `docs/arcana-sidecar.md` for the active setup.
+
 **Purpose**: Guide for removing Arcana references and integrating 5 new Elixir-native tools into ai-rules
 
 ---

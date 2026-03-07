@@ -44,7 +44,6 @@
               curl
               x11_ssh_askpass
               postgresql_16
-              fresh-editor
             ] ++ lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
               CoreFoundation
               CoreServices
@@ -118,6 +117,10 @@
           default = mkDevShell { };
           elixir_1_17_erlang_27 = mkDevShell {
             elixirAttr = "elixir_1_17";
+            erlangAttr = "erlang_27";
+          };
+          elixir_1_18_erlang_27 = mkDevShell {
+            elixirAttr = "elixir_1_18";
             erlangAttr = "erlang_27";
           };
         };

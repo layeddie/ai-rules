@@ -143,6 +143,7 @@ All tools support:
 All tools support:
 - **mgrep**: Semantic search (native in OpenCode, manual in others)
 - **Serena MCP**: Semantic search + edit (via MCP)
+- **Arcana sidecar (optional)**: shared local doc retrieval via scripts (`scripts/arcana_*`) for any agent
 - **grep**: Exact pattern matching
 
 ### Roles & Skills

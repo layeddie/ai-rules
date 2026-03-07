@@ -4,7 +4,7 @@
 **Date**: January 16, 2026
 **Purpose**: Comprehensive guide for Elixir/BEAM MCP tools and AI integration
 
-**Note**: Arcana has been removed from ai-rules (domain mismatch: data science vs Elixir development). See migration guide for details.
+**Note**: Arcana is not part of default MCP coding workflow. It is now supported as an optional sidecar for local document retrieval. See `docs/arcana-sidecar.md`.
 
 ---
 

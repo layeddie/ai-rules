@@ -33,6 +33,7 @@ project_requirements.md # project brief
 ## 4) Tools
 - ripgrep for exact/regex; mgrep for conceptual (see `docs/mixed-search-strategy.md`).
 - Serena MCP for semantic search/edit in build/review.
+- Optional Arcana sidecar for local doc retrieval across all agents (Elixir 1.18+): `docs/arcana-sidecar.md`.
 - Silence banner noise: set `AI_RULES_SILENT=1` before `nix develop`.
 
 ## 5) Coding stance

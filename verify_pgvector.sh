@@ -1,54 +1,61 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+set -euo pipefail
 
 echo "=== pgvector Verification ==="
 echo ""
 
-echo "1. Checking PostgreSQL 16 is running..."
-if brew services list | grep -q "postgresql@16.*started"; then
-  echo "   ✓ PostgreSQL 16 is running"
+PG_BIN=${PG_BIN:-/opt/homebrew/opt/postgresql@16/bin/psql}
+DB_HOST=${ARCANA_DB_HOST:-localhost}
+DB_PORT=${ARCANA_DB_PORT:-5432}
+DB_USER=${ARCANA_DB_USER:-$(whoami)}
+DB_NAME=${ARCANA_DB_NAME:-ai_rules_context}
+
+if [[ ! -x "$PG_BIN" ]]; then
+  echo "1. Checking psql binary..."
+  echo "   x psql not found at $PG_BIN"
+  echo "   Set PG_BIN to your psql path."
+  exit 1
+fi
+
+echo "1. Checking database connectivity..."
+if "$PG_BIN" -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d postgres -tAc "SELECT 1;" >/dev/null; then
+  echo "   ok PostgreSQL is reachable on ${DB_HOST}:${DB_PORT}"
 else
-  echo "   ✗ PostgreSQL 16 is NOT running"
+  echo "   x Could not connect to PostgreSQL on ${DB_HOST}:${DB_PORT}"
   exit 1
 fi
 
 echo ""
-echo "2. Checking pgvector library..."
-if [ -f "/opt/homebrew/opt/postgresql@16/lib/postgresql/vector.dylib" ]; then
-  echo "   ✓ vector.dylib found"
+echo "2. Checking target database..."
+DB_EXISTS=$("$PG_BIN" -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname = '$DB_NAME';")
+
+if [[ "$DB_EXISTS" == "1" ]]; then
+  echo "   ok Database '$DB_NAME' exists"
 else
-  echo "   ✗ vector.dylib NOT found"
+  echo "   x Database '$DB_NAME' does not exist"
+  echo "   Create it first or set ARCANA_DB_NAME."
   exit 1
 fi
 
 echo ""
-echo "3. Checking pgvector SQL files..."
-if [ -f "/opt/homebrew/opt/postgresql@16/share/postgresql@16/extension/vector.control" ]; then
-  echo "   ✓ SQL extension files found"
+echo "3. Checking pgvector extension..."
+if "$PG_BIN" -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" -c "CREATE EXTENSION IF NOT EXISTS vector;" >/dev/null; then
+  echo "   ok vector extension is available/enabled"
 else
-  echo "   ✗ SQL extension files NOT found"
+  echo "   x Could not enable vector extension in '$DB_NAME'"
   exit 1
 fi
 
 echo ""
-echo "4. Testing pgvector extension..."
-/opt/homebrew/opt/postgresql@16/bin/psql -h localhost -p 5432 -d ai_rules_context -c "SELECT extversion FROM pg_extension WHERE extname = 'vector';" 2>/dev/null
-if [ $? -eq 0 ]; then
-  echo "   ✓ pgvector extension is loaded"
+echo "4. Checking vector operations..."
+if "$PG_BIN" -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" -c "SELECT '[1,2,3]'::vector;" >/dev/null; then
+  echo "   ok Vector operations are working"
 else
-  echo "   ✗ pgvector extension is NOT loaded"
-  exit 1
-fi
-
-echo ""
-echo "5. Testing vector operations..."
-/opt/homebrew/opt/postgresql@16/bin/psql -h localhost -p 5432 -d ai_rules_context -c "SELECT '[1,2,3]'::vector;" 2>/dev/null
-if [ $? -eq 0 ]; then
-  echo "   ✓ Vector operations working"
-else
-  echo "   ✗ Vector operations NOT working"
+  echo "   x Vector operations failed"
   exit 1
 fi
 
 echo ""
 echo "=== ALL CHECKS PASSED ==="
-echo "pgvector is ready for Arcana installation!"
+echo "pgvector is ready for Arcana."
