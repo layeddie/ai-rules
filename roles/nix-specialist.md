@@ -125,7 +125,7 @@ pkgs.erlang_26            # Allows 26, 27, 28...
 ### MLX Configuration for M2 Max
 
 ```yaml
-# Plan Mode (Llama 3.1 70B - 5 GPUs, Batch 1)
+# Planning profile: larger reasoning model, small batch
 tensor_parallel: 5
 max_gpus: 5
 vram_limit: 45000000000  # 45GB
@@ -133,7 +133,7 @@ batch_size: 1
 quantization_bits: 4
 temperature: 0.7
 
-# Build Mode (DeepSeek 16B - 2 GPUs, Batch 4)
+# Build profile: faster coding model, medium batch
 tensor_parallel: 2
 max_gpus: 5
 vram_limit: 45000000000  # 45GB
@@ -141,7 +141,7 @@ batch_size: 4
 quantization_bits: 4
 temperature: 0.3
 
-# Review Mode (Llama 3.1 70B - 5 GPUs, Batch 8)
+# Review profile: larger analysis model, higher batch
 tensor_parallel: 5
 max_gpus: 5
 vram_limit: 45000000000  # 45GB

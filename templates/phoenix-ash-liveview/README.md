@@ -422,7 +422,7 @@ opencode --config .opencode/opencode.review.json
 │  opencode --config .opencode/opencode.build.json             │
 │  ├── Agent: Orchestrator                                   │
 │  ├── Tools: Serena (primary), grep, write                 │
-│  ├── Model: DeepSeek Coder 16B (Ollama)               │
+│  ├── Model: project-selected build model               │
 │  └── Output: Implementation code, tests                     │
 └─────────────────────────────────────────────────────────┘
 ```

@@ -309,7 +309,7 @@ opencode --config .opencode/opencode.build.json
   - ✅ grep (exact searches)
   - ⚠️ mgrep (reference only - quick lookups)
   - ✅ bash (run mix commands, tests)
-- **Model**: DeepSeek Coder 16B (local - Ollama) or LM Studio Phi-4-mini
+- **Model**: Your selected build model from `project_requirements.md`
 
 **Example Prompts**:
 
@@ -815,6 +815,6 @@ git diff HEAD~1 HEAD  # See what changed
 - **GitHub Issues**: https://github.com/layeddie/ai-rules/issues
 ---
 
-**Happy coding with ai-rules! 🎉**
+Use this guide as the operational setup reference, then keep project-specific decisions in `project_requirements.md`.
 
 For questions or issues, refer to this guide or check relevant documentation in `ai-rules/` folder.

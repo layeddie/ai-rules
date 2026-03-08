@@ -333,7 +333,7 @@ open cover/excoveralls.html
 ### Available Commands
 
 ```bash
-# Create new feature (from .ai_rules)
+# Create new feature (from ai-rules)
 /create-feature accounts user create,update,delete
 
 # Run full test suite
