@@ -1,355 +1,240 @@
 # Project Requirements
 
-**Project Name**: Test Elixir/Ash/Phoenix/LiveView Project
-**Created**: [Date]
-**Language**: Elixir 1.17+
-**Framework**: Phoenix 1.7.14+, Ash 3.4+, LiveView 1.0.0+
-**Database**: PostgreSQL 16
-**Testing Framework**: ExUnit, StreamData, PropCheck
-**LiveView Version**: Phoenix LiveView 1.0.0+
+Use this file as the project brief that agents read before planning or coding. Keep it concise, current, and specific to the application you are building.
+
+**Project Name**:
+**Created**:
+**Last Updated**:
+**Primary Owner**:
 
 ---
 
 ## 1. Project Overview
 
-**Purpose**: Test project for validating `ai-rules` repository with Elixir, Ash, Phoenix, and LiveView integration.
+**What are you building?**
 
-**Target Users**: Developers testing `ai-rules` repository for compatibility with OpenCode, mgrep, and Serena MCP.
+**Who is it for?**
 
-**Key Features**:
-- Domain Resource Action pattern with Ash framework
-- LiveView UI for real-time features
-- OTP supervision tree architecture
-- TDD workflow with comprehensive testing
-- mgrep + Serena MCP integration
-- Multi-session development workflow (plan, build, review)
+**What problem does it solve?**
+
+**Key features in scope for the next milestone**:
+-
+-
+-
+
+**Out of scope for now**:
+-
+-
 
 ---
 
 ## 2. Technical Stack
 
-**Elixir Version**: 1.17.3
-**Phoenix Version**: 1.7.14
-**Ash Version**: 3.4.12
-**Ash Dependencies**:
-- `ash`: Core Ash framework
-- `ash_postgres`: PostgreSQL adapter
-- `ash_authentication`: JWT authentication
-- `ash_phoenix`: Phoenix LiveView integration
-- `ash_json_api`: JSON API layer
-- `ash_policy`: Authorization policies
-- `ash_graphql`: GraphQL support (optional)
+**Project Type**: Phoenix app / Phoenix + Ash / Elixir library / Nerves / other
 
-**Database**: PostgreSQL 16 via Ash Postgres
+**Elixir / OTP target**:
 
-**Testing Framework**: 
-- `ex_unit`: Built-in testing framework
-- `stream_data`: Property-based testing
-- `propcheck`: Alternative property-based testing
-- `ex_machina`: ExMachina for concurrent testing (optional)
+**Core frameworks and libraries**:
+- Phoenix:
+- Ash:
+- LiveView:
+- Database:
+- HTTP client:
+- Background jobs:
+- Observability:
 
-**LiveView**: Phoenix LiveView 1.0.0+
+**Deployment target**:
 
-**Additional Libraries**:
-- `jason`: JSON parsing
-- `phoenix_live_view`: LiveView framework
-- `telemetry`: Observability and metrics
-- `gettext`: Internationalization
-
-**Development Tools**:
-- `credo`: Code quality and static analysis
-- `dialyxir`: Type checking (optional)
-- `ex_doc`: Documentation generation
+**Environment constraints**:
+- Nix required?: yes / no
+- Local-first development?: yes / no
+- External paid services allowed?: yes / no
 
 ---
 
 ## 3. LLM Configuration
 
-Detailed model matrices are in `configs/project_requirements_appendix.md`. Use that appendix to select providers/models; keep this file lean for agent context.
+Choose tools and models that fit your budget, privacy needs, and latency tolerance. Prefer current, reliable models over hard-coding stale recommendations.
+
+### 3.1 Planning
+
+**Primary provider/model**:
+
+**Fallback provider/model**:
+
+**Local option, if any**:
+
+**Why this choice**:
+
+### 3.2 Build
+
+**Primary provider/model**:
+
+**Fallback provider/model**:
+
+**Local option, if any**:
+
+**Why this choice**:
+
+### 3.3 Review
+
+**Primary provider/model**:
+
+**Fallback provider/model**:
+
+**Local option, if any**:
+
+**Why this choice**:
+
+### 3.4 Provider Constraints
+
+**Required environment variables**:
+-
+
+**Budget / privacy / data handling constraints**:
+-
+
+For selection guidance, see `configs/project_requirements_appendix.md`.
 
 ---
 
 ## 4. Tool Configuration
 
+Document the tools you expect agents to rely on for this project.
+
 ### 4.1 Planning Tools
 
-**mgrep**: ✅ Enabled
-- **Purpose**: Semantic codebase discovery
-- **Configuration**: 
-  - Max results: 20
-  - Web search: Enabled
-  - Content view: Enabled
-- **Usage**: Primary tool for discovering patterns
-
-**Tidewave MCP**: ⏸️ Disabled
-- **Reason**: Subscription required, using subscription-free starting point
-
-**Serena MCP**: ❌ Disabled
-- **Reason**: Planning phase is read-only
-
-**grep**: ✅ Enabled
-- **Purpose**: Exact pattern matching for known patterns
-- **Usage**: Finding exact function/module names
-
-**websearch**: ✅ Enabled
-- **Purpose**: External best practices and documentation
-- **Usage**: Finding external patterns, OTP best practices
+- `rg` / exact search:
+- `mgrep` / conceptual search:
+- `web search`:
+- `usage_rules`:
+- `codicil`:
+- `Serena`:
 
 ### 4.2 Build Tools
 
-**mgrep**: ⚠️ Reference only
-- **Purpose**: Quick lookups during implementation
-- **Configuration**: Disabled by default, enable with --mgrep flag if needed
-- **Usage**: When stuck or need quick reference
+- `rg` / exact search:
+- `Serena`:
+- `mgrep`:
+- `bash` / `mix` tasks:
+- formatter / static analysis:
 
-**Tidewave MCP**: ⏸️ Disabled
-- **Reason**: Subscription required, using subscription-free starting point
+### 4.3 Review Tools
 
-**Serena MCP**: ✅ Enabled
-- **Purpose**: Semantic search + editing with context
-- **Configuration**:
-  - Read-only: false
-  - Project path: `.serena/`
+- `rg` / exact search:
+- `mgrep`:
+- `Serena`:
+- review-specific checks:
 
-**grep**: ✅ Enabled
-- **Purpose**: Fast exact searches during implementation
-- **Usage**: Finding exact patterns, verifying matches
+### 4.4 Tool Notes
 
-**websearch**: ⚠️ Disabled
-- **Purpose**: External search (less needed in build mode)
-- **Usage**: Disabled to reduce context
-
-**bash**: ✅ Enabled
-- **Purpose**: Run mix commands, tests, quality checks
-- **Usage**: 
-  - `mix deps.get`
-  - `mix test`
-  - `mix format`
-  - `mix credo --strict`
-  - `mix dialyzer`
-
-**write**: ✅ Enabled
-- **Purpose**: Create and modify code files
-- **Usage**: All implementation operations
+- Preferred workflow: single session / multi-session
+- Required local services:
+- MCP servers in use:
 
 ---
 
 ## 5. Architecture Requirements
 
-### 5.1 Design Patterns
+### 5.1 Design Direction
 
-**Domain Resource Action**: ✅ Yes
-- **Use Case**: Primary pattern for organizing business logic
+- Domain boundaries:
+- Core business entities:
+- Primary workflows:
+- Data ownership rules:
 
-**OTP Supervision Tree**: ✅ Yes
-- **Strategy**: One-for-one for domain supervisors
-- **Rationale**: Isolation between domains, independent failure handling
+### 5.2 BEAM / OTP Expectations
 
-### 5.2 System Boundaries
+- Supervision strategy:
+- Long-running processes:
+- PubSub / realtime needs:
+- Fault tolerance expectations:
 
-**Domains**:
-- **accounts**: User management, authentication, sessions
-- **dashboard**: LiveView UI, real-time features
-- **api**: JSON API endpoints via Ash JSON API
-- **notifications**: Email notifications (Swoosh)
-- **background**: Background job processing
+### 5.3 Web / API Shape
 
-**APIs**:
-- **Internal**: Phoenix LiveView channels
-- **External**: Third-party integrations
+- LiveView usage:
+- JSON API / GraphQL / internal APIs:
+- Authn / authz approach:
+- External integrations:
+
+### 5.4 Data and Persistence
+
+- Database choice:
+- Caching strategy:
+- Eventing / jobs:
+- Migration constraints:
 
 ---
 
 ## 6. Testing Strategy
 
-**Unit Testing**: 80%+ coverage on business logic
-- **Integration Testing**: 30%+ coverage on database/API
-- **Property-Based Testing**: Yes, for complex logic
-- **E2E Testing**: Critical user journeys
+**Required checks before merge**:
+- `mix format`
+- `mix credo --strict`
+- `mix test`
 
-**Test Organization**:
-```
-test/
-├── test_app_web/
-│   ├── [Project Name]/
-│   │   ├── accounts/
-│   │   │   └── user/
-│   │       └── actions/
-│   └── dashboards/
-├── test_app_web/
-└── test/[Project Name]/
-    └── live/
-```
+**Optional checks**:
+- `mix dialyzer`
+- property-based tests
+- integration or live tests
 
-### Test Coverage Goals**:
-- **Business Logic**: 80%+
-- **Domain Modules**: 85%+
-- **Integration Points**: 90%+
-- **Critical Paths**: 100%
+**Coverage priorities**:
+- Critical user flows:
+- Business logic:
+- OTP/process behavior:
+- External integrations:
+
+**Testing rules**:
+- Prefer deterministic tests.
+- Avoid sleep-based synchronization.
+- Mirror source structure in tests where practical.
 
 ---
 
 ## 7. Development Workflow
 
-**Mode Strategy**: Multi-session (plan in one term, build in another, automatic but other options available)
+**Working mode**: plan/build/review or single-session
 
-**CI/CD**: GitHub Actions
-```yaml
-name: Test and Coverage
+**Branching / review expectations**:
+- Feature branches:
+- PR required before merge?: yes / no
+- Conventional commits?: yes / no
 
-on:
-  pull_request:
-    jobs:
-      - name: Run tests and coverage
-        runs-on: ubuntu-latest
-    steps:
-      - name: Install dependencies
-      - name: Check out code and install
-      - name: Run all tests
-      - name: Generate coverage report
-      - name: Upload coverage report
-```
-
-**Code Review**: Required before merging to main
-
-**Deployment**: Mix release for OTP application
+**Definition of done**:
+-
+-
+-
 
 ---
 
-## 8. Performance & Scaling
+## 8. Performance, Reliability, and Security
 
-**Concurrency Model**: OTP processes with Task.async for fire-and-forget
+**Performance priorities**:
+-
 
-**Database Optimization**:
-- Preloading strategies
-- Window functions for aggregation
-- Indexing: Composite indexes on frequently queried columns
+**Reliability expectations**:
+-
 
-**Horizontal Scaling**: Phoenix PubSub for distributed updates
+**Security constraints**:
+-
 
-**Caching Strategy**: ETS for in-memory caches
-
----
-
-## 9. Security Requirements
-
-**Authentication**: Ash Authentication with JWT tokens
-- **Authorization**: Ash policies with role-based access control (RBAC)
-
-**Data Encryption**: 
-- **At rest**: TLS/HTTPS
-- **In transit**: TLS (for internal services)
-
-**Input Validation**: Ash changesets with proper validations
-
-**Sensitive Data**: Never log or expose sensitive data
+**Observability requirements**:
+-
 
 ---
 
-## 10. Deployment & DevOps
+## 9. Open Questions
 
-**Environment**: Development, Staging, Production
-
-**Release Strategy**: Blue-green deployment
-- **Monitoring**: Telemetry for observability
-
-**Health Checks**: `/health` endpoint for system status
+-
+-
+-
 
 ---
 
-## 11. Project Structure
+## 10. Initial Delivery Plan
 
-```
-test_app/
-├── ai-rules/                # Symlink to this repo
-├── .opencode/               # Plan/Build/Review configs
-├── config/                  # Environment config only
-├── lib/
-│   ├── test_app/            # Application + supervision
-│   │   ├── application.ex
-│   │   ├── registry/
-│   │   └── support/
-│   └── test_app_ash/        # Ash Domain/Resource/Action (single responsibility)
-│       ├── domains/
-│       │   └── accounts/
-│       │       ├── resources/
-│       │       ├── actions/
-│       │       ├── policies/
-│       │       └── notifiers/
-│       └── apis/
-├── lib/test_app_web/        # Phoenix LiveView (thin glue)
-│   ├── endpoint.ex
-│   ├── router.ex
-│   ├── controllers/
-│   └── live/
-├── priv/repo/               # Migrations & seeds
-├── test/                    # Mirrors lib/ for coverage/searchability
-│   ├── support/
-│   ├── ash/
-│   └── web/
-├── flake.nix                # Nix devshell
-└── project_requirements.md  # This file
-```
+**Slice 1**:
 
----
+**Slice 2**:
 
-## 12. Acceptance Criteria
-
-- [ ] Project initialized with ai-rules and all required directories created
-- [ ] project_requirements.md configured with Elixir, Ash, Phoenix, LiveView
-- [ ] LLM configuration defined for plan/build/review modes
-- [ ] Tool configuration complete (mgrep + Serena per phase)
-- [ ] Nix configuration ready (MLX GPU config for M2 Max)
-- [ ] Templates applied (Phoenix + Ash + LiveView)
-- [ ] Multi-session workflow documented
-
----
-
-## 13. Open Questions
-
-- [ ] How to enable Tidewave MCP for testing? (requires subscription)
-- [ ] What performance characteristics does Serena provide vs mgrep?
-- [ ] Serena vs mgrep: Better LSP integration or faster performance?
-- [ ] Should Serena be used in plan mode instead of read-only?
-- [ ] How to optimize MLX GPU settings for this project?
-
----
-
-## 14. Tidewave MCP (Pending Discussion)
-
-**Status**: ⏸️ Awaiting decision before enabling in test project
-
-**Questions to Resolve**:
-1. What specific capabilities does Tidewave provide that Serena doesn't?
-2. Should Tidewave be used instead of Serena, or in addition to Serena?
-3. What are the performance characteristics (speed, accuracy, token usage)?
-4. Does Tidewave have better LSP integration with OpenCode?
-5. Is Tidewave more suitable for specific phases (plan/build/review)?
-6. What are the subscription costs and model requirements?
-
-**Current Placeholder Configuration**:
-```json
-{
-  "mcp": {
-    "tidewave": {
-      "type": "local",
-      "command": ["tidewave", "mcp"],
-      "enabled": false,
-      "environment": {
-        "TIDEWAVE_PROJECT_PATH": "{project_root}/.tidewave",
-        "TIDEWAVE_READ_ONLY": "true"
-      }
-    }
-  }
-}
-```
-
-**Recommendation**: Tidewave requires a subscription so `.ai_rules` is a **subscription-free starting point**. Consider whether to add Tidewave support after evaluating:
-- **Subscription costs**
-- **Performance comparison**
-- **Integration benefits**
-- **Suitability for specific use cases
-
----
-
-**Ready for testing .ai_rules integration with OpenCode, mgrep, and Serena MCP!**
+**Slice 3**:

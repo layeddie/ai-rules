@@ -126,7 +126,7 @@ export MLX_TEMP_REVIEW=0.5
 ### Model Paths
 
 ```yaml
-# For use in .ai_rules localModels.mlx configuration
+# For use in ai-rules localModels.mlx configuration
 models:
   llama3.1_70b:
     path: "mlx-community/Llama-3.1-70B-Instruct-4bit"

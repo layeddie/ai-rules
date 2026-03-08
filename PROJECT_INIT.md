@@ -175,18 +175,18 @@ vim project_requirements.md  # or use your preferred editor
 
 #### LLM Configuration
 **Planning Phase**:
-- **Primary Model**: Claude 3.5 Sonnet (recommended)
-- **Fallback**: Claude 3 Opus
+- **Primary Model**: Pick a current strong reasoning model
+- **Fallback**: Pick a second provider or local option
 - **Local Provider**: Ollama or LM Studio?
 
 **Building Phase**:
-- **Primary Model**: DeepSeek Coder 16B (recommended for local)
-- **Fallback**: Llama 3.1 70B
+- **Primary Model**: Pick a model that is good at iterative code edits
+- **Fallback**: Keep a stronger reasoning model available
 - **Local Provider**: Ollama or LM Studio?
 
 **Reviewing Phase**:
-- **Primary Model**: Claude 3.5 Sonnet (recommended)
-- **Fallback**: Claude 3 Opus
+- **Primary Model**: Pick a model that is conservative and good at review
+- **Fallback**: Use a different provider if you want a second opinion
 
 #### Tool Configuration
 - **mgrep**: Enable in plan and review modes?
@@ -262,7 +262,7 @@ opencode --config .opencode/opencode.plan.json
   - ✅ websearch (external patterns)
   - ❌ write (disabled - read-only)
   - ❌ serena_* (disabled - no editing)
-- **Model**: Claude 3.5 Sonnet (API) or Llama 3.1 70B (local)
+- **Model**: Your selected planning model from `project_requirements.md`
 
 **Example Prompts**:
 
@@ -356,7 +356,7 @@ opencode --config .opencode/opencode.review.json
   - ✅ serena_* (active - edit context)
   - ✅ grep (pattern verification)
   - ✅ bash (quality checks)
-- **Model**: Claude 3.5 Sonnet (API) or Llama 3.1 70B (local)
+- **Model**: Your selected review model from `project_requirements.md`
 
 **Example Prompts**:
 

@@ -2,12 +2,12 @@
 
 **Standards-based AI rules for Elixir/BEAM development**
 
-This repository provides a standardized set of AI agent guidelines, tool configurations, and project templates for building Elixir/BEAM applications with agentic AI tools.
+`ai-rules` is a reusable operating layer for AI-assisted Elixir/BEAM development. It gives coding agents a subscription-free, tool-agnostic set of rules, roles, skills, patterns, templates, and workflow configs so they can plan, build, and review projects consistently across OpenCode, Claude, Cursor, and local or MCP-based tooling.
 
 # Disclaimer
 
 This project is provided as-is and without any warranty. The authors are not responsible for any damages or losses resulting from the use of this project.
-Created with opencode using GLM 4.7 Zen and research on many elixir ai projects as of Jan 2026. Not fully tested against any real projects yet.
+This repository has evolved through several iterations across multiple models and tools. Some documents may still reflect older assumptions and are being consolidated toward the positioning described above.
 
 ---
 
@@ -298,12 +298,12 @@ Compatible
 
 ### project_requirements.md
 
-- **Purpose**: Template for defining project requirements
-- **Sections**: LLM configuration, tool config, architecture, testing strategy
+- **Purpose**: Starter brief for defining project goals, constraints, tool choices, architecture, and quality bar
+- **Sections**: Project overview, technical stack, LLM/provider strategy, tool config, architecture, testing strategy
 
 ### opencode_mcp.json
 
-- **Purpose**: MCP server configuration (Serena, placeholder for Tidewave)
+- **Purpose**: MCP server configuration for ai-rules workflows
 
 ### mlx_gpu_config.yml
 
@@ -333,7 +333,7 @@ All tools (mgrep, Serena) are open-source and free.
 
 - No subscription required to use `ai-rules`.
 - Local LLM providers (Ollama, LM Studio, MLX) are free.
-- API providers (Anthropic, OpenAI, OpenCode Zen) are optional, user choice.
+- API providers are optional and user-chosen.
 
 ---
 
@@ -362,7 +362,7 @@ All tools (mgrep, Serena) are open-source and free.
 - Flexible LLM support (local + API)
 - Elixir/BEAM best practices
 
-**Perfect for**: Full-stack web applications, libraries, or embedded systems!
+**Perfect for**: full-stack web applications, libraries, and embedded systems.
 
 ---
 
@@ -379,7 +379,3 @@ Where content is inspired or adapted, this repo prefers paraphrased integration 
 
 For local research/source inventory, see:
 - `/Users/elay14/projects/2026/elixir-ai/Elixir-AI-Development-Environment-Outline.md`
-
----
-
-**Ready to code with ai-rules! 🎉**

@@ -1,6 +1,6 @@
 # Roles Overview
 
-`.ai_rules` provides **role-based agents** with specialized expertise for different aspects of Elixir/BEAM development.
+`ai-rules` provides **role-based agents** with specialized expertise for different aspects of Elixir/BEAM development.
 
 ---
 
@@ -269,7 +269,7 @@ You can customize role selection in `project_requirements.md`:
 
 ## Integration with Skills
 
-All roles can invoke **technical skills** from `.ai_rules/skills/`:
+All roles can invoke **technical skills** from `ai-rules/skills/`:
 
 ### Common Skills Used Across Roles
 
@@ -329,7 +329,7 @@ Agents can invoke skills directly:
 
 ## Summary
 
-`.ai_rules` provides a complete set of **role-based agents** for Elixir/BEAM development:
+`ai-rules` provides a complete set of **role-based agents** for Elixir/BEAM development:
 
 **Architecture**: Architect - System design and OTP patterns
 **Implementation**: Orchestrator - TDD coordination and building

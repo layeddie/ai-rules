@@ -1,12 +1,12 @@
 # Claude Integration Guide
 
-This guide explains how to use `.ai_rules` with Claude Code, Claude Desktop, or Cursor (which uses Claude API).
+This guide explains how to use `ai-rules` with Claude Code, Claude Desktop, or Cursor (which uses Claude API).
 
 ---
 
 ## Overview
 
-`.ai_rules` is **compatible with Claude** through the `.claude/` folder structure. This folder now includes optional, Claude-only bridge assets (hooks, skills, templates) kept separate from OpenCode/Cursor defaults.
+`ai-rules` is **compatible with Claude** through the `.claude/` folder structure. This folder now includes optional, Claude-only bridge assets (hooks, skills, templates) kept separate from OpenCode/Cursor defaults.
 
 ```
 .claude/
@@ -61,7 +61,7 @@ Agents provide **specialized expertise** for different tasks:
 
 ### Available Commands
 
-`.ai_rules` provides two custom commands:
+`ai-rules` provides two custom commands:
 
 #### /create-feature
 
@@ -279,7 +279,7 @@ claude-code
 - **Windows**: `%APPDATA%/Claude/claude_desktop_config.json`
 - **Linux**: `~/.config/claude/claude_desktop_config.json`
 
-**Add .ai_rules Path**:
+**Add ai-rules Path**:
 ```json
 {
   "aiRulesPath": "~/path/to/ai-rules"
@@ -296,7 +296,7 @@ claude-code
 - Project root directory
 - Parent directory (affects all projects in directory)
 
-**Add .ai_rules Rules**:
+**Add ai-rules Rules**:
 See `tools/cursor/.cursorrules` for complete rules file.
 
 ---
@@ -341,7 +341,7 @@ You can use **both Claude and OpenCode**:
 
 1. **Use Claude** for quick code assistance and questions
 2. **Use OpenCode** for multi-session workflows
-3. **Share the same .ai_rules** folder between both tools
+3. **Share the same `ai-rules`** folder between both tools
 4. **Sync changes via git**
 
 ---
@@ -356,7 +356,7 @@ If you want to migrate from Claude to OpenCode:
 cp -r .claude my_project/
 
 # Copy project_requirements.md
-cp .ai_rules/configs/project_requirements.md my_project/
+cp ai-rules/configs/project_requirements.md my_project/
 ```
 
 ### Step 2: Create OpenCode Config
@@ -367,7 +367,7 @@ cd my_project
 mkdir -p .opencode
 
 # Copy OpenCode configs
-cp .ai_rules/tools/opencode/*.json .opencode/
+cp ai-rules/tools/opencode/*.json .opencode/
 ```
 
 ### Step 3: Update project_requirements.md
@@ -440,7 +440,7 @@ cat .claude/skills/otp-patterns/SKILL.md
 
 ## Summary
 
-Claude compatibility with `.ai_rules` provides:
+Claude compatibility with `ai-rules` provides:
 
 ✅ **Role-Based Agents**: Specialized expertise for different tasks
 ✅ **Custom Commands**: /create-feature, /full-test

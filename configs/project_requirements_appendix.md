@@ -1,23 +1,53 @@
-# Project Requirements Appendix (Models & Providers)
+# Project Requirements Appendix
 
-## Planning (Architecture & Design)
-- Primary: Claude 3.5 Sonnet (API)
-- Fallback: Claude 3 Opus
-- Local: Llama 3.1 70B (Ollama/MLX)
-- Env: ANTHROPIC_API_KEY, OPENAI_API_KEY (optional), OLLAMA_HOST, MLX_* (tensor_parallel/max_gpus/vram_limit/batch_plan)
+This appendix exists to help users choose providers and models without turning `project_requirements.md` into a stale benchmark document.
 
-## Build (Implementation)
-- Primary: DeepSeek Coder V2 16B-instruct (Ollama)
-- Fallback: Llama 3.1 70B
-- Local small edits: LM Studio Phi-4-mini
-- Env: OLLAMA_MODEL_BUILD, LMSTUDIO_MODEL_BUILD, MLX_BATCH_BUILD, MLX_TEMP_BUILD
+## Selection Heuristics
 
-## Review (Quality)
-- Primary: Claude 3.5 Sonnet
-- Fallback: Claude 3 Opus
-- Local: Llama 3.1 70B
-- Env: ANTHROPIC_API_KEY, OLLAMA_MODEL_REVIEW, MLX_BATCH_REVIEW, MLX_TEMP_REVIEW
+### Planning
+- Prefer a strong reasoning model.
+- Optimize for architectural clarity, not raw token speed.
+- Local models are fine if they can reliably hold repo-wide context.
 
-## Notes
-- Use OpenCode Zen as curated API provider when available.
-- Keep appendix out of main prompt unless tuning models.
+### Build
+- Prefer a model that is strong at iterative edits, refactors, and tool use.
+- Optimize for latency and consistency across many short coding turns.
+- Keep a stronger fallback available for complex rewrites or debugging.
+
+### Review
+- Prefer a model that is conservative, detail-oriented, and good at finding regressions.
+- Optimize for correctness over speed.
+- Use a different model from build if you want a second-pass perspective.
+
+## Provider Questions
+
+Before locking in a provider, answer:
+- Is project code allowed to leave the machine?
+- What is the per-developer monthly budget?
+- Do you need offline or local-only work?
+- Is latency or quality more important during build loops?
+- Do you need MCP, streaming, or long-context support?
+
+## Local Provider Notes
+
+- `Ollama`: simple local setup, good default for local-first workflows.
+- `LM Studio`: useful for desktop-managed local models and API compatibility.
+- `MLX`: strong option on Apple Silicon when you want local acceleration.
+
+## API Provider Notes
+
+- Choose the provider that currently gives the best mix of reliability, cost, and quality for your team.
+- Treat specific model names as time-sensitive. Re-evaluate them periodically instead of freezing them in core docs.
+
+## Environment Variables
+
+Only document variables that the project actually uses. Common examples:
+- `OPENAI_API_KEY`
+- `ANTHROPIC_API_KEY`
+- `OLLAMA_HOST`
+- `LMSTUDIO_HOST`
+
+## Guidance
+
+- Keep this appendix out of default agent context unless model selection is part of the task.
+- Update it when your real provider strategy changes, not when experimenting casually.

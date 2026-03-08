@@ -1,12 +1,12 @@
 # Tools Configuration
 
-This directory contains tool-specific configurations for integrating `.ai_rules` with various AI agent interfaces.
+This directory contains tool-specific configurations for integrating `ai-rules` with various AI agent interfaces.
 
 ---
 
 ## Overview
 
-`.ai_rules` is designed to be **tool-agnostic** but provides optimized configurations for:
+`ai-rules` is designed to be **tool-agnostic** but provides optimized configurations for:
 - **OpenCode** (primary) - Multi-session agentic development
 - **Claude** (compatible) - Code/Desktop/Code interface
 - **Cursor** (compatible) - VS Code-based agentic development
@@ -135,7 +135,7 @@ This directory contains tool-specific configurations for integrating `.ai_rules`
 
 All tools support:
 - **Local LLMs**: Ollama, LM Studio, MLX
-- **API LLMs**: Anthropic, OpenAI, OpenCode Zen
+- **API LLMs**: provider of your choice
 - **Configuration**: Set in `project_requirements.md`
 
 ### Tools
@@ -159,7 +159,7 @@ All tools use:
 
 ### From Claude to OpenCode
 
-1. Copy `.claude/` structure to `.ai_rules/`
+1. Copy `.claude/` structure into your project and point it at `ai-rules/`
 2. Create `.opencode/` directory
 3. Copy configurations from `tools/opencode/`
 4. Update `project_requirements.md` with OpenCode-specific settings
@@ -209,11 +209,11 @@ All tools use:
 
 ### Configuration Not Applied
 
-**Symptom**: Tool not using `.ai_rules` configuration
+**Symptom**: Tool not using `ai-rules` configuration
 
 **Solutions**:
 1. Check file paths are correct
-2. Verify symlinks: `ls -la .ai_rules`
+2. Verify symlinks: `ls -la ai-rules`
 3. Restart tool after configuration changes
 4. Check tool documentation for specific setup steps
 
@@ -230,12 +230,12 @@ All tools use:
 
 ## Summary
 
-`.ai_rules` supports multiple AI tools with optimized configurations. Choose the tool that best fits your workflow, or use multiple tools together for different aspects of development.
+`ai-rules` supports multiple AI tools with optimized configurations. Choose the tool that best fits your workflow, or use multiple tools together for different aspects of development.
 
 **Primary Tool**: OpenCode (recommended for full-featured Elixir/BEAM development)
 
 **Compatible Tools**: Claude, Cursor, Nix
 
-**Flexible LLM Support**: Local (Ollama, LM Studio, MLX) + API (Anthropic, OpenAI, OpenCode Zen)
+**Flexible LLM Support**: Local (Ollama, LM Studio, MLX) plus whichever API provider fits your project
 
 **Universal Guidelines**: Roles, skills, and project templates work across all tools

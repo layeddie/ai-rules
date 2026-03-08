@@ -1,6 +1,6 @@
 # Skills Overview
 
-`.ai_rules` provides **reusable technical skills** that can be invoked by any agent role.
+`ai-rules` provides **reusable technical skills** that can be invoked by any agent role.
 
 ---
 
@@ -187,7 +187,7 @@ Each skill provides:
 
 ## Summary
 
-`.ai_rules` skills provide:
+`ai-rules` skills provide:
 
 ✅ **Reusable technical modules** for common Elixir/BEAM patterns
 ✅ **Specialized expertise** in OTP, Ecto, and Testing

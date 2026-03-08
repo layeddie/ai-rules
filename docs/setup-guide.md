@@ -7,13 +7,13 @@ This guide covers setting up the ai-rules development environment.
 ### Option 1: One-Line Setup
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/your-org/ai-rules/main/scripts/setup_all.sh | bash
+curl -fsSL https://raw.githubusercontent.com/layeddie/ai-rules/main/scripts/setup_all.sh | bash
 ```
 
 ### Option 2: Manual Setup
 
 ```bash
-git clone https://github.com/your-org/ai-rules.git
+git clone https://github.com/layeddie/ai-rules.git
 cd ai-rules
 ./scripts/setup_all.sh
 ```
@@ -94,7 +94,7 @@ sudo dnf install -y git curl erlang elixir
 
 ```bash
 # In WSL2 Ubuntu
-curl -fsSL https://raw.githubusercontent.com/your-org/ai-rules/main/scripts/setup_all.sh | bash
+curl -fsSL https://raw.githubusercontent.com/layeddie/ai-rules/main/scripts/setup_all.sh | bash
 ```
 
 ---

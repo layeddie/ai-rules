@@ -1,16 +1,16 @@
 # Cursor Integration Guide
 
-This guide explains how to use `.ai_rules` with Cursor (VS Code-based AI agent).
+This guide explains how to use `ai-rules` with Cursor (VS Code-based AI agent).
 
 ---
 
 ## Overview
 
-Cursor is a VS Code extension that provides AI-powered coding assistance. `.ai_rules` provides guidelines and rules that Cursor can follow.
+Cursor is a VS Code extension that provides AI-powered coding assistance. `ai-rules` provides guidelines and rules that Cursor can follow.
 
 ### Key Features
 
-- **Agent-Based Prompting**: Role-specific guidelines from `.ai_rules`
+- **Agent-Based Prompting**: Role-specific guidelines from `ai-rules`
 - **Custom Commands**: Slash commands for common workflows
 - **Elixir/BEAM Focused**: Optimized for OTP patterns, Domain Resource Action
 - **Integration**: Works with Cursor's AI capabilities
@@ -27,7 +27,7 @@ Cursor uses a **`.cursorrules` file** in your project root to define agent behav
 ```
 my_app/
   ├── .cursorrules    # Cursor rules file
-  └── .ai_rules/    # Symlink to .ai_rules repository
+  └── ai-rules/      # Symlink to ai-rules repository
 ```
 
 **Content**: See `.cursorrules` file in this directory for complete rules configuration.
@@ -47,7 +47,7 @@ Cursor can be configured via VS Code settings:
 
 ---
 
-## Using .ai_rules with Cursor
+## Using ai-rules with Cursor
 
 ### Workflow
 
@@ -55,7 +55,7 @@ Unlike OpenCode's **multi-session** approach, Cursor is a **single-session** too
 
 #### Planning Phase
 ```text
-Act as an elixir-architect agent. Read .ai_rules/roles/architect.md for guidance.
+Act as an elixir-architect agent. Read ai-rules/roles/architect.md for guidance.
 Design a Phoenix application with user authentication following Domain Resource Action pattern.
 Create a detailed architecture plan with supervision tree design.
 Output to project_requirements.md or a new plan.md file.
@@ -63,7 +63,7 @@ Output to project_requirements.md or a new plan.md file.
 
 #### Implementation Phase
 ```text
-Act as an orchestrator agent. Read .ai_rules/roles/orchestrator.md for guidance.
+Act as an orchestrator agent. Read ai-rules/roles/orchestrator.md for guidance.
 Implement the user authentication feature according to the architecture plan.
 Follow TDD - write failing tests first.
 Use Domain Resource Action pattern with proper OTP supervision.
@@ -71,7 +71,7 @@ Use Domain Resource Action pattern with proper OTP supervision.
 
 #### Review Phase
 ```text
-Act as an elixir-reviewer agent. Read .ai_rules/roles/reviewer.md for guidance.
+Act as an elixir-reviewer agent. Read ai-rules/roles/reviewer.md for guidance.
 Review the user authentication implementation.
 Check for OTP best practices, Domain Resource Action adherence, and code quality.
 Provide specific, actionable feedback.
@@ -93,22 +93,22 @@ Defines how Cursor should behave in different contexts:
 ## Architect
 Act as an expert Elixir/BEAM architect specializing in system design.
 Focus on OTP supervision trees, domain boundaries, and fault tolerance.
-Reference .ai_rules/roles/architect.md for detailed guidance.
+Reference ai-rules/roles/architect.md for detailed guidance.
 
 ## Orchestrator
 Act as an Elixir/BEAM implementation coordinator.
 Focus on TDD, Domain Resource Action pattern, and code quality.
-Reference .ai_rules/roles/orchestrator.md for detailed guidance.
+Reference ai-rules/roles/orchestrator.md for detailed guidance.
 
 ## Reviewer
 Act as an Elixir/BEAM code review specialist.
 Focus on OTP best practices, code quality, and specific feedback.
-Reference .ai_rules/roles/reviewer.md for detailed guidance.
+Reference ai-rules/roles/reviewer.md for detailed guidance.
 
 ## QA
 Act as a quality assurance specialist.
 Focus on testing strategies, coverage analysis, and edge cases.
-Reference .ai_rules/roles/qa.md for detailed guidance.
+Reference ai-rules/roles/qa.md for detailed guidance.
 ```
 
 ### Tool Usage
@@ -226,7 +226,7 @@ end
 I need to add user email verification to the Phoenix application.
 
 Plan the implementation following Domain Resource Action pattern.
-Act as an architect agent from .ai_rules.
+Act as an architect agent from ai-rules.
 Design:
 - Domain boundary for accounts/verification
 - Resource: email_verification
@@ -250,7 +250,7 @@ Document the plan in project_requirements.md or create a verification-plan.md fi
 ```text
 I'm implementing the email verification feature according to the plan.
 
-Act as an orchestrator agent from .ai_rules.
+Act as an orchestrator agent from ai-rules.
 Follow TDD:
 1. Write failing test for send action
 2. Implement send action to pass test
@@ -275,7 +275,7 @@ Add appropriate tests:
 ```text
 Review the email verification implementation.
 
-Act as a reviewer agent from .ai_rules.
+Act as a reviewer agent from ai-rules.
 Check:
 - OTP patterns (GenServer for email sending?)
 - Domain Resource Action adherence?
@@ -332,7 +332,7 @@ You can use **Cursor and OpenCode together**:
 
 1. **Use Cursor** for quick code assistance and questions
 2. **Use OpenCode** for multi-session workflows (plan/build/review)
-3. **Share .ai_rules folder** between both tools
+3. **Share the `ai-rules` folder** between both tools
 4. **Sync changes via git**
 
 ---
@@ -341,9 +341,9 @@ You can use **Cursor and OpenCode together**:
 
 If you want to migrate from Cursor to OpenCode:
 
-### Step 1: Copy .ai_rules
+### Step 1: Link ai-rules
 ```bash
-# Ensure .ai_rules is linked
+# Ensure ai-rules is linked
 cd my_app
 ln -s ~/path/to/ai-rules ai-rules
 ```
@@ -352,7 +352,7 @@ ln -s ~/path/to/ai-rules ai-rules
 ```bash
 # Copy OpenCode configurations
 mkdir -p .opencode
-cp .ai_rules/tools/opencode/*.json .opencode/
+cp ai-rules/tools/opencode/*.json .opencode/
 ```
 
 ### Step 3: Start OpenCode Sessions
@@ -384,7 +384,7 @@ opencode --config .opencode/opencode.build.json
 
 **Solutions**:
 1. Explicitly specify agent role in prompt
-2. Reference relevant .ai_rules/roles/ file
+2. Reference the relevant `ai-rules/roles/` file
 3. Be specific about expected behavior
 4. Restart Cursor session
 
@@ -402,7 +402,7 @@ opencode --config .opencode/opencode.build.json
 
 ## Summary
 
-Cursor with `.ai_rules` provides:
+Cursor with `ai-rules` provides:
 
 ✅ **Agent Roles**: Architect, Orchestrator, Reviewer, QA
 ✅ **Elixir/BEAM Patterns**: GenServer, Supervision, DRA

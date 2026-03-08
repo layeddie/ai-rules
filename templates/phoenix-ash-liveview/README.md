@@ -411,7 +411,7 @@ opencode --config .opencode/opencode.review.json
 │  opencode --config .opencode/opencode.plan.json              │
 │  ├── Agent: Architect                                      │
 │  ├── Tools: mgrep (primary), grep, websearch              │
-│  ├── Model: Claude 3.5 Sonnet (API)                     │
+│  ├── Model: project-selected planning model             │
 │  └── Output: project_requirements.md, file structure plan  │
 └─────────────────────────────────────────────────────────┘
                               ↓

@@ -281,8 +281,8 @@ Modify the template for your project needs:
         ];
 
         shellHook = ''
-          # .ai_rules integration
-          export AI_RULES_PATH="${toString ./.ai_rules}"
+          # ai-rules integration
+          export AI_RULES_PATH="${toString ./ai-rules}"
 
           # Local LLM paths
           export OLLAMA_HOST="http://localhost:11434"
@@ -631,7 +631,7 @@ Add `ai-rules` as an input to your flake.nix:
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
-    ai-rules.url = "github:layeddie/.ai_rules";  # Your repo URL
+    ai-rules.url = "github:layeddie/ai-rules";
   };
 
   outputs = { self, nixpkgs, flake-utils, ai-rules }:
@@ -650,7 +650,7 @@ Add `ai-rules` as an input to your flake.nix:
 
         shellHook = ''
           # Your existing shell hooks
-          # .ai_rules integration
+          # ai-rules integration
         '';
       };
     }
@@ -698,13 +698,13 @@ opencode --config .opencode/opencode.review.json
 
 ## Summary
 
-Nix integration with `.ai_rules` provides:
+Nix integration with `ai-rules` provides:
 
 ✅ **Reproducible Environment**: Pinned Elixir, OTP, Erlang, Node.js
 ✅ **GPU Acceleration**: MLX configured for M2 Max (5 GPUs, 4-bit quantization)
 ✅ **Local LLM Support**: Ollama, LM Studio paths configured
 ✅ **OpenCode Integration**: Environment variables set for tooling
-✅ **.ai_rules Integration**: Scripts and configs available in PATH
+✅ **ai-rules Integration**: Scripts and configs available in PATH
 
 **For detailed configuration**, see:
 - `tools/nixos/flakes/universal.nix` - Universal Elixir template
@@ -713,14 +713,14 @@ Nix integration with `.ai_rules` provides:
 - `configs/mlx_gpu_config.yml` - MLX GPU settings
 - `PROJECT_INIT.md` - Overall project initialization
 
-**For .ai_rules best practices**, see:
+**For ai-rules best practices**, see:
 - `AGENTS.md` - Agent guidelines
 - `../../roles/` - Role definitions
 - `../../skills/` - Technical skills
 
 ---
 
-**Happy coding with Nix and .ai_rules! 🎉**
+**Happy coding with Nix and ai-rules!**
 
 ---
 
